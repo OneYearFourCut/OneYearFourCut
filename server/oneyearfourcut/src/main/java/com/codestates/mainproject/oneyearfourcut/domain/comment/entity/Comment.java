@@ -43,4 +43,5 @@ public class Comment extends Auditable {
     private List<Reply> replyList = new ArrayList<>(); // 대댓글, targetEntity
 
 
+
 }

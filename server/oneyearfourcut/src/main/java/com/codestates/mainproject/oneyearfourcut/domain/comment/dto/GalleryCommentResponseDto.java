@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GalleryCommentResponseDto extends Auditable {
     private Long commentId;
+    private Long memberId;
     private String nickname;
     private String content;
     private Long artWorkId; //it can be NULL
