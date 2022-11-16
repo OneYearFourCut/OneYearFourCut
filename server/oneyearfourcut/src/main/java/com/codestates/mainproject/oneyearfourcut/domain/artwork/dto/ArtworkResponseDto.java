@@ -9,9 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ArtWorkResponseDto {
+public class ArtworkResponseDto {
 
-    private long artWorkId;
+    private long artworkId;
     private long memberId;
     private String title;
     private String content;

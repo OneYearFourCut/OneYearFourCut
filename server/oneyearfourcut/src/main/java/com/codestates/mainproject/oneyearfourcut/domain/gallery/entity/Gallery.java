@@ -1,14 +1,12 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.entity;
 
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtWork;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.Getter;
 import lombok.Setter;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 
@@ -36,7 +34,7 @@ public class Gallery extends Auditable {
     private Member member;
 
     @OneToMany(mappedBy = "gallery")
-    private List<ArtWork> artWorkList = new ArrayList<>();
+    private List<Artwork> artworkList = new ArrayList<>();
 
     @OneToMany(mappedBy = "gallery")
     private List<Comment> commentList = new ArrayList<>();

@@ -2,7 +2,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.member.entity;
 
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alarm;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtWork;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.vote.entity.Vote;
@@ -12,13 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +26,7 @@ public class Member extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    private String nickName;
+    private String nickname;
 
     private String email;
 
@@ -43,7 +37,7 @@ public class Member extends Auditable {
     private List<Vote> voteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<ArtWork> artWorkList = new ArrayList<>();
+    private List<Artwork> artworkList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Comment> commentList = new ArrayList<>();

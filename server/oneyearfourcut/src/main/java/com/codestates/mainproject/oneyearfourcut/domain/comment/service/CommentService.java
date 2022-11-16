@@ -1,6 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtWorkRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
@@ -8,7 +8,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryS
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtWorkService;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +27,11 @@ public class CommentService {
     private final CommentRepository cRepo;
     private final MemberRepository mRepo;
     private final GalleryRepository gRepo;
-    private final ArtWorkRepository aRepo;
+    private final ArtworkRepository aRepo;
 
     private final MemberService mService;
     private final GalleryService gService;
-    private final ArtWorkService aService;
+    private final ArtworkService aService;
 
 
 

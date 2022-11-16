@@ -11,8 +11,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArtWorkListResponseDto {
+public class ArtworkListResponseDto {
     private String galleryTitle;
     private String galleryContent;
-    private List<ArtWorkResponseDto> artWorkList;
+    private List<ArtworkResponseDto> artworkList;
 }

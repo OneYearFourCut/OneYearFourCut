@@ -3,7 +3,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.entity;
 
 
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtWork;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
@@ -37,7 +36,7 @@ public class Comment extends Auditable {
     @JoinColumn(name = "galley_id")
     private Gallery gallery;  //작품이 아닌 전시관 전체 댓글일때
 
-    private Long artWorkId;  //작품에 달린 댓글일때.
+    private Long artworkId;  //작품에 달린 댓글일때.
 
     @OneToMany(mappedBy = "comment")
     private List<Reply> replyList = new ArrayList<>(); // 대댓글, targetEntity

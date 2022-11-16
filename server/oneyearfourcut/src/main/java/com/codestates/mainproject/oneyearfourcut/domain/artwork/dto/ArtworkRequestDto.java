@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
-public class ArtWorkRequestDto {
+public class ArtworkRequestDto {
 
     private MultipartFile img;
     private String title;

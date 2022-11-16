@@ -14,10 +14,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class ArtWork extends Auditable {
+public class Artwork extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long artWorkId;
+    private Long artworkId;
     private String title;
     private String content;
 
@@ -25,7 +25,7 @@ public class ArtWork extends Auditable {
     @JoinColumn(name = "GALLERY_ID")
     private Gallery gallery;
 
-    @OneToMany(mappedBy = "artWork")
+    @OneToMany(mappedBy = "artwork")
     private List<Vote> voteList = new ArrayList<>();
 
     @ManyToOne
