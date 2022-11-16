@@ -12,6 +12,7 @@ import lombok.Setter;
 public class ArtWorkResponseDto {
 
     private long artWorkId;
+    private long memberId;
     private String title;
     private String content;
     private String imagePath;
