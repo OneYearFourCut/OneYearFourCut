@@ -4,7 +4,11 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtWork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
+
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,6 +16,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @Entity
+@Getter
+@Setter
 public class Gallery extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
