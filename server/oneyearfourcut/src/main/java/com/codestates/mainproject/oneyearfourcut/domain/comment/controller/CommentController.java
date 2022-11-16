@@ -1,11 +1,14 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.*;
+
+import lombok.extern.slf4j.Slf4j;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.global.page.PageInfo;
 import com.codestates.mainproject.oneyearfourcut.global.page.PageResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -39,13 +42,14 @@ public class CommentController {
     @GetMapping("/{gallery-id}/comments")
     public ResponseEntity<?> getCommentOnGallery(@PathVariable("gallery-id") Long galleryId) {
 
-        List<CommentGalleryResponseDto> comments = List.of(
-                new CommentGalleryResponseDto(1L, "홍길동", "댓글입니다@@", 1L),
-                new CommentGalleryResponseDto(2L, "홍길동", "댓글입니다@@", 1L),
-                new CommentGalleryResponseDto(3L, "홍길동", "댓글입니다@@", 2L),
-                new CommentGalleryResponseDto(4L, "홍길동", "댓글입니다@@", null)
+        List<GalleryCommentResponseDto> comments = List.of(
+                new GalleryCommentResponseDto(1L, "홍길동", "댓글입니다@@", 1L),
+                new GalleryCommentResponseDto(2L, "홍길동", "댓글입니다@@", 1L),
+                new GalleryCommentResponseDto(3L, "홍길동", "댓글입니다@@", 2L),
+                new GalleryCommentResponseDto(4L, "홍길동", "댓글입니다@@", null)
         );
-        CommentListGalleryResponseDto response = new CommentListGalleryResponseDto(1L, comments);
+        GalleryCommentListResponseDto response = new GalleryCommentListResponseDto(1L, comments);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -53,13 +57,13 @@ public class CommentController {
     @GetMapping("/{gallery-id}/artworks/{artwork-id}/comments")
     public ResponseEntity<?> getCommentOnArtWork(@PathVariable Map<Long, Long> pathIdMap) {
 
-        List<CommentArtWorkResponseDto> comments = List.of(
-                new CommentArtWorkResponseDto(1L, "홍길동", "댓글입니다@@"),
-                new CommentArtWorkResponseDto(2L, "홍길동", "댓글입니다@@")
+        List<ArtWorkCommentResponseDto> comments = List.of(
+                new ArtWorkCommentResponseDto(1L, "홍길동", "댓글입니다@@"),
+                new ArtWorkCommentResponseDto(2L, "홍길동", "댓글입니다@@")
         );
-        CommentListArtWorkResponseDto response = new CommentListArtWorkResponseDto(1L, comments);
+        ArtWorkCommentListResponseDto response = new ArtWorkCommentListResponseDto(1L, comments);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
 }
+
