@@ -38,4 +38,5 @@ public class Gallery extends Auditable {
 
     @OneToMany(mappedBy = "gallery")
     private List<Comment> commentList = new ArrayList<>();
+
 }

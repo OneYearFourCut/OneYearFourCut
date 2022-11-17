@@ -1,8 +1,13 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.controller;
 
+
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkListResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.mapper.ArtworkMapper;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +16,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/galleries")
+@RequiredArgsConstructor
 public class ArtworkController {
+
+    private final ArtworkMapper artworkMapper;
+    private final ArtworkService artworkService;
 
     // 전시 작품 등록
     @PostMapping("/{gallery-id}/artworks")
     public ResponseEntity<?> postArtwork(@PathVariable("gallery-id") long galleryId,
                                       @ModelAttribute ArtworkRequestDto request) {
-
+        Artwork artwork = artworkMapper.artworkRequestDtoToArtwork(request);
+        artworkService.createArtwork(galleryId, artwork);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
