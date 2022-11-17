@@ -22,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member extends Auditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -44,4 +45,5 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
+
 }

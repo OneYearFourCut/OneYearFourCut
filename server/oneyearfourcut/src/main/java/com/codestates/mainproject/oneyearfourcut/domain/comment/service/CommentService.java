@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.GalleryCommentListResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -34,13 +36,19 @@ public class CommentService {
     private final ArtworkService aService;
 
 
-
-    //Create method
-    public Comment createComment(Comment comment, Long galleryId){
-
-        Member member = mService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인
+    //Create method(Gallery comment)
+    public Comment createCommentOnGallery(Comment comment, Long galleryId){
+        Member member = mService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인, JWT
         comment.setGallery(gService.findGallery(galleryId));  //gallerId를찾아 comment 생성
-        comment.setMember(member);
+        comment.setMember(member); //Member에 저장.
+        return cRepo.save(comment);
+    }
+
+    //Create method(Artwork comment)
+    public Comment createCommentOnArtwork(Comment comment,Long artworkId){
+        Member member = mService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인, JWT
+        comment.setGallery(aService.findArtwork(artworkId));  //gallerId를찾아 comment 생성
+        comment.setMember(member); //Member에 저장.
         return cRepo.save(comment);
     }
 
@@ -53,33 +61,39 @@ public class CommentService {
         return comment.get();
     }
 
-/*    //Update method
+
+    //Update method
     public Comment updateComment(Comment comment, Long memberId){
-        Comment foundComment =
+        Comment foundComment = findComment(comment.getCommentId());
+
+        //member 검증. JWT 수정 필요.
+        Long foundMember = mService.findMember(comment.getMember().getMemberId()).getMemberId();
+        if(Objects.equals(memberId, foundMember)){
+
+            Optional.ofNullable(comment.getContent())
+                    .ifPresent(foundComment::setContent);
+
+        }
         return cRepo.save(comment);
+
     }
 
     //Delete method
-    public void deleteComment(Long commentId){
-
-        cRepo.delete()
+    public void deleteComment(Long commentId, Long memberId) {
+        Comment comment = findComment(commentId);
+        //member 검증. JWT 수정 필요.
+        Long foundMember = mService.findMember(comment.getMember().getMemberId()).getMemberId();
+        if (Objects.equals(memberId, foundMember)) {//member검증. JWT 수정 필요.
+            cRepo.delete(comment);
+        }
     }
 
-    private void verifiedMember(Comment comment){
-        mService.findMember(comment.getMember().getMemberId);
-    }
-
-    private void verifiedGallery(Comment comment){
-        gService.findGallery(comment.getGallery().getGalleryId);
-    }*/
 
     //Pagination method
     public Page<Comment> pageComments(int page, int size){
         PageRequest pr = PageRequest.of(page -1, size);
         return  cRepo.findAllByOrderByCommentIdDesc(pr);
     }
-
-
 
 
 }

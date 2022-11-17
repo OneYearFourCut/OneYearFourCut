@@ -2,10 +2,15 @@ package com.codestates.mainproject.oneyearfourcut.domain.comment.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.*;
 
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.mapper.CommentMapper;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.service.CommentService;
+import com.codestates.mainproject.oneyearfourcut.global.page.PageInfo;
+import com.codestates.mainproject.oneyearfourcut.global.page.PageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -22,13 +28,20 @@ import java.util.Map;
 @AllArgsConstructor
 public class CommentController {
     private final CommentService commentService;
+    private final CommentMapper commentMapper;
 
-    //댓글 등록 - 전체 작품(Gallery)
+/*    //댓글 등록 - 전체 작품(Gallery)
     @PostMapping("/{gallery-id}/comments")
     public ResponseEntity<Object> postCommentOnGallery(@PathVariable("gallery-id") Long galleryId,
-                                         @ModelAttribute CommentRequestDto commentRequestDto) {
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+                                         @RequestBody CommentRequestDto commentRequestDto) {
+
+        Comment comment = commentMapper.toGalleryCommentListResponseDto(commentRequestDto);
+        Comment response = commentService.createCommentOnGallery(comment, galleryId);
+
+
+        return new ResponseEntity<>(commentMapper.toGalleryCommentListResponseDto(response),
+                HttpStatus.CREATED);
+    }*/
 
     //댓글 등록 - 개별 작품(Artwork)
     @PostMapping("/{gallery-id}/artworks/{artwork-id}/comments")
@@ -68,16 +81,19 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-/*    @GetMapping
+/*
+    @GetMapping
     public ResponseEntity<Object> getCommentPages( @RequestParam int page, @RequestParam int size) {
 
-        Page<Comment> commentPage = commentService.findComment(page, size);
-        List<Comment> comments = memberPage.getContent();
-        List<GalleryCommentResponseDto> response = mapper.commentsToMemberResponseDtos(comment);
-        PageInfo pageInfo = new PageInfo(page, size, (int) memberPage.getTotalElements(), memberPage.getTotalPages());
+        Page<Comment> commentPage = commentService.pageComments(page, size);
+        List<Comment> comments = commentPage.getContent();
+        List<GalleryCommentResponseDto> response =
+                (List<GalleryCommentResponseDto>) commentMapper.toGalleryCommentListResponseDto((CommentRequestDto) comments);
+        PageInfo pageInfo = new PageInfo(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
 
-        return new ResponseEntity<>(new PageResponseDto(response, pageInfo), HttpStatus.OK);
-    }*/
+        return new ResponseEntity<>(new PageResponseDto<>(response, pageInfo), HttpStatus.OK);
+    }
+*/
 
 }
 
