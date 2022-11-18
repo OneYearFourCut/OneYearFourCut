@@ -29,7 +29,8 @@ public class Gallery extends Auditable {
     @Enumerated(EnumType.STRING) //enum의 이름을 컬럼에 저장
     private GalleryStatus status = GalleryStatus.OPEN;
 
-    @ManyToOne
+    // Artwork에서 갤러리를 호출할 때마다 member쪽이 조회 쿼리문이 발생하여 지연 로딩으로 바꿨습니다.
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

@@ -1,6 +1,6 @@
-/*
-package com.codestates.mainproject.oneyearfourcut.Comment;
 
+/*
+package com.codestates.mainproject.oneyearfourcut.domain.comment.mapper;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.*;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;

@@ -15,4 +15,5 @@ public interface ArtworkMapper {
 
     List<ArtworkResponseDto> artworkListToArtworkListResponseDto(List<Artwork> artworkList);
 
+    ArtworkResponseDto artworkToArtworkResponseDto(Artwork artwork);
 }

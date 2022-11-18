@@ -2,14 +2,12 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.data.domain.Sort.Order.asc;
 import static org.springframework.data.domain.Sort.Order.desc;
 
 @Service
@@ -26,16 +23,11 @@ import static org.springframework.data.domain.Sort.Order.desc;
 public class ArtworkService {
 
     private final ArtworkRepository artworkRepository;
-    private final GalleryRepository galleryRepository; // GalleryRepository -> GalleryService 로 변경 예정
+    private final GalleryService galleryService;
     private final MemberRepository memberRepository; // MemberRepository -> MemberService 로 변경 예정
 
     public void createArtwork(long galleryId, Artwork artwork) {
-        // galleryService - 검증된 갤러리 가져오는 메서드 구현시 아래 로직 대체할 예정
-        Optional<Gallery> galleryOptional = galleryRepository.findById(galleryId);
-        Gallery verifiedGallery = galleryOptional.orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));
-        artwork.setGallery(verifiedGallery);
-
+        artwork.setGallery(galleryService.findGallery(galleryId));
         /*
         ### 이미지 업로드 관련
         MultipartFile img = artwork.getImg();
@@ -63,15 +55,49 @@ public class ArtworkService {
 
     @Transactional(readOnly = true)
     public List<Artwork> findArtworkList(long galleryId) {
-        // galleryId를 가진 갤러리가 존재하는지 여부 체크해야 함. -> merge 후 수정 예정
-
-        // 정렬 기준 : 생성일자 - 내림차순 (수정일자는 배제함 - 프론트)
+        galleryService.findGallery(galleryId);
         List<Artwork> artworkList = artworkRepository.findAllByGallery_GalleryId(galleryId,
-                Sort.by(desc("createdDate")));
+                Sort.by(desc("createdAt")));
         return artworkList;
     }
-    
-    public Artwork findArtwork(Long artworkId) {
-        return null;
+
+    @Transactional(readOnly = true)
+    public Artwork findArtwork(long galleryId, long artworkId) {
+        // 존재하는 galleryId 인지 검증
+        galleryService.findGallery(galleryId);
+        // 유효한 artworkId 인지 검증
+        verifyArtworkId(artworkId);
+
+        return findVerifiedArtwork(galleryId, artworkId);
+    }
+
+
+    // ================= 검증 관련 메서드 =================
+    @Transactional(readOnly = true)
+    public Artwork findVerifiedArtwork(long artworkId) {
+        Optional<Artwork> artworkOptional = artworkRepository.findById(artworkId);
+
+        Artwork verifiedArtwork = artworkOptional.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND));
+        return verifiedArtwork;
+    }
+
+    @Transactional(readOnly = true)
+    public Artwork findVerifiedArtwork(long galleryId, long artworkId) {
+        Optional<Artwork> artworkOptional =
+                artworkRepository.findByGallery_GalleryIdAndArtworkId(galleryId,artworkId);
+
+        Artwork verifiedArtwork = artworkOptional.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND_FROM_GALLERY));
+        return verifiedArtwork;
+    }
+
+    @Transactional(readOnly = true)
+    public void verifyArtworkId(long artworkId) {
+        Optional<Artwork> artworkOptional
+                = artworkRepository.findById(artworkId);
+        artworkOptional.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND));
+
     }
 }

@@ -39,7 +39,7 @@ public class Artwork extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GALLERY_ID")
     private Gallery gallery;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

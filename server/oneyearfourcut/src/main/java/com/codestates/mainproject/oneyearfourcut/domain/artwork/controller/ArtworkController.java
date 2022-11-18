@@ -45,7 +45,10 @@ public class ArtworkController {
     @GetMapping("{gallery-id}/artworks/{artwork-id}")
     public ResponseEntity<?> getArtwork(@PathVariable("gallery-id") long galleryId,
                                      @PathVariable("artwork-id") long artworkId) {
-        ArtworkResponseDto response = new ArtworkResponseDto(artworkId, 1L,"타이틀1", "설명1", "이미지경로1", 5, false, 3);
+
+        Artwork findArtwork = artworkService.findArtwork(galleryId, artworkId);
+        ArtworkResponseDto response = artworkMapper.artworkToArtworkResponseDto(findArtwork);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
