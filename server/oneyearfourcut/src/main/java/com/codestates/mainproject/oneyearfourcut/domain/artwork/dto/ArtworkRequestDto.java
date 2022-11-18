@@ -12,6 +12,4 @@ public class ArtworkRequestDto {
     private MultipartFile img;
     private String title;
     private String content;
-
-
 }

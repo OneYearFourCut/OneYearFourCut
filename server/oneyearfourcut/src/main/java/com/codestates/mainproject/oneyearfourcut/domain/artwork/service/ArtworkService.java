@@ -10,10 +10,15 @@ import com.codestates.mainproject.oneyearfourcut.global.exception.exception.Busi
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.domain.Sort.Order.asc;
+import static org.springframework.data.domain.Sort.Order.desc;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +56,19 @@ public class ArtworkService {
 
         // 이미지 - 로컬환경 : "/파일명.확장자"형태로 DB에 저장 (S3 설정 시 삭제 예정)
         String localImgRoot = "/" + artwork.getImg().getOriginalFilename();
-        artwork.setImgPath(localImgRoot);
+        artwork.setImagePath(localImgRoot);
 
         artworkRepository.save(artwork);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Artwork> findArtworkList(long galleryId) {
+        // galleryId를 가진 갤러리가 존재하는지 여부 체크해야 함. -> merge 후 수정 예정
+
+        // 정렬 기준 : 생성일자 - 내림차순 (수정일자는 배제함 - 프론트)
+        List<Artwork> artworkList = artworkRepository.findAllByGallery_GalleryId(galleryId,
+                Sort.by(desc("createdDate")));
+        return artworkList;
     }
     
     public Gallery findArtwork(Long artworkId) {

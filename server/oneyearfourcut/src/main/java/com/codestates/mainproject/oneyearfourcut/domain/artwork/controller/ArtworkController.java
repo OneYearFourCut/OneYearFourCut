@@ -35,12 +35,9 @@ public class ArtworkController {
     @GetMapping("/{gallery-id}/artworks")
     public ResponseEntity<?> getArtworks(@PathVariable("gallery-id") long galleryId) {
 
-        List<ArtworkResponseDto> artworks = List.of(
-                new ArtworkResponseDto(1L, 1L, "타이틀1", "설명1", "이미지경로1", 5, true, 3),
-                new ArtworkResponseDto(2L, 1L, "타이틀2", "설명2", "이미지경로2", 3, false, 3)
-                );
+        List<Artwork> artworkList = artworkService.findArtworkList(galleryId);
+        List<ArtworkResponseDto> response = artworkMapper.artworkListToArtworkListResponseDto(artworkList);
 
-        ArtworkListResponseDto response = new ArtworkListResponseDto("원강님의 전시관", "나의 전시관을 소개합니다!", artworks);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
