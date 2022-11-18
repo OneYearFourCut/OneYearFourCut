@@ -4,8 +4,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import lombok.*;
-
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ public class Gallery extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long galleryId;
+
     private String title;
+
     private String content;
 
     @Enumerated(EnumType.STRING) //enum의 이름을 컬럼에 저장
@@ -33,7 +36,9 @@ public class Gallery extends Auditable {
     @OneToMany(mappedBy = "gallery")
     private List<Artwork> artworkList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "gallery")
+    @OneToMany(mappedBy = "gallery", cascade = CascadeType.REMOVE, targetEntity = Comment.class)
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.TRUE)
     private List<Comment> commentList = new ArrayList<>();
 
 }

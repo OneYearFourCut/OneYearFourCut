@@ -3,97 +3,89 @@ package com.codestates.mainproject.oneyearfourcut.domain.comment.mapper;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.*;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
 import java.util.List;
 
-
+//https://meetup.toast.com/posts/213
+//https://www.youtube.com/watch?v=6n4iL5E-Rwo&list=PLF5X0J2bZ_k42wt16-EWfOa2QEGFfPmMS&index=7
+//https://stackoverflow.com/questions/59333845/mapstruct-many-to-one-mapping
+//https://mapstruct.org/documentation/stable/reference/html/
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-/*
+    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-    List<GalleryCommentListResponseDto> toGalleryCommentListResponseDtos(List<GalleryCommentResponseDto> commentList);
-
-    default List<GalleryCommentListResponseDto> toGalleryCommentListResponseDtos(List<GalleryCommentResponseDto> commentList) {
-        if ( commentList == null ) {
-            return null;
-        }
-
-        galleryCommentListResponseDto.setGalleryId( gallery.getGalleryId());
-
-        List<GalleryCommentListResponseDto> list = new ArrayList<GalleryCommentListResponseDto>( commentList.size() );
-        for ( GalleryCommentResponseDto galleryCommentResponseDto : commentList ) {
-            list.add( galleryCommentResponseDtoToGalleryCommentListResponseDto( galleryCommentResponseDto ) );
-        }
-
-        return list;
-    }
-
-    default GalleryCommentListResponseDto galleryCommentResponseDtoToGalleryCommentListResponseDto(GalleryCommentResponseDto galleryCommentResponseDto) {
-        if ( galleryCommentResponseDto == null ) {
-            return null;
-        }
-
-        GalleryCommentListResponseDto galleryCommentListResponseDto = new GalleryCommentListResponseDto();
-
-        return galleryCommentListResponseDto;
-    }
-
-
-    default GalleryCommentListResponseDto toGalleryCommentListResponseDto(CommentRequestDto commentRequestDto){
+    default Comment commentRequestDtoToComment(CommentRequestDto commentRequestDto) {
         if ( commentRequestDto == null ) {
             return null;
         }
-        Member member = new Member();
-        Gallery gallery = new Gallery();
-        Comment comment = new Comment();
-        GalleryCommentResponseDto galleryCommentResponseDto = new GalleryCommentResponseDto();
-        GalleryCommentListResponseDto galleryCommentListResponseDto = new GalleryCommentListResponseDto();
+        /*Member member = new Member();
+        member.setMemberId(commentRequestDto.getMemberId());
+        comment.member(member);*/
 
-        galleryCommentResponseDto.setCommentId( comment.getCommentId() );
-        galleryCommentResponseDto.setContent( comment.getContent() );
-        galleryCommentResponseDto.setArtworkId( comment.getArtworkId() );
-        galleryCommentResponseDto.setNickname( member.getNickname() );
-        galleryCommentResponseDto.setMemberId( member.getMemberId() );
+        Comment.CommentBuilder comment = Comment.builder();
 
-        galleryCommentListResponseDto.setGalleryId( gallery.getGalleryId());
+        comment.content( commentRequestDto.getContent() );
 
-        return galleryCommentListResponseDto;
+        return comment.build();
     }
 
-    default ArtworkCommentListResponseDto toArtworkCommentListResponseDto(CommentRequestDto commentRequestDto){
-        if ( commentRequestDto == null ) {
+    default GalleryCommentResponse commentToGalleryCommentResponse(Comment comment) {
+        if ( comment == null ) {
             return null;
         }
-        Member member = new Member();
-        Artwork artwork = new Artwork();
-        Comment comment = new Comment();
-        ArtworkCommentListResponseDto artworkCommentListResponseDto = new ArtworkCommentListResponseDto();
-        ArtworkCommentResponseDto artworkCommentResponseDto = new ArtworkCommentResponseDto();
 
-        artworkCommentResponseDto.setCommentId( comment.getCommentId() );
-        artworkCommentResponseDto.setContent( comment.getContent() );
-        artworkCommentResponseDto.setNickname( member.getNickname() );
-        artworkCommentResponseDto.setMemberId( member.getMemberId() );
+        GalleryCommentResponse galleryCommentResponse = new GalleryCommentResponse();
 
-        artworkCommentListResponseDto.setArtworkId( artwork.getArtworkId());
+        galleryCommentResponse.setCommentId( comment.getCommentId() );
+        galleryCommentResponse.setCreatedAt( comment.getCreatedAt() );
+        galleryCommentResponse.setModifiedAt( comment.getModifiedAt() );
+        galleryCommentResponse.setContent( comment.getContent() );
+        galleryCommentResponse.setArtworkId( comment.getArtworkId() );
+        galleryCommentResponse.setMemberId(comment.getMember().getMemberId());
+        galleryCommentResponse.setNickname(comment.getMember().getNickname());
+        galleryCommentResponse.setGalleryId(comment.getGallery().getGalleryId());
+        galleryCommentResponse.setReplyList( null );
 
-        return artworkCommentListResponseDto;
+        return galleryCommentResponse;
     }
 
-    default Comment toComment(CommentRequestDto commentRequestDto) {
-        if ( commentRequestDto == null ) {
+    List<GalleryCommentResponse> commentToGalleryCommentResponseList(List<Comment> commentList);
+
+    default ArtworkCommentResponse commentToArtworkCommentResponse(Comment comment) {
+        if ( comment == null ) {
             return null;
         }
-        Comment comment = new Comment();
-        comment.setContent( commentRequestDto.getContent() );
 
-        return comment;
+        ArtworkCommentResponse artworkCommentResponse = new ArtworkCommentResponse();
+
+        artworkCommentResponse.setCommentId( comment.getCommentId() );
+        artworkCommentResponse.setCreatedAt( comment.getCreatedAt() );
+        artworkCommentResponse.setModifiedAt( comment.getModifiedAt() );
+        artworkCommentResponse.setContent( comment.getContent() );
+        artworkCommentResponse.setArtworkId( comment.getArtworkId() );
+        artworkCommentResponse.setMemberId(comment.getMember().getMemberId());
+        artworkCommentResponse.setNickname(comment.getMember().getNickname());
+        artworkCommentResponse.setReplyList( null );
+
+        return artworkCommentResponse;
     }
-*/
+
+    List<ArtworkCommentResponse> commentToArtworkCommentResponseList(List<Comment> commentList);
+
 
 }
+
+
+
+
+
+
+
+
+
+

@@ -71,7 +71,7 @@ public class ArtworkService {
         return artworkList;
     }
     
-    public Gallery findArtwork(Long artworkId) {
+    public Artwork findArtwork(Long artworkId) {
         return null;
     }
 }

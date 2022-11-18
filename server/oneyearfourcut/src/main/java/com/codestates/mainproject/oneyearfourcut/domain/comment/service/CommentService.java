@@ -1,9 +1,9 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.GalleryCommentListResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -15,54 +15,86 @@ import com.codestates.mainproject.oneyearfourcut.global.exception.exception.Exce
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static org.springframework.data.domain.Sort.Order.asc;
+import static org.springframework.data.domain.Sort.Order.desc;
 
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommentService {
-    private final CommentRepository cRepo;
-    private final MemberRepository mRepo;
-    private final GalleryRepository gRepo;
-    private final ArtworkRepository aRepo;
+    private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
+    private final GalleryRepository galleryRepository;
+    private final ArtworkRepository artworkRepository;
 
-    private final MemberService mService;
-    private final GalleryService gService;
-    private final ArtworkService aService;
+    private final MemberService memberService;
+    private final GalleryService galleryService;
+    private final ArtworkService artworkService;
 
+    @Transactional //comment on gallery
+    public Comment createGalleryComment(Comment comment,Long galleryId,Long memberId){
+        /*Member member = memberService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인, JWT*/
+        /*comment.setGallery(galleryService.findGallery(galleryId)); //gallerId를찾아 comment 생성*/
+        Optional<Member> tempMember = memberRepository.findById(memberId);
+        Optional<Gallery> tempGallery = galleryRepository.findById(galleryId);
 
-    //Create method(Gallery comment)
-    public Comment createCommentOnGallery(Comment comment, Long galleryId){
-        Member member = mService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인, JWT
-        comment.setGallery(gService.findGallery(galleryId));  //gallerId를찾아 comment 생성
-        comment.setMember(member); //Member에 저장.
-        return cRepo.save(comment);
+        Member member = tempMember.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        Gallery gallery = tempGallery.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));
+
+        comment.setGallery(gallery);
+        comment.setMember(member);  //Member에 저장.
+        return commentRepository.save(comment);
+    }
+    @Transactional //comment on artwork
+    public Comment createArtworkComment(Comment comment,Long galleryId, Long artworkId, Long memberId){
+        /*Member member = memberService.findMember(comment.getMember().getMemberId());
+        comment.setGallery(galleryService.findGallery(galleryId));*/
+        Optional<Member> tempMember = memberRepository.findById(memberId);
+        Optional<Gallery> tempGallery = galleryRepository.findById(galleryId);
+
+        Member member = tempMember.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        Gallery gallery = tempGallery.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));
+
+        comment.setGallery(gallery);
+        comment.setMember(member);
+        comment.setArtworkId(artworkId); //comment db에 저장.
+        return commentRepository.save(comment); //save
     }
 
-    //Create method(Artwork comment)
-    public Comment createCommentOnArtwork(Comment comment,Long artworkId){
-        Member member = mService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인, JWT
-        comment.setGallery(aService.findArtwork(artworkId));  //gallerId를찾아 comment 생성
-        comment.setMember(member); //Member에 저장.
-        return cRepo.save(comment);
-    }
-
-    //Read(find) method
-    public Comment findComment(Long commentId){
-        Optional<Comment> comment = cRepo.findById(commentId);
-        if(comment.isEmpty()){
-            throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
+    @Transactional
+    public List<Comment> findCommentOnGallery(Long galleryId){
+        List<Comment> commentList1 =
+                commentRepository.findAllByGallery_GalleryId(galleryId, Sort.by(desc("createdAt")));
+        if(commentList1.isEmpty()){
+            throw new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND);
         }
-        return comment.get();
+        return commentList1;
+    }
+
+    @Transactional
+    public List<Comment> findCommentOnArtwork(Long artworkId){
+        List<Comment> commentList2 =
+                commentRepository.findAllByArtworkId(artworkId,Sort.by(desc("createdAt")));
+        if(commentList2.isEmpty()){
+            throw new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND);
+        }
+        return commentList2;
     }
 
 
-    //Update method
+ /*   //Update method
     public Comment updateComment(Comment comment, Long memberId){
         Comment foundComment = findComment(comment.getCommentId());
 
@@ -75,7 +107,6 @@ public class CommentService {
 
         }
         return cRepo.save(comment);
-
     }
 
     //Delete method
@@ -92,8 +123,9 @@ public class CommentService {
     //Pagination method
     public Page<Comment> pageComments(int page, int size){
         PageRequest pr = PageRequest.of(page -1, size);
-        return  cRepo.findAllByOrderByCommentIdDesc(pr);
-    }
+        return  cRepo.findAllByOrderByCreatedDateAsc(pr);
+    }*/
+
 
 
 }

@@ -2,18 +2,28 @@ package com.codestates.mainproject.oneyearfourcut.domain.comment.dto;
 
 
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ArtworkCommentResponseDto extends Auditable {
+public class ArtworkCommentResponse extends Auditable {
+
+
     private Long commentId;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     private Long memberId;
     private String nickname;
     private String content;
+    private Long artworkId;
+
+    private List<ReplyResponseDto> replyList;
+
+
+
+
 }
