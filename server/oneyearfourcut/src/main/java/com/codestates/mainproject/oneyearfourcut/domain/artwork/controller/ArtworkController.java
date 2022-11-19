@@ -1,7 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.controller;
 
 
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkListResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
@@ -19,14 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArtworkController {
 
-    private final ArtworkMapper artworkMapper;
+    private final ArtworkMapper mapper;
     private final ArtworkService artworkService;
 
     // 전시 작품 등록
     @PostMapping("/{gallery-id}/artworks")
     public ResponseEntity<?> postArtwork(@PathVariable("gallery-id") long galleryId,
                                       @ModelAttribute ArtworkRequestDto request) {
-        Artwork artwork = artworkMapper.artworkRequestDtoToArtwork(request);
+        Artwork artwork = mapper.artworkRequestDtoToArtwork(request);
         artworkService.createArtwork(galleryId, artwork);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -36,7 +35,7 @@ public class ArtworkController {
     public ResponseEntity<?> getArtworks(@PathVariable("gallery-id") long galleryId) {
 
         List<Artwork> artworkList = artworkService.findArtworkList(galleryId);
-        List<ArtworkResponseDto> response = artworkMapper.artworkListToArtworkListResponseDto(artworkList);
+        List<ArtworkResponseDto> response = mapper.artworkListToArtworkListResponseDto(artworkList);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -47,7 +46,7 @@ public class ArtworkController {
                                      @PathVariable("artwork-id") long artworkId) {
 
         Artwork findArtwork = artworkService.findArtwork(galleryId, artworkId);
-        ArtworkResponseDto response = artworkMapper.artworkToArtworkResponseDto(findArtwork);
+        ArtworkResponseDto response = mapper.artworkToArtworkResponseDto(findArtwork);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -57,9 +56,10 @@ public class ArtworkController {
     public ResponseEntity<?> patchArtwork(@PathVariable("gallery-id") long galleryId,
                                           @PathVariable("artwork-id") long artworkId,
                                           @ModelAttribute ArtworkRequestDto request) {
-        ArtworkResponseDto response = new ArtworkResponseDto(artworkId, 1L,request.getTitle(), request.getContent(),
-                "이미지경로/" + request.getImg().getOriginalFilename(),
-                5, false, 3);
+
+        Artwork artwork = mapper.artworkRequestDtoToArtwork(request);
+        Artwork updatedArtwork = artworkService.updateArtwork(galleryId, artworkId, artwork);
+        ArtworkResponseDto response = mapper.artworkToArtworkResponseDto(updatedArtwork);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
