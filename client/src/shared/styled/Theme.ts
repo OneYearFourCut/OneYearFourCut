@@ -31,11 +31,13 @@ const colors = {
   red_002: '#F21628',
   red_003: '#F54553',
   red_004: '#FCCED1',
+  red_005: '#FCC7CC',
 
   green_001: '#153515',
   green_002: '#316232',
   green_003: '#518252',
   green_004: '#8BB88C',
+  green_005: '#B1EEB2',
 };
 
 const mixins = {
@@ -54,9 +56,13 @@ const mixins = {
       `,
 };
 
+const flex = {
+  center: 'display: flex; align-items: center; justify-content: center;',
+};
 export type ColorsTypes = typeof colors;
 
 export const theme: DefaultTheme = {
   colors,
   mixins,
+  flex,
 };

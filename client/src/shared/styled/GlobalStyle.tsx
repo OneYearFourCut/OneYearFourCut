@@ -7,6 +7,9 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     font-family: 'Noto Sans', 'Noto Sans KR', sans-serif;
 }
+body{
+    padding-top: 5vh;
+}
 `;
 
 export default GlobalStyle;
