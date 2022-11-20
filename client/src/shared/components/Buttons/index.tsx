@@ -1,45 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-
-interface Props {
-  border: string;
-  bgColor: string;
-  color: string;
-  children?: React.ReactNode;
-  height: string;
-  onClick: () => void;
-  radius: string;
-  width: string;
-}
-
-// 아예 이놈을 초록색으로 바꿔버려
-const GreenBtn: React.FC<Props> = ({
-  border,
-  bgColor,
-  color,
-  children,
-  height,
-  onClick,
-  radius,
-  width,
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        backgroundColor: bgColor,
-        border,
-        borderRadius: radius,
-        color,
-        height,
-        width,
-      }}
-    >
-      {children}
-    </button>
-  );
-};
 
 const Btn = styled.button`
   width: ${rem(185)};
@@ -79,4 +39,4 @@ const IconBtn = ({ className, children, icon }: IconBtnInterface) => {
   );
 };
 
-export { GreenBtn, Btn, IconBtn };
+export { Btn, IconBtn };
