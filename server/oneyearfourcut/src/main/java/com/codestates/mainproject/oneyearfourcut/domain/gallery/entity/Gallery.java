@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class Gallery extends Auditable {
     private String content;
 
     @Enumerated(EnumType.STRING) //enum의 이름을 컬럼에 저장
-    private GalleryStatus status = GalleryStatus.OPEN;
+    private GalleryStatus status;
 
     // Artwork에서 갤러리를 호출할 때마다 member쪽이 조회 쿼리문이 발생하여 지연 로딩으로 바꿨습니다.
     @ManyToOne(fetch = FetchType.LAZY)
