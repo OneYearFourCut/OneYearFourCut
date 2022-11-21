@@ -1,7 +1,9 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentType;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
@@ -18,12 +20,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import static org.springframework.data.domain.Sort.Order.asc;
+import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.DELETED;
+import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
 import static org.springframework.data.domain.Sort.Order.desc;
 
 
@@ -39,93 +41,60 @@ public class CommentService {
     private final GalleryService galleryService;
     private final ArtworkService artworkService;
 
-    @Transactional //comment on gallery
-    public Comment createGalleryComment(Comment comment,Long galleryId,Long memberId){
-        /*Member member = memberService.findMember(comment.getMember().getMemberId()); //해당 memberId 존재 확인, JWT*/
-        /*comment.setGallery(galleryService.findGallery(galleryId)); //gallerId를찾아 comment 생성*/
-        Optional<Member> tempMember = memberRepository.findById(memberId);
-        Optional<Gallery> tempGallery = galleryRepository.findById(galleryId);
-
-        Member member = tempMember.orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        Gallery gallery = tempGallery.orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));
-
-        comment.setGallery(gallery);
-        comment.setMember(member);  //Member에 저장.
-        return commentRepository.save(comment);
-    }
-    @Transactional //comment on artwork
-    public Comment createArtworkComment(Comment comment,Long galleryId, Long artworkId, Long memberId){
-        /*Member member = memberService.findMember(comment.getMember().getMemberId());
-        comment.setGallery(galleryService.findGallery(galleryId));*/
-        Optional<Member> tempMember = memberRepository.findById(memberId);
-        Optional<Gallery> tempGallery = galleryRepository.findById(galleryId);
-
-        Member member = tempMember.orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        Gallery gallery = tempGallery.orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));
-
-        comment.setGallery(gallery);
+    //댓글 생성 메소드, 1)galleryservice 통해서 회원/갤러리검증, 2)댓글VALID설정 3)memberid, gallery set(양쪽) 4)artwork set 5)save
+    public void createComment(Comment comment, Long galleryId, Long artworkId, Long memberId) {
+        galleryService.verifiedGalleryExist(memberId);
+        comment.setCommentStatus(VALID);
+        Member member = new Member();
+        member.setMemberId(memberId);
         comment.setMember(member);
-        comment.setArtworkId(artworkId); //comment db에 저장.
-        return commentRepository.save(comment); //save
-    }
-
-    @Transactional
-    public List<Comment> findCommentOnGallery(Long galleryId){
-        List<Comment> commentList1 =
-                commentRepository.findAllByGallery_GalleryId(galleryId, Sort.by(desc("createdAt")));
-        if(commentList1.isEmpty()){
-            throw new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND);
+        comment.setGallery(galleryService.findGallery(galleryId));
+        if(artworkId != null){
+            comment.setArtworkId(artworkId);
         }
-        return commentList1;
+        commentRepository.save(comment);
     }
 
-    @Transactional
-    public List<Comment> findCommentOnArtwork(Long artworkId){
-        List<Comment> commentList2 =
-                commentRepository.findAllByArtworkId(artworkId,Sort.by(desc("createdAt")));
-        if(commentList2.isEmpty()){
-            throw new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND);
+    //find & Pagination method
+    public Page<Comment> findCommentByPage(Long galleryId, Long artworkId, int page, int size) {
+        PageRequest pr = PageRequest.of(page - 1, size);
+        Page<Comment> commentPage;
+        galleryService.findGallery(galleryId);
+        if (artworkId == null) {
+            commentPage =
+                    commentRepository.findAllByCommentStatusAndGallery_GalleryIdOrderByCommentIdDesc(VALID,galleryId, pr);
         }
-        return commentList2;
-    }
-
-
- /*   //Update method
-    public Comment updateComment(Comment comment, Long memberId){
-        Comment foundComment = findComment(comment.getCommentId());
-
-        //member 검증. JWT 수정 필요.
-        Long foundMember = mService.findMember(comment.getMember().getMemberId()).getMemberId();
-        if(Objects.equals(memberId, foundMember)){
-
-            Optional.ofNullable(comment.getContent())
-                    .ifPresent(foundComment::setContent);
-
+        else {
+            commentPage = commentRepository.findAllByCommentStatusAndArtworkIdOrderByCommentIdDesc(VALID, artworkId, pr);
         }
-        return cRepo.save(comment);
+        if (commentPage.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
+        }
+        return commentPage;
     }
 
-    //Delete method
-    public void deleteComment(Long commentId, Long memberId) {
+
+    //comment jpa레포 존재여부 검증 메소드
+    public Comment findComment(Long commentId){
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        Comment foundComment = comment.orElseThrow(()->new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        if(foundComment.getCommentStatus() == DELETED) throw new BusinessLogicException(ExceptionCode.COMMENT_DELETED);
+        return foundComment;
+    }
+
+    //comment 삭제 메소드, 1)pathvariable를 통해서 gallery존재 확인, 2)repo존재 확인 3)status deleted 4)save
+    public void deleteComment(Long commentId) {
         Comment comment = findComment(commentId);
-        //member 검증. JWT 수정 필요.
-        Long foundMember = mService.findMember(comment.getMember().getMemberId()).getMemberId();
-        if (Objects.equals(memberId, foundMember)) {//member검증. JWT 수정 필요.
-            cRepo.delete(comment);
-        }
+        comment.setCommentStatus(DELETED);
+        commentRepository.save(comment);
     }
 
-
-    //Pagination method
-    public Page<Comment> pageComments(int page, int size){
-        PageRequest pr = PageRequest.of(page -1, size);
-        return  cRepo.findAllByOrderByCreatedDateAsc(pr);
-    }*/
-
+    //comment update
+    public Comment modifyComment(Comment reqeustComment, Comment foundComment){
+        Optional.ofNullable(reqeustComment.getContent())
+                .ifPresent(foundComment::setContent);
+        return commentRepository.save(foundComment);
+    }
 
 
 }

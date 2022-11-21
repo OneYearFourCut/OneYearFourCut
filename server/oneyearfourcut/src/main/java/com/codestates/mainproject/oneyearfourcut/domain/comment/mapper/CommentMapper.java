@@ -23,10 +23,6 @@ public interface CommentMapper {
         if ( commentRequestDto == null ) {
             return null;
         }
-        /*Member member = new Member();
-        member.setMemberId(commentRequestDto.getMemberId());
-        comment.member(member);*/
-
         Comment.CommentBuilder comment = Comment.builder();
 
         comment.content( commentRequestDto.getContent() );

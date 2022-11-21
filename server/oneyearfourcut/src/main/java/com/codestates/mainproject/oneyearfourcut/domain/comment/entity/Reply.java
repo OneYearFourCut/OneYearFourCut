@@ -26,4 +26,7 @@ public class Reply extends Auditable {
     @JoinColumn(name = "member_id")
     private Member member; // 작성자 회원 id
 
+    @Enumerated(EnumType.STRING)
+    private CommentStatus replyStatus; //삭제 여부
+
 }

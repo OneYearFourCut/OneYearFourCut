@@ -1,16 +1,33 @@
+
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      
 spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
   h2:
     console:
       enabled: true
       path: /h2
+
   datasource:
+    sql-script-encoding: UTF-8
     url: jdbc:h2:mem:test
+    driver-class-name: org.h2.Driver
+
   jpa:
     hibernate:
       ddl-auto: create  # 스키마 자동 생성
     properties:
       hibernate:
-        format_sql: true # 쿼리를 가독성있게 바꿔줌
+        format_sql: false # 쿼리를 가독성있게 바꿔줌
     show-sql: true      # SQL 쿼리 출력
     defer-datasource-initialization: true
 
