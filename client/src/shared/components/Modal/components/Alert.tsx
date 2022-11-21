@@ -1,4 +1,4 @@
-import ModalStore from 'store/store';
+import { ModalStore } from 'store/store';
 import { ModalViewBox, ModalbtnBox } from './ModalContainer';
 import * as S from './SvgComponents';
 
@@ -10,13 +10,14 @@ interface Data {
 }
 
 const Alert = ({ data }: { data: Data }) => {
-  const { CloseModal } = ModalStore();
+  const { closeModal } = ModalStore();
+
   return (
     <ModalViewBox color={data.color}>
       <S.ApplySVG></S.ApplySVG>
       <h3>{data.title}</h3>
       <ModalbtnBox>
-        <button onClick={CloseModal}>취소</button>
+        <button onClick={()=>closeModal("AlertModal")}>취소</button>
         <button className='Progressbtn' onClick={data.onClick}>
           {data.content}{' '}
         </button>

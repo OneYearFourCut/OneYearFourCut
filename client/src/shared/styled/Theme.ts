@@ -16,6 +16,7 @@ const colors = {
   beige_002: '#FDFAEB',
   beige_003: '#FFFDF5',
   beige_004: '#FFFEFB',
+  beige_005: '#FBF6F2',
 
   gold_001: '#A76D28',
   gold_002: '#D99441',

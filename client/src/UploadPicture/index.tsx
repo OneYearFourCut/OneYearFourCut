@@ -1,15 +1,14 @@
 import * as C from './components/Container';
 import Upload from './components/Upload';
 import { Input } from './components/Input';
-import ModalStore from 'store/store';
+import { ModalStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/components/Alert';
-import { ModalBackdrop } from 'shared/components/Modal/components/ModalContainer';
+import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 const UploadPicture = () => {
-  const { isOpenModal, OpenModal, CloseModal } = ModalStore();
-
+  const { target, openModal, closeModal } = ModalStore();
   const onClick = () => {
     //여기에 progressBtn을 눌렀을때 필요한 로직 작성
-    CloseModal();
+    closeModal("AlertModal");
   };
 
   const data = {
@@ -27,11 +26,11 @@ const UploadPicture = () => {
           <Input></Input>
         </C.InputContainer>
         <C.UploadBtnContainer>
-          <button onClick={OpenModal}>등록하기</button>
+          <button onClick={()=>openModal("AlertModal")}>등록하기</button>
         </C.UploadBtnContainer>
       </C.DefualtContainer>
       {/* 모달 생성부분 */}
-      {isOpenModal ? (
+      {target.AlertModal ? (
         <ModalBackdrop>
           <Alert data={data}></Alert>
         </ModalBackdrop>
