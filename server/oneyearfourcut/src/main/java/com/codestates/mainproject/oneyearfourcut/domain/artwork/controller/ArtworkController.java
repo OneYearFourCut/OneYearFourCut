@@ -64,10 +64,22 @@ public class ArtworkController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{gallery-id}/artworks/like")
+    public ResponseEntity<?> getOneYearFourCut(@PathVariable("gallery-id") long galleryId) {
+        List<Artwork> oneYearFourCut = artworkService.findOneYearFourCut(galleryId);
+
+        List<ArtworkResponseDto> response = mapper.artworkListToArtworkListResponseDto(oneYearFourCut);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
     // 작품 삭제
     @DeleteMapping("{gallery-id}/artworks/{artwork-id}")
     public ResponseEntity<?> deleteArtwork(@PathVariable("gallery-id") long galleryId,
                                         @PathVariable("artwork-id") long artworkId) {
+
+        artworkService.deleteArtwork(galleryId, artworkId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

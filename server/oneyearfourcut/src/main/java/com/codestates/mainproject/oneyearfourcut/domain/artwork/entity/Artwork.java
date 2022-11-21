@@ -6,6 +6,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.vote.entity.Vote;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,14 @@ public class Artwork extends Auditable {
     @Transient
     private MultipartFile img;
 
+    // 여기서부터
+    @Formula("(select count(*) from vote v where v.artwork_id = artwork_id)")
+    private int voteCount;
+    public int getLikeCount() {
+        return voteCount;
+    }
+    // 여기까지 좋아요 로직에 따라 변경될 수 있음.
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GALLERY_ID")
     private Gallery gallery;
@@ -43,7 +52,7 @@ public class Artwork extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "artwork")
+    @OneToMany(mappedBy = "artwork", cascade = CascadeType.REMOVE)
     private List<Vote> voteList = new ArrayList<>();
 
     public void setGallery(Gallery gallery) {
