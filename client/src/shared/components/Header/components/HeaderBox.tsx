@@ -9,10 +9,9 @@ const HeaderBox = styled.div`
   background-color: ${({ theme }) => theme.colors.beige_002};
   display: flex;
   align-items: center;
-  padding: 0 ${rem('18px')} 0 ${rem(18)};
   z-index:50;
   .HeaderBackbtn {
-    margin-right: ${rem(135)};
+    margin: 0 ${rem(135)} 0 ${rem(18)};
   }
   h2{
     color: ${({ theme }) => theme.colors.green_002}

@@ -22,10 +22,10 @@ const HeaderBackbtn = () => {
 };
 
 const HeaderBellbtn = () => {
-  const { isOpen, openAlarm } = AlarmStore();
+  const { alarmIsOpen, openAlarm } = AlarmStore();
   return (
     <>
-      {isOpen ? null : (
+      {!alarmIsOpen && (
         <svg
           width='18'
           height='20'
@@ -46,14 +46,13 @@ const HeaderBellbtn = () => {
 };
 
 const HeaderHamburgerbtn = () => {
-  const { target, openModal } = ModalStore();
-  const { isOpen } = AlarmStore();
+  const { openModal } = ModalStore();
+  const { alarmIsOpen } = AlarmStore();
   
 
   return (
     <>
-      {isOpen ? null : (
-        <>
+      {!alarmIsOpen &&(
           <svg
             width='18'
             height='14'
@@ -70,12 +69,6 @@ const HeaderHamburgerbtn = () => {
               fill='#316232'
             />
           </svg>
-          {target.ProfileModal ? (
-            <ModalBackdrop>
-              <Profile></Profile>
-            </ModalBackdrop>
-          ) : null}
-        </>
       )}
     </>
   );

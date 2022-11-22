@@ -4,7 +4,7 @@ import Filter from './components/Filter';
 import { AlarmStore } from 'store/store';
 const AlarmList = () => {
   
-  const { isOpen } = AlarmStore();
+  const { alarmIsOpen } = AlarmStore();
 
   let data = [
     {
@@ -24,14 +24,14 @@ const AlarmList = () => {
 
   return (
     <>
-      {isOpen ? (
+      {alarmIsOpen && (
         <B.DefualtContainer>
           <Filter />
           {data.map((data) => (
             <Alarm data={data}></Alarm>
           ))}
         </B.DefualtContainer>
-      ) : null}
+      )}
     </>
   );
 };

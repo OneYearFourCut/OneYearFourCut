@@ -39,7 +39,7 @@ const InputContainer = styled.div`
   margin-top: ${rem(53)};
 `;
 const UploadBtnContainer = styled.div`
-    widthL ${rem(428)};
+    width: ${rem(428)};
     height: ${rem(40)};
     margin-top: ${rem(59)};
     margin-bottom: ${rem(65)};

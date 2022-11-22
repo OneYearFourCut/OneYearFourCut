@@ -6,12 +6,10 @@ const ModalBackdropBox = styled.div`
   width: ${rem(428)};
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
-  position: fixed;
+  position: absolute;
   top: 0;
-  left: 0;
-  z-index: 99;
+  z-index: 51;
   overflow: hidden;
-
   ${({ theme }) => theme.flex.center}
 `;
 //모달창안에 있는 버튼이 들어있는 박스
@@ -22,7 +20,7 @@ const ModalViewBox = styled.div`
   height: ${rem(122)};
   background-color: white;
   border-radius: ${rem(10)};
-  z-index: 100;
+  z-index: 52;
   position: relative;
   .ApplySVG {
     position: absolute;

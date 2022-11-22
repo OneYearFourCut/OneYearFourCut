@@ -21,9 +21,9 @@ const UploadPicture = () => {
   return (
     <>
       <C.DefualtContainer>
-        <Upload></Upload>
+        <Upload/>
         <C.InputContainer>
-          <Input></Input>
+          <Input/>
         </C.InputContainer>
         <C.UploadBtnContainer>
           <button onClick={()=>openModal("AlertModal")}>등록하기</button>
@@ -32,7 +32,7 @@ const UploadPicture = () => {
       {/* 모달 생성부분 */}
       {target.AlertModal ? (
         <ModalBackdrop>
-          <Alert data={data}></Alert>
+          <Alert data={data}/>
         </ModalBackdrop>
       ) : null}
     </>

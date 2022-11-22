@@ -39,6 +39,8 @@ const colors = {
   green_003: '#518252',
   green_004: '#8BB88C',
   green_005: '#B1EEB2',
+  green_006: '#278F59',
+  green_007: '#96CB97',
 };
 
 const mixins = {

@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* 항상 가운데 오게 하기위함. */
+#root{
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}

@@ -32,23 +32,53 @@ const ModalStore = create<Modal>((set, get) => ({
 }));
 
 interface Alarm {
-  isOpen: boolean;
+  alarmIsOpen: boolean;
   openAlarm: () => void;
   closeAlarm: () => void;
 }
 
 const AlarmStore = create<Alarm>((set) => {
   return {
-    isOpen: false,
+    alarmIsOpen: false,
     openAlarm: () =>
       set(() => {
-        return { isOpen: true };
+        return { alarmIsOpen: true };
       }),
     closeAlarm: () =>
       set(() => {
-        return { isOpen: false };
+        return { alarmIsOpen: false };
       }),
   };
 });
 
-export { ModalStore, AlarmStore };
+interface ToastState {
+  time: number;
+  content: string[];
+  id: number;
+}
+
+interface Components {
+  ToastList: ToastState[];
+  addToast: (data: ToastState) => void;
+  removeToast: () => void;
+}
+
+const ToastStore = create<Components>((set, get) => ({
+  ToastList: [],
+  addToast: (data) =>
+    set(() => {
+      let arr = get().ToastList.slice();
+      arr.push({ ...data });
+      return {
+        ToastList: arr,
+      };
+    }),
+  removeToast: () =>
+    set(() => {
+      let arr = get().ToastList.slice();
+      arr.shift();
+      return { ToastList: [...arr] };
+    }),
+}));
+
+export { ModalStore, AlarmStore, ToastStore };
