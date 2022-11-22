@@ -22,6 +22,12 @@ const Btn = styled.button`
     background-color: ${({ theme }) => theme.colors.black_007};
     color: ${({ theme }) => theme.colors.green_002};
   }
+
+  &.red {
+    background-color: ${({ theme }) => theme.colors.red_002};
+    color: ${({ theme }) => theme.colors.black_007};
+    border: 0px;
+  }
 `;
 
 interface IconBtnInterface {
