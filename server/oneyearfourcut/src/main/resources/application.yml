@@ -30,7 +30,8 @@ spring:
         format_sql: false # 쿼리를 가독성있게 바꿔줌
     show-sql: true      # SQL 쿼리 출력
     defer-datasource-initialization: true
-
+  profiles:
+    include: oauth
   sql:
     init:
       data-locations: classpath*:db/data.sql

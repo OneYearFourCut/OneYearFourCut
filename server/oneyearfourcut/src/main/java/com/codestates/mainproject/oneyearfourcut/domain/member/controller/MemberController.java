@@ -16,14 +16,14 @@ public class MemberController {
     private final MemberMapper memberMapper;
     private final MemberService memberService;
 
-    //회원 등록
-    @PostMapping
-    public ResponseEntity postMember(@RequestBody MemberRequestDto memberRequestDto) {
-        //Oauth 2.0 카카오 회원가입이면 MemberRequestDto로 받아오는 형식은 아닐 것 같은데, 일단 일반적인 회원가입처럼 구현
-        Member postMember = memberMapper.memberRequestDtoToMember(memberRequestDto);
-        memberService.createMember(postMember);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+    //회원 수정
+    @PatchMapping("/me")
+    public ResponseEntity patchMember() {
+        Long memberId = 1L;
+
+        //로직
+        return null;
     }
 
     //회원 탈퇴
