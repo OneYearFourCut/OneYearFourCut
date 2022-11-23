@@ -1,9 +1,12 @@
 import { rem } from 'polished';
+import { useNavigate } from 'react-router-dom';
 import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import { Profile } from 'shared/components/Modal/components/Profile';
 import { ModalStore, AlarmStore } from 'store/store';
 
 const HeaderBackbtn = () => {
+  const navigate = useNavigate();
+
   return (
     <svg
       width={rem(10)}
@@ -12,6 +15,7 @@ const HeaderBackbtn = () => {
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       className='HeaderBackbtn'
+      onClick={()=>navigate(-1)}
     >
       <path
         d='M9.20985 0.513629L0.561412 6.77144C0.525477 6.79733 0.496211 6.8314 0.476025 6.87082C0.455839 6.91025 0.445312 6.95391 0.445312 6.9982C0.445312 7.04249 0.455839 7.08615 0.476025 7.12557C0.496211 7.165 0.525477 7.19906 0.561412 7.22496L9.20985 13.4828C9.39618 13.6164 9.65633 13.4828 9.65633 13.2543V11.6054C9.65633 11.2468 9.48407 10.9058 9.19227 10.6949L4.08055 6.99996L9.19227 3.30152C9.48407 3.09058 9.65633 2.75308 9.65633 2.39097V0.742144C9.65633 0.513629 9.39618 0.380035 9.20985 0.513629Z'
@@ -23,6 +27,12 @@ const HeaderBackbtn = () => {
 
 const HeaderBellbtn = () => {
   const { alarmIsOpen, openAlarm } = AlarmStore();
+  const navigate = useNavigate();
+  const handleOnClick = () =>{
+    openAlarm();
+    navigate('/alarmList');
+  }
+
   return (
     <>
       {!alarmIsOpen && (
@@ -33,7 +43,7 @@ const HeaderBellbtn = () => {
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
           className='HeaderBellbtn'
-          onClick={openAlarm}
+          onClick={handleOnClick}
         >
           <path
             d='M9 20C9.6193 20.0008 10.2235 19.8086 10.7285 19.4502C11.2335 19.0917 11.6143 18.5849 11.818 18H6.182C6.38566 18.5849 6.76648 19.0917 7.27151 19.4502C7.77654 19.8086 8.3807 20.0008 9 20ZM16 12.586V8C16 4.783 13.815 2.073 10.855 1.258C10.562 0.52 9.846 0 9 0C8.154 0 7.438 0.52 7.145 1.258C4.185 2.074 2 4.783 2 8V12.586L0.293001 14.293C0.199958 14.3857 0.126171 14.4959 0.0758854 14.6172C0.0256001 14.7386 -0.000189449 14.8687 1.04767e-06 15V16C1.04767e-06 16.2652 0.105358 16.5196 0.292894 16.7071C0.480431 16.8946 0.734785 17 1 17H17C17.2652 17 17.5196 16.8946 17.7071 16.7071C17.8946 16.5196 18 16.2652 18 16V15C18.0002 14.8687 17.9744 14.7386 17.9241 14.6172C17.8738 14.4959 17.8 14.3857 17.707 14.293L16 12.586Z'

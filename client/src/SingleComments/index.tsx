@@ -15,7 +15,7 @@ const Body = styled.div`
   background-color: ${({ theme }) => theme.colors.black_007};
 `;
 
-const SingleComment = () => {
+const SingleComment = (props:any) => {
   return (
     <Body>
       <CommentsList></CommentsList>

@@ -22,6 +22,5 @@ const HeaderBox = styled.div`
   .HeaderHamburgerbtn{
     margin-left: ${rem(26)};
   }
-}
 `;
 export { HeaderBox };

@@ -5,7 +5,7 @@ import ModalBackdrop from '../Modal/components/ModalBackdrop';
 import { Profile } from '../Modal/components/Profile';
 const Header = () => {
   const { target } = ModalStore();
-
+  if (window.location.pathname === '/') return null;
   return (
     <>
       {target.ProfileModal ? (
