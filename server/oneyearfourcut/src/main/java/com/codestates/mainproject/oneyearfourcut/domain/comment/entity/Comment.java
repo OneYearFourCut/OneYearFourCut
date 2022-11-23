@@ -2,24 +2,18 @@
 
 package com.codestates.mainproject.oneyearfourcut.domain.comment.entity;
 
-
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Comment extends Auditable {
@@ -47,14 +41,13 @@ public class Comment extends Auditable {
     @Enumerated(EnumType.STRING)
     private CommentStatus commentStatus;
 
-    @Builder
-    public Comment(Long commentId, String content, Member member, Gallery gallery, Long artworkId, List<Reply> replyList, CommentStatus commentStatus) {
-        this.commentId = commentId;
+    public void setContent(String content) {
         this.content = content;
-        this.member = member;
-        this.gallery = gallery;
-        this.artworkId = artworkId;
-        this.replyList = replyList;
+    }
+
+    public void setCommentStatus(CommentStatus commentStatus) {
         this.commentStatus = commentStatus;
     }
+
+
 }

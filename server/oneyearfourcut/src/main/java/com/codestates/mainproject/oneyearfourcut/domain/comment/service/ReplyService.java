@@ -1,15 +1,17 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentReqDto;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.mapper.ReplyMapper;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.ReplyRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
+import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,38 +21,63 @@ import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Co
 @Service
 @RequiredArgsConstructor
 public class ReplyService {
-    private ReplyRepository replyRepository;
-    private CommentService commentService;
+    private final ReplyRepository replyRepository;
+    private final ReplyMapper mapper;
+    private final CommentService commentService;
+    private final MemberService memberService;
 
-    public void createReply(Reply reply,Long commentId, Long memberId) {
-        //replyid set, commentId검증, memberId 검증, Save
+    @Transactional
+    public void createReply(CommentReqDto requestDto, Long commentId, Long memberId) {
+        Reply reply = Reply.builder()
+                .content(requestDto.getContent())
+                .comment(commentService.findComment(commentId))
+                .member(memberService.findMember(memberId))
+                .replyStatus(VALID)
+                .build();
         replyRepository.save(reply);
     }
-
-    public List<Reply> findReplyList(Long commentId){
-        List<Reply> replyList = new ArrayList<>();
-
-        return replyList;
+    public List<ReplyResDto> getReplyList(Long commentId, Long memberId)  {
+        List<Reply> replyList = findReplyList(commentId, 3L);
+        List<ReplyResDto> result = mapper.replyToReplyResponseDtoList(replyList);
+        return result;
+    }
+    @Transactional
+    public void modifyReply(Long replyId, CommentReqDto requestDto){
+        Reply foundReply = findReply(replyId);
+        Reply requestReply = mapper.commentRequestDtoToReply(requestDto);
+        Optional.ofNullable(requestReply.getContent())
+                .ifPresent(foundReply::setContent);
+    }
+    @Transactional
+    public void deleteReply(Long replyId) {
+        Reply reply = findReply(replyId);
+        reply.setReplyStatus(DELETED);
     }
 
-    public Reply findReply(Long replyId){
+    //----private-----//
+    @Transactional
+    private Reply findReply(Long replyId){
         Optional<Reply> reply = replyRepository.findById(replyId);
         Reply foundReply = reply.orElseThrow(()->new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         if(foundReply.getReplyStatus() == DELETED) throw new BusinessLogicException(ExceptionCode.COMMENT_DELETED);
         return foundReply;
     }
-
-    public void deleteReply(Long replyId) {
-        Reply reply = findReply(replyId);
-        reply.setReplyStatus(DELETED);
-        replyRepository.save(reply);
-    }
-
-    //comment update
-    public Reply modifyComment(Reply reqeustReply, Reply foundReply){
-        Optional.ofNullable(reqeustReply.getContent())
-                .ifPresent(foundReply::setContent);
-        return replyRepository.save(foundReply);
+    @Transactional
+    private List<Reply> findReplyList(Long commentId, Long memberId) {
+        List<Reply> replyList;
+        commentService.findComment(commentId);
+        memberService.findMember(memberId);
+        if (commentId != null) {
+            replyList =
+                    replyRepository.findAllByReplyStatusAndComment_CommentIdOrderByReplyIdDesc(VALID, commentId);
+        }
+        else {
+           throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
+        }
+        if (replyList.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
+        }
+        return replyList;
     }
 
 }

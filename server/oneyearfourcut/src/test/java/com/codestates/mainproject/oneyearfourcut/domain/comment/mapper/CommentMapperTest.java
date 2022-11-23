@@ -32,7 +32,7 @@ class CommentMapperTest {
 /*Comment comment =new Comment(1L,"댓글입니다.",null,null,null,null);*//*
 
 
-    CommentRequestDto commentRequestDto = new CommentRequestDto();
+    CommentReqDto commentRequestDto = new CommentReqDto();
 
     @Test
         //testCommentRequestDtoToComment //Pass
@@ -116,7 +116,7 @@ assertThat(testDto.getArtworkId()).isEqualTo(3L);
 
     @Test
     void testReplyToReplyResponseDto(){
-        ReplyResponseDto testDto = CommentMapper.INSTANCE.replyToReplyResponseDto(reply);
+        ReplyResDto testDto = CommentMapper.INSTANCE.replyToReplyResponseDto(reply);
         assertThat(testDto).isNotNull();
     }
 *//*

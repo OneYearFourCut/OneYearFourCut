@@ -7,15 +7,17 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class Reply extends Auditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyId;
 
+    @Column
     private String content; // 댓글 내용
 
     @ManyToOne
@@ -28,5 +30,13 @@ public class Reply extends Auditable {
 
     @Enumerated(EnumType.STRING)
     private CommentStatus replyStatus; //삭제 여부
+
+    public void setReplyStatus(CommentStatus replyStatus) {
+        this.replyStatus = replyStatus;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
 }
