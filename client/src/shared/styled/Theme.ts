@@ -33,6 +33,8 @@ const colors = {
   red_003: '#F54553',
   red_004: '#FCCED1',
   red_005: '#FCC7CC',
+  red_006: '#3B0105',
+  red_007: '#A1020F',
 
   green_001: '#153515',
   green_002: '#316232',

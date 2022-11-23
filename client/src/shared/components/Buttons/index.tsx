@@ -36,6 +36,17 @@ interface IconBtnInterface {
   children?: React.ReactNode;
 }
 
+const SmallBtn = styled.button`
+  width: ${rem(80)};
+  height: ${rem(40)};
+  background-color: ${({ theme }) => theme.colors.green_002};
+  border-radius: ${rem(5)};
+  border: none;
+  color: white;
+  font-size: ${rem(16)};
+  margin-left: ${rem(294)};
+`;
+
 const IconBtn = ({ className, children, icon }: IconBtnInterface) => {
   return (
     <Btn className={className}>
@@ -45,4 +56,4 @@ const IconBtn = ({ className, children, icon }: IconBtnInterface) => {
   );
 };
 
-export { Btn, IconBtn };
+export { Btn, SmallBtn, IconBtn };
