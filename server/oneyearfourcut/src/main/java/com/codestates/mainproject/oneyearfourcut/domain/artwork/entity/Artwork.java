@@ -37,13 +37,15 @@ public class Artwork extends Auditable {
     @Transient
     private MultipartFile img;
 
-    // 여기서부터
+    // <============================
+    // Artwork Repository에서 voteCount를 사용하기 위해 Formula 추가 (JPQL 대신)
     @Formula("(select count(*) from vote v where v.artwork_id = artwork_id)")
-    private int voteCount;
-    public int getLikeCount() {
-        return voteCount;
-    }
-    // 여기까지 좋아요 로직에 따라 변경될 수 있음.
+    private int likeCount;
+
+    @Formula("(select count(*) from comment c where c.artwork_id = artwork_id)")
+    private int commentCount;
+
+    // <=== 좋아요 로직에 따라 변경될 수 있음.
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GALLERY_ID")
@@ -71,7 +73,6 @@ public class Artwork extends Auditable {
         member.getArtworkList().add(this);
     }
 
-    // Mapper - Response에 memberId 담으려면 아래 getter를 추가해야 함... (toEntity 고려해봐야 할까요...)
     public Long getMemberId() {
         return this.member.getMemberId();
     }

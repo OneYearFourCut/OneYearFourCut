@@ -23,4 +23,21 @@ public class Vote extends Auditable {
     @ManyToOne
     @JoinColumn(name = "ARTWORK_ID")
     private Artwork artwork;
+
+    public void setMember(Member member) {
+        if (this.member != null) {
+            member.getVoteList().remove(this);
+        }
+        this.member = member;
+        member.getVoteList().add(this);
+    }
+
+    public void setArtwork(Artwork artwork) {
+        if (this.artwork != null) {
+            this.artwork.getVoteList().remove(this);
+        }
+        this.artwork = artwork;
+        artwork.getVoteList().add(this);
+    }
+
 }

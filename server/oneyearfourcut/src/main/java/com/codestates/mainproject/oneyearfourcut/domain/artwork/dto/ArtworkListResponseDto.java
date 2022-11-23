@@ -12,5 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArtworkListResponseDto {
-    private List<ArtworkResponseDto> artworkList;
+    private List<ArtworkResponseDto> artworkListResponse;
+
+
 }

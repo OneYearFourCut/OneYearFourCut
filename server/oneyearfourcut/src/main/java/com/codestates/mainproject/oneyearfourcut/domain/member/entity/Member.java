@@ -29,7 +29,6 @@ public class Member extends Auditable {
 
     private String email;
 
-
     @OneToMany(mappedBy = "member")
     private List<Gallery> galleryList = new ArrayList<>();
 

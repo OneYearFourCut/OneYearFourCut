@@ -3,6 +3,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.mapper.ArtworkMapper;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
@@ -34,8 +35,7 @@ public class ArtworkController {
     @GetMapping("/{gallery-id}/artworks")
     public ResponseEntity<?> getArtworks(@PathVariable("gallery-id") long galleryId) {
 
-        List<Artwork> artworkList = artworkService.findArtworkList(galleryId);
-        List<ArtworkResponseDto> response = mapper.artworkListToArtworkListResponseDto(artworkList);
+        List<ArtworkResponseDto> response = artworkService.findArtworkList(galleryId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -45,8 +45,7 @@ public class ArtworkController {
     public ResponseEntity<?> getArtwork(@PathVariable("gallery-id") long galleryId,
                                      @PathVariable("artwork-id") long artworkId) {
 
-        Artwork findArtwork = artworkService.findArtwork(galleryId, artworkId);
-        ArtworkResponseDto response = mapper.artworkToArtworkResponseDto(findArtwork);
+        ArtworkResponseDto response = artworkService.findArtwork(galleryId, artworkId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -58,21 +57,20 @@ public class ArtworkController {
                                           @ModelAttribute ArtworkRequestDto request) {
 
         Artwork artwork = mapper.artworkRequestDtoToArtwork(request);
-        Artwork updatedArtwork = artworkService.updateArtwork(galleryId, artworkId, artwork);
-        ArtworkResponseDto response = mapper.artworkToArtworkResponseDto(updatedArtwork);
-
+        ArtworkResponseDto response = artworkService.updateArtwork(galleryId, artworkId, artwork);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 올해네컷 조회
     @GetMapping("/{gallery-id}/artworks/like")
     public ResponseEntity<?> getOneYearFourCut(@PathVariable("gallery-id") long galleryId) {
-        List<Artwork> oneYearFourCut = artworkService.findOneYearFourCut(galleryId);
 
-        List<ArtworkResponseDto> response = mapper.artworkListToArtworkListResponseDto(oneYearFourCut);
+        List<OneYearFourCutResponseDto> response = artworkService.findOneYearFourCut(galleryId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
 
     // 작품 삭제
     @DeleteMapping("{gallery-id}/artworks/{artwork-id}")
