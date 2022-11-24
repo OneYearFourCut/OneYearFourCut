@@ -2,6 +2,8 @@
 
 package com.codestates.mainproject.oneyearfourcut.domain.comment.entity;
 
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
@@ -12,9 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "comment")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Comment extends Auditable {
     @Id
@@ -41,13 +42,46 @@ public class Comment extends Auditable {
     @Enumerated(EnumType.STRING)
     private CommentStatus commentStatus;
 
-    public void setContent(String content) {
+    @Builder
+    public Comment(Long commentId, String content, Member member, Gallery gallery, Long artworkId, CommentStatus commentStatus) {
+        this.commentId = commentId;
         this.content = content;
-    }
-
-    public void setCommentStatus(CommentStatus commentStatus) {
+        this.member = member;
+        this.gallery = gallery;
+        this.artworkId = artworkId;
         this.commentStatus = commentStatus;
     }
 
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void changeCommentStatus(CommentStatus commentStatus) {
+        this.commentStatus = commentStatus;
+    }
+
+    public CommentGalleryResDto toCommentGalleryResponseDto(){
+        return CommentGalleryResDto.builder()
+                .commentId(this.getCommentId())
+                .createdAt(this.getCreatedAt())
+                .modifiedAt(this.getModifiedAt())
+                .content(this.getContent())
+                .artworkId(this.getArtworkId())
+                .memberId(this.getMember().getMemberId())
+                .nickname(this.getMember().getNickname())
+                .build();
+    }
+
+    public CommentArtworkResDto toCommentArtworkResponseDto(){
+        return CommentArtworkResDto.builder()
+                .commentId(this.getCommentId())
+                .createdAt(this.getCreatedAt())
+                .modifiedAt(this.getModifiedAt())
+                .content(this.getContent())
+                .memberId(this.getMember().getMemberId())
+                .nickname(this.getMember().getNickname())
+                .build();
+    }
 
 }

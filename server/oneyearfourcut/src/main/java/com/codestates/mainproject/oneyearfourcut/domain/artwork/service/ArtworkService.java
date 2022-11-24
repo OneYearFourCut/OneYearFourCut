@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -81,7 +82,7 @@ public class ArtworkService {
         List<ArtworkResponseDto> responseDtoList = new ArrayList<>();
         /*
         이렇게 로직을 짜니까 반복 횟수만큼 좋아요 조회 쿼리가 들어갑니다. -> 비효율 -> 미리 Vote List를 가져와 비교함.
-        artworkList.forEach(artwork -> responseDtoList.add(ArtworkResponseDto.of(
+        artworkList.forEach(artwork -> responseDtoList.add(CommentArtworkHeadDto.of(
                 artwork, voteRepository.existsByMember_MemberIdAndArtwork_ArtworkId(memberId, artwork.getArtworkId()))));
         */
         List<Vote> voteList = voteRepository.findAllByMember_MemberId(LOGIN_PERSON_ID);
@@ -158,6 +159,16 @@ public class ArtworkService {
         }
 
         return findArtwork;
+    }
+
+    public void checkGalleryArtworkVerification(Long galleryId, Long artworkId) {
+        Optional<Artwork> artwork = artworkRepository.findById(artworkId);
+        Artwork foundArtwork = artwork.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND));
+
+        if (!Objects.equals(galleryId, foundArtwork.getGallery().getGalleryId())) {
+            throw new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND_FROM_GALLERY);
+        }
     }
 
 }

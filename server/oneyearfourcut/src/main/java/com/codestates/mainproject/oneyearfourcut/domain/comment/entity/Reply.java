@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.entity;
 
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
@@ -7,9 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Reply extends Auditable {
 
@@ -31,12 +30,32 @@ public class Reply extends Auditable {
     @Enumerated(EnumType.STRING)
     private CommentStatus replyStatus; //삭제 여부
 
-    public void setReplyStatus(CommentStatus replyStatus) {
+    @Builder
+    public Reply(Long replyId, String content, Comment comment, Member member, CommentStatus replyStatus) {
+        this.replyId = replyId;
+        this.content = content;
+        this.comment = comment;
+        this.member = member;
         this.replyStatus = replyStatus;
     }
 
-    public void setContent(String content) {
+    public void changeReplyStatus(CommentStatus replyStatus) {
+        this.replyStatus = replyStatus;
+    }
+
+    public void changeContent(String content) {
         this.content = content;
+    }
+
+    public ReplyResDto toReplyResponseDto(){
+        return ReplyResDto.builder()
+                .replyId(this.getReplyId())
+                .createdAt(this.getCreatedAt())
+                .modifiedAt(this.getModifiedAt())
+                .content(this.getContent())
+                .memberId(this.getMember().getMemberId())
+                .nickname(this.getMember().getNickname())
+                .build();
     }
 
 }
