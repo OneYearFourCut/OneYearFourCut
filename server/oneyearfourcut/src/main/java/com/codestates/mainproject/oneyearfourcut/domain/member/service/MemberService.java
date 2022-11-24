@@ -1,6 +1,9 @@
 package com.codestates.mainproject.oneyearfourcut.domain.member.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
@@ -22,6 +25,22 @@ public class MemberService {
         }
     }
 
+    public MemberResponseDto modifyMember(Long memberId, MemberRequestDto memberRequestDto) {
+        Member findMember = findMember(memberId);
+
+        Optional.ofNullable(memberRequestDto.getNickname())
+                        .ifPresent(findMember::updateNickname);
+
+        if (!memberRequestDto.getProfile().isEmpty()) {
+            //이미지 저장하고, 해당 경로를 findMember에 넣어주는 로직
+        }
+
+        Member savedMember = memberRepository.save(findMember);
+
+        return savedMember.toMemberResponseDto();
+    }
+
+    @Transactional(readOnly = true)
     public Member findMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 
@@ -29,6 +48,7 @@ public class MemberService {
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberByEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
@@ -37,8 +57,8 @@ public class MemberService {
     }
 
     public void deleteMember(Long memberId) {
-        findMember(memberId);   //회원이 존재하는지 확인
-        //상태변화로 변경 예정 -> 삭제에서 활동으로 바뀔때의 로직 oauth쪽에 적용 시켜야함
-        memberRepository.deleteById(memberId);
+        Member findMember = findMember(memberId);//회원이 존재하는지 확인
+
+        findMember.updateStatus(MemberStatus.DELETE);
     }
 }

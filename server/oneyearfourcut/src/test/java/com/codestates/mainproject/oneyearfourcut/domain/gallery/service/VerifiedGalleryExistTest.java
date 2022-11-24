@@ -27,14 +27,12 @@ class VerifiedGalleryExistTest {
     Long closedGalleryId = 1L;
     Gallery closedGallery = Gallery.builder()
             .title("test gallery1")
-            .galleryId(closedGalleryId)
             .content("test content1")
             .status(GalleryStatus.CLOSED)
             .build();
     Long openGalleryId = 2L;
     Gallery openGallery = Gallery.builder()
             .title("test gallery2")
-            .galleryId(openGalleryId)
             .content("test content2")
             .status(GalleryStatus.OPEN)
             .build();

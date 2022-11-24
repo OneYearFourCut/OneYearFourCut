@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.global.config.auth.handler;
 
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
@@ -57,6 +58,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .nickname(nickname)
                 .profile(profile)
                 .role(Role.USER)
+                .memberStatus(MemberStatus.ACTIVE)
                 .build();
         memberService.createMember(member);
     }

@@ -1,9 +1,9 @@
 package com.codestates.mainproject.oneyearfourcut.domain.member.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberRequestDto;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
-import com.codestates.mainproject.oneyearfourcut.domain.member.mapper.MemberMapper;
+import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,28 +13,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberMapper memberMapper;
     private final MemberService memberService;
 
 
     //회원 수정
     @PatchMapping("/me")
-    public ResponseEntity patchMember() {
-        Long memberId = 1L;
+    public ResponseEntity patchMember(@LoginMember Long memberId,
+                                      @ModelAttribute MemberRequestDto memberRequestDto) {
+        //회원 수정 시에 프로필, 이름을 한번에 변경할건지 프론트와 의논해봐야함
+        MemberResponseDto memberResponseDto = memberService.modifyMember(memberId, memberRequestDto);
 
-        //로직
-        return null;
+        return new ResponseEntity(memberResponseDto, HttpStatus.OK);
     }
 
     //회원 탈퇴
     @DeleteMapping("/me")
-    public ResponseEntity deleteMember() {
-        Long memberId = 1L; //jwt로 memberId 찾아와야함
-
+    public ResponseEntity deleteMember(@LoginMember Long memberId) {
         memberService.deleteMember(memberId);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity("회원 탈퇴 성공!", HttpStatus.NO_CONTENT);
     }
-
-
-
 }

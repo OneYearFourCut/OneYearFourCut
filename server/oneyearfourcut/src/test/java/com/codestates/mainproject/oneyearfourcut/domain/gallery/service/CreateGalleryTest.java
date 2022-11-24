@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
@@ -7,6 +9,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,22 +33,9 @@ public class CreateGalleryTest {
     private GalleryService galleryService;
 
     //테스트용 데이터
-    Gallery closedGallery = Gallery.builder()
-            .title("test gallery1")
-            .galleryId(1L)
-            .content("test content1")
-            .status(GalleryStatus.CLOSED)
-            .build();
-    Gallery openGallery = Gallery.builder()
-            .title("test gallery2")
-            .galleryId(2L)
-            .content("test content2")
-            .status(GalleryStatus.OPEN)
-            .build();
-
     String title = "승필의 전시회";
     String content = "어서오세요";
-    Gallery postGallery = Gallery.builder()
+    GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
             .title(title)
             .content(content)
             .build();
@@ -53,27 +45,23 @@ public class CreateGalleryTest {
         // given
         Long emptyMemberId = 1L;
 
-        Member emptyMember = Member.builder()
-                .memberId(emptyMemberId)
-                .email("test1@gmail.com")
-                .nickname("nickname1")
-                .galleryList(null)
-                .build();
+        Member emptyMember = new Member(emptyMemberId);
 
+        Gallery gallery = galleryRequestDto.toEntity(emptyMemberId);
 
         given(memberService.findMember(emptyMemberId))
                 .willReturn(emptyMember);
-        given(galleryRepository.save(postGallery))
-                .willReturn(postGallery);
+        given(galleryRepository.save(any(Gallery.class)))
+                .willReturn(gallery);
 
         // when
-        Gallery createdGallery = galleryService.createGallery(postGallery, emptyMemberId);
+        GalleryResponseDto galleryResponseDto = galleryService.createGallery(galleryRequestDto, emptyMemberId);
 
         // then
-        assertThat(createdGallery.getMember().getMemberId()).isEqualTo(emptyMemberId);
-        assertThat(createdGallery.getStatus()).isEqualTo(GalleryStatus.OPEN);
-        assertThat(createdGallery.getTitle()).isEqualTo(title);
-        assertThat(createdGallery.getContent()).isEqualTo(content);
+        assertThat(gallery.getMember().getMemberId()).isEqualTo(emptyMemberId);
+        assertThat(gallery.getStatus()).isEqualTo(GalleryStatus.OPEN);
+        assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
+        assertThat(galleryResponseDto.getContent()).isEqualTo(content);
     }
 
     @Test
@@ -81,26 +69,23 @@ public class CreateGalleryTest {
         // given
         Long closedGalleryMemberId = 1L;
 
-        Member closedGalleryMember = Member.builder()
-                .memberId(closedGalleryMemberId)
-                .email("test2@gmail.com")
-                .nickname("nickname2")
-                .galleryList(List.of(closedGallery))
-                .build();
+        Member closedGalleryMember = new Member(List.of(getClosedGallery()));
+
+        Gallery gallery = galleryRequestDto.toEntity(closedGalleryMemberId);
 
         given(memberService.findMember(closedGalleryMemberId))
                 .willReturn(closedGalleryMember);
-        given(galleryRepository.save(postGallery))
-                .willReturn(postGallery);
+        given(galleryRepository.save(any(Gallery.class)))
+                .willReturn(gallery);
 
         // when
-        Gallery createdGallery = galleryService.createGallery(postGallery, closedGalleryMemberId);
+        GalleryResponseDto galleryResponseDto = galleryService.createGallery(galleryRequestDto, closedGalleryMemberId);
 
         // then
-        assertThat(createdGallery.getMember().getMemberId()).isEqualTo(closedGalleryMemberId);
-        assertThat(createdGallery.getStatus()).isEqualTo(GalleryStatus.OPEN);
-        assertThat(createdGallery.getTitle()).isEqualTo(title);
-        assertThat(createdGallery.getContent()).isEqualTo(content);
+        assertThat(gallery.getMember().getMemberId()).isEqualTo(closedGalleryMemberId);
+        assertThat(gallery.getStatus()).isEqualTo(GalleryStatus.OPEN);
+        assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
+        assertThat(galleryResponseDto.getContent()).isEqualTo(content);
     }
 
     @Test
@@ -108,12 +93,7 @@ public class CreateGalleryTest {
         // given
         Long openGalleryMemberId = 1L;
 
-        Member openGalleryMember = Member.builder()
-                .memberId(openGalleryMemberId)
-                .email("test3@gmail.com")
-                .nickname("nickname3")
-                .galleryList(List.of(closedGallery, openGallery))
-                .build();
+        Member openGalleryMember = new Member(List.of(getClosedGallery(), getOpenGallery()));
 
         given(memberService.findMember(openGalleryMemberId))
                 .willReturn(openGalleryMember);
@@ -121,7 +101,24 @@ public class CreateGalleryTest {
         // when
         // then
         assertThatExceptionOfType(BusinessLogicException.class)
-                .isThrownBy(() -> galleryService.createGallery(postGallery, openGalleryMemberId))
+                .isThrownBy(() -> galleryService.createGallery(galleryRequestDto, openGalleryMemberId))
                 .withMessage(ExceptionCode.OPEN_GALLERY_EXIST.getMessage());
     }
+
+    private Gallery getClosedGallery() {
+        return  Gallery.builder()
+                .title("test gallery1")
+                .content("test content1")
+                .status(GalleryStatus.CLOSED)
+                .build();
+    }
+
+    private Gallery getOpenGallery() {
+        return Gallery.builder()
+                .title("test gallery2")
+                .content("test content2")
+                .status(GalleryStatus.OPEN)
+                .build();
+    }
+
 }

@@ -1,16 +1,23 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,83 +31,116 @@ public class ModifyGalleryTest {
     String modifiedContent = "수정된 내용";
     String title = "원래 제목";
     String content = "원래 내용";
+    long memberId = 1L;
     Gallery findGallery = Gallery.builder()
-            .galleryId(1L)
-            .member(Member.builder().memberId(1L).build())
             .status(GalleryStatus.OPEN)
             .title(title)
             .content(content)
+            .member(new Member(memberId))
             .build();
 
     @Test
     void 제목_내용_수정사항이_적용된다() {
         //given
-        Gallery allRequestGallery = Gallery.builder()
+        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
                 .title(modifiedTitle)
                 .content(modifiedContent)
                 .build();
 
+        given(galleryRepository.findById(1L))
+                .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        Gallery allModifiedGallery = galleryService.modifyGallery(allRequestGallery, findGallery);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
 
         //then
-        assertThat(allModifiedGallery.getTitle()).isEqualTo(modifiedTitle);
-        assertThat(allModifiedGallery.getContent()).isEqualTo(modifiedContent);
+        assertThat(galleryResponseDto.getTitle()).isEqualTo(modifiedTitle);
+        assertThat(galleryResponseDto.getContent()).isEqualTo(modifiedContent);
     }
 
     @Test
     void 제목_수정사항이_적용된다() {
         //given
-        Gallery titleRequestGallery = Gallery.builder()
+        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
                 .title(modifiedTitle)
                 .build();
 
+        given(galleryRepository.findById(1L))
+                .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        Gallery titleModifiedGallery = galleryService.modifyGallery(titleRequestGallery, findGallery);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
 
         //then
-        assertThat(titleModifiedGallery.getTitle()).isEqualTo(modifiedTitle);
-        assertThat(titleModifiedGallery.getContent()).isEqualTo(content);
+        assertThat(galleryResponseDto.getTitle()).isEqualTo(modifiedTitle);
+        assertThat(galleryResponseDto.getContent()).isEqualTo(content);
     }
 
     @Test
     void 내용_수정사항이_적용된다() {
         //given
-        Gallery contentRequestGallery = Gallery.builder()
+        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
                 .content(modifiedContent)
                 .build();
 
+        given(galleryRepository.findById(1L))
+                .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        Gallery contentModifiedGallery = galleryService.modifyGallery(contentRequestGallery, findGallery);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
 
         //then
-        assertThat(contentModifiedGallery.getTitle()).isEqualTo(title);
-        assertThat(contentModifiedGallery.getContent()).isEqualTo(modifiedContent);
+        assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
+        assertThat(galleryResponseDto.getContent()).isEqualTo(modifiedContent);
     }
 
     @Test
     void 수정사항이_없어도_적용된다() {
         //given
-        Gallery nullRequestGallery = Gallery.builder()
+        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
                 .build();
 
+        given(galleryRepository.findById(1L))
+                .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        Gallery nullModifiedGallery = galleryService.modifyGallery(nullRequestGallery, findGallery);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
 
         //then
-        assertThat(nullModifiedGallery.getTitle()).isEqualTo(title);
-        assertThat(nullModifiedGallery.getContent()).isEqualTo(content);
+        assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
+        assertThat(galleryResponseDto.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    void 주인이_아니면_수정이_안된다() {
+        //given
+        Gallery findGallery = Gallery.builder()
+                .status(GalleryStatus.OPEN)
+                .title(title)
+                .content(content)
+                .member(new Member(2L))
+                .build();
+
+        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
+                .title(modifiedTitle)
+                .content(modifiedContent)
+                .build();
+
+        given(galleryRepository.findById(1L))
+                .willReturn(Optional.ofNullable(findGallery));
+
+        //when
+        //then
+        assertThatThrownBy(() -> galleryService.modifyGallery(galleryRequestDto, 1L, memberId))
+                .isInstanceOf(BusinessLogicException.class)
+                .hasMessage(ExceptionCode.NO_AUTHORITY.getMessage());
     }
 }

@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -8,6 +10,7 @@ import com.codestates.mainproject.oneyearfourcut.global.exception.exception.Busi
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,33 +20,38 @@ import static com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Ga
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GalleryService {
     private final GalleryRepository galleryRepository;
     private final MemberService memberService;
 
-    public Gallery createGallery(Gallery requestGallery, Long memberId) {
+    public GalleryResponseDto createGallery(GalleryRequestDto galleryRequestDto, Long memberId) {
         // 오픈된 전시관이 이미 존재하는지 확인하고 있으면 에러
         verifiedMemberCanOpenGallery(memberId);
 
-        //초기상태가 open이므로 넣어줘야함
-        requestGallery.setStatus(OPEN);
+        Gallery gallery = galleryRequestDto.toEntity(memberId);
 
-        Member member = new Member();
-        member.setMemberId(memberId);
-        requestGallery.setMember(member);
+        Gallery savedGallery = galleryRepository.save(gallery);
 
-        return galleryRepository.save(requestGallery);
+        return savedGallery.toGalleryResponseDto();
     }
 
-    public Gallery modifyGallery(Gallery requestGallery, Gallery findGallery) {
-        Optional.ofNullable(requestGallery.getTitle())
-                .ifPresent(findGallery::setTitle);
-        Optional.ofNullable(requestGallery.getContent())
-                .ifPresent(findGallery::setContent);
+    public GalleryResponseDto modifyGallery(GalleryRequestDto galleryRequestDto, long galleryId, Long loginId) {
+        Gallery findGallery = findGallery(galleryId);
 
-        return galleryRepository.save(findGallery);
+        isLoginMemberGallery(findGallery, loginId);
+
+        Optional.ofNullable(galleryRequestDto.getTitle())
+                .ifPresent(findGallery::updateTitle);
+        Optional.ofNullable(galleryRequestDto.getContent())
+                .ifPresent(findGallery::updateContent);
+
+        Gallery savedGallery = galleryRepository.save(findGallery);
+
+        return savedGallery.toGalleryResponseDto();
     }
 
+    @Transactional(readOnly = true)
     public Gallery findGallery(Long galleryId) {
         Optional<Gallery> optionalGallery = galleryRepository.findById(galleryId);
 
@@ -56,14 +64,16 @@ public class GalleryService {
         return findGallery;
     }
 
-    public void deleteGallery(Long galleryId) {
-        Gallery gallery = findGallery(galleryId);
-        gallery.setStatus(CLOSED);
+    public void deleteGallery(Long galleryId, Long loginId) {
+        Gallery findGallery = findGallery(galleryId);
 
-        galleryRepository.save(gallery);
+        isLoginMemberGallery(findGallery, loginId);
+
+        findGallery.updateStatus(CLOSED);
     }
 
     //전시관이 유효한지 검증하는 메서드
+    @Transactional(readOnly = true)
     public void verifiedGalleryExist(Long galleryId) {
         Optional<Gallery> optionalGallery = galleryRepository.findById(galleryId);
 
@@ -79,13 +89,18 @@ public class GalleryService {
     private void verifiedMemberCanOpenGallery(Long memberId) {
         Member loginMember = memberService.findMember(memberId);
         List<Gallery> galleryList = loginMember.getGalleryList();
-        if (Optional.ofNullable(galleryList).isPresent()) {
             galleryList.stream()
                     .forEach(gallery -> {
                         if (gallery.getStatus() == OPEN){
                             throw new BusinessLogicException(ExceptionCode.OPEN_GALLERY_EXIST);
                         }
                     });
+        }
+
+    //로그인 회원의 갤러리인지 확인하는 로직
+    private void isLoginMemberGallery(Gallery findGallery, Long loginId) {
+        if (findGallery.getMember().getMemberId() != loginId) {
+            throw new BusinessLogicException(ExceptionCode.NO_AUTHORITY);
         }
     }
 }
