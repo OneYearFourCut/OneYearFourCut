@@ -1,17 +1,19 @@
-package com.codestates.mainproject.oneyearfourcut.domain.vote.entity;
+package com.codestates.mainproject.oneyearfourcut.domain.Like.entity;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
-public class Vote extends Auditable {
+@NoArgsConstructor
+public class ArtworkLike extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long voteId;
@@ -26,18 +28,21 @@ public class Vote extends Auditable {
 
     public void setMember(Member member) {
         if (this.member != null) {
-            member.getVoteList().remove(this);
+            member.getArtworkLikeList().remove(this);
         }
         this.member = member;
-        member.getVoteList().add(this);
+        member.getArtworkLikeList().add(this);
     }
 
     public void setArtwork(Artwork artwork) {
         if (this.artwork != null) {
-            this.artwork.getVoteList().remove(this);
+            this.artwork.getArtworkLikeList().remove(this);
         }
         this.artwork = artwork;
-        artwork.getVoteList().add(this);
+        artwork.getArtworkLikeList().add(this);
     }
 
+    public ArtworkLike(Long voteId) {
+        this.voteId = voteId;
+    }
 }

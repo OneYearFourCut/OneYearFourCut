@@ -5,9 +5,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alarm;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
-import com.codestates.mainproject.oneyearfourcut.domain.vote.entity.Vote;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +29,7 @@ public class Member extends Auditable {
     private String nickname;
 
     private String email;
-
+    
     private String profile;
 
     @Enumerated(EnumType.STRING)
@@ -81,7 +80,7 @@ public class Member extends Auditable {
     private List<Gallery> galleryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<Vote> voteList = new ArrayList<>();
+    private List<ArtworkLike> artworkLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Artwork> artworkList = new ArrayList<>();

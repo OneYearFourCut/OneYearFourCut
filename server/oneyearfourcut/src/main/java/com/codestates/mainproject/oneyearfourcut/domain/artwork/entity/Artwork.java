@@ -1,8 +1,11 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.entity;
 
+
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
-import com.codestates.mainproject.oneyearfourcut.domain.vote.entity.Vote;
+import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
 import org.hibernate.annotations.Formula;
@@ -11,12 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Artwork extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,21 +30,21 @@ public class Artwork extends Auditable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String imagePath;
 
+    @Enumerated(EnumType.STRING)
+    private ArtworkStatus status;
+
     @Transient
-    private MultipartFile img;
+    private MultipartFile image;
 
-    // <============================
-    // Artwork Repository에서 voteCount를 사용하기 위해 Formula 추가 (JPQL 대신)
-    @Formula("(select count(*) from vote v where v.artwork_id = artwork_id)")
+    @Formula("(select count(*) from artwork_like v where v.artwork_id = artwork_id)")
     private int likeCount;
-
+    @Transient
+    private boolean liked;
     @Formula("(select count(*) from comment c where c.artwork_id = artwork_id)")
     private int commentCount;
-
-    // <=== 좋아요 로직에 따라 변경될 수 있음.
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GALLERY_ID")
@@ -51,17 +53,23 @@ public class Artwork extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "artwork", cascade = CascadeType.REMOVE)
-    private List<Vote> voteList = new ArrayList<>();
+    @OneToMany(mappedBy = "artwork", cascade = CascadeType.ALL)
+    private List<ArtworkLike> artworkLikeList = new ArrayList<>();
 
+    public Long getMemberId() {
+        return this.member.getMemberId();
+    }
+
+
+    /* ################### Setter ################### */
     public void setGallery(Gallery gallery) {
+
         if (this.gallery != null) {
             this.gallery.getArtworkList().remove(this);
         }
         this.gallery = gallery;
         gallery.getArtworkList().add(this);
     }
-
     public void setMember(Member member) {
         if (this.member != null) {
             this.member.getArtworkList().remove(this);
@@ -69,21 +77,61 @@ public class Artwork extends Auditable {
         this.member = member;
         member.getArtworkList().add(this);
     }
-
-
-    // ReplyMapper - Response에 memberId 담으려면 아래 getter를 추가해야 함... (toEntity 고려해봐야 할까요...)
-    public Long getMemberId() {
-        return this.member.getMemberId();
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
-    @Override
-    public String toString() {
-        return "Artwork{" +
-                "artworkId=" + artworkId +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", imgPath='" + imagePath + '\'' +
-                ", createdAt='" + this.getCreatedAt() + '\'' +
-                '}';
+
+    public void setStatus(ArtworkStatus status) {
+        this.status = status;
+
     }
+
+    public void modify(Artwork artwork) {
+        // ************************* S3 설정 시 이미지 관련 변경 예정 *************************
+        Optional.ofNullable(artwork.getImage())
+                .ifPresent(imagePath -> this.imagePath = "/" + imagePath.getOriginalFilename());
+        Optional.ofNullable(artwork.getTitle())
+                .ifPresent(title -> this.title = title);
+        Optional.ofNullable(artwork.getContent())
+                .ifPresent(content -> this.content = content);
+    }
+
+    /* ################### 생성자 ################### */
+    @Builder
+    public Artwork(Long artworkId, String title, String content, String imagePath, MultipartFile image) {
+        this.artworkId = artworkId;
+        this.title = title;
+        this.content = content;
+        this.imagePath = imagePath;
+        this.image = image;
+        this.artworkLikeList = new ArrayList<>();
+
+    }
+
+    /* ################### toDto ################### */
+    public ArtworkResponseDto toArtworkResponseDto() {
+        return ArtworkResponseDto.builder()
+                .artworkId(getArtworkId())
+                .memberId(getMemberId())
+                .title(getTitle())
+                .content(getContent())
+                .imagePath(getImagePath())
+                .likeCount(getLikeCount())
+                .liked(isLiked())
+                .commentCount(getCommentCount())
+                .build();
+    }
+
+    public OneYearFourCutResponseDto toOneYearFourCutResponseDto() {
+        return OneYearFourCutResponseDto.builder()
+                .artworkId(getArtworkId())
+                .imagePath(getImagePath())
+                .likeCount(getLikeCount())
+                .build();
+    }
+
 }

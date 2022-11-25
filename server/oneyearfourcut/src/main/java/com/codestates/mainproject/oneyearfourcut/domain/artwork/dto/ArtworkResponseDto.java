@@ -2,11 +2,11 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.dto;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import lombok.*;
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
-@Setter
 public class ArtworkResponseDto {
 
     private long artworkId;
@@ -30,23 +30,10 @@ public class ArtworkResponseDto {
         this.commentCount = commentCount;
     }
 
-    public static ArtworkResponseDto of(Artwork artwork, boolean voted) {
-        return ArtworkResponseDto.builder()
-                .artworkId(artwork.getArtworkId())
-                .memberId(artwork.getMemberId())
-                .title(artwork.getTitle()).content(artwork.getContent())
-                .imagePath(artwork.getImagePath())
-                .likeCount(artwork.getLikeCount())
-                .liked(voted)
-                .commentCount(artwork.getCommentCount()) // 수정 예정
-                .build();
-    }
 
-    public static ArtworkResponseDto of(Artwork artwork) {
-        return ArtworkResponseDto.builder()
-                .artworkId(artwork.getArtworkId())
-                .imagePath(artwork.getImagePath())
-                .likeCount(artwork.getLikeCount())
-                .build();
+    public static List<ArtworkResponseDto> toListResponse (List<Artwork> artworkList) {
+        return artworkList.stream()
+                .map(Artwork::toArtworkResponseDto)
+                .collect(Collectors.toList());
     }
 }

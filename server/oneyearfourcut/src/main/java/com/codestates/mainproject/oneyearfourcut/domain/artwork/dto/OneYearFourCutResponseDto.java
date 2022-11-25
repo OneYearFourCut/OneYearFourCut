@@ -21,13 +21,11 @@ public class OneYearFourCutResponseDto {
         this.likeCount = likeCount;
     }
 
-    public static List<OneYearFourCutResponseDto> of (List<Artwork> artworkList) {
-        return artworkList.stream().map(artwork ->
-                OneYearFourCutResponseDto.builder()
-                        .artworkId(artwork.getArtworkId())
-                        .imagePath(artwork.getImagePath())
-                        .likeCount(artwork.getLikeCount())
-                        .build())
+
+    public static List<OneYearFourCutResponseDto> toListResponse (List<Artwork> artworkList) {
+        return artworkList.stream()
+                .map(Artwork::toOneYearFourCutResponseDto)
                 .collect(Collectors.toList());
     }
+
 }
