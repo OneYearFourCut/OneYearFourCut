@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-
 //toast 메세지들이 들어갈 공간
 const ToastRenderBox = styled.div`
   width: ${rem(400)};
@@ -15,7 +14,7 @@ const ToastRenderBox = styled.div`
 `;
 
 //실제 Toast 메세지
-const ToastBox = styled.div<{time:number}>`
+const ToastBox = styled.div<{ time: number }>`
   width: ${rem(395)};
   height: ${rem(64)};
   margin: ${rem(18)} ${rem(18)} 0 ${rem(18)};
@@ -24,17 +23,23 @@ const ToastBox = styled.div<{time:number}>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: ToastShow ${({time}) => time/1000}s linear forwards;
+  animation: ToastShow ${({ time }) => time / 1000}s linear forwards;
   background-color: white;
 
-  .ToastContent {
-    width: ${rem(250)};
+  .ToastContentBox {
+    width: ${rem(350)};
+    margin: ${rem(15)} 0 ${rem(10)} 0;
+    font-size: ${rem(12)};
     display: flex;
     align-items: center;
-    margin: ${rem(10)} 0 ${rem(5)} ${rem(100)};
+    justify-content: center;
 
-    label {
-      margin-right: ${rem(50)};
+    .ToastContent {
+      width: ${rem(340)};
+      text-align: center;
+
+    }
+    .OptionSVG {
     }
   }
   @keyframes ToastShow {
@@ -54,7 +59,7 @@ const ToastBox = styled.div<{time:number}>`
 `;
 
 //실제 Toast 메세지의 progress bar
-const ProgressBar = styled.div<{time:number}>`
+const ProgressBar = styled.div<{ time: number }>`
   width: ${rem(395)};
   height: ${rem(4)};
   background-color: ${({ theme }) => theme.colors.green_007};
@@ -78,9 +83,8 @@ const ProgressBar = styled.div<{time:number}>`
     width: 0;
     height: ${rem(4)};
     background-color: ${({ theme }) => theme.colors.green_006};
-    animation: progress ${({time}) => time/1000}s linear forwards;
+    animation: progress ${({ time }) => time / 1000}s linear forwards;
   }
 `;
-
 
 export { ToastRenderBox, ToastBox, ProgressBar };

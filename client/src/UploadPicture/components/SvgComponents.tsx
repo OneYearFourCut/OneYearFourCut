@@ -77,6 +77,7 @@ const UploadSvg = () => {
       viewBox='0 0 101 101'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
+      className='UploadSvg'
     >
       <g opacity='0.4'>
         <path
