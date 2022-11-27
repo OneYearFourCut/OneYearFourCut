@@ -1,14 +1,11 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
@@ -45,7 +42,7 @@ public class CommentService {
                 .commentStatus(VALID)
                 .build();
         commentRepository.save(comment);
-        return new CommentGalleryHeadDto<>(galleryId,comment.toCommentGalleryResponseDto());
+        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
 
     public CommentArtworkHeadDto<Object> createCommentOnArtwork(CommentRequestDto commentRequestDto, Long galleryId, Long artworkId, Long memberId) {
@@ -62,7 +59,7 @@ public class CommentService {
     }
 
 
-    private Page<Comment> findCommentByPage(Long galleryId, Long artworkId, int page, int size) {
+    public Page<Comment> findCommentByPage(Long galleryId, Long artworkId, int page, int size) {
         PageRequest pr = PageRequest.of(page - 1, size);
         Page<Comment> commentPage;
         galleryService.findGallery(galleryId);
@@ -81,23 +78,23 @@ public class CommentService {
     }
 
 
-    public GalleryPageResponseDto<Object> getGalleryCommentPage(Long galleryId, int page, int size, Long memberId){
+    public CommentGalleryPageResponseDto<Object> getGalleryCommentPage(Long galleryId, int page, int size, Long memberId){
         memberService.findMember(memberId);
         Page<Comment> commentPage = findCommentByPage(galleryId, null, page, size);
         List<Comment> commentList = commentPage.getContent();
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
         List<CommentGalleryResDto> response = CommentGalleryResDto.toCommentGalleryResponseDtoList(commentList);
-        return new GalleryPageResponseDto<>(galleryId, response, pageInfo);
+        return new CommentGalleryPageResponseDto<>(galleryId, response, pageInfo);
     }
 
 
-    public ArtworkPageResponseDto<Object> getArtworkCommentPage(Long galleryId, Long artworkId, int page, int size, Long memberId) {
+    public CommentArtworkPageResponseDto<Object> getArtworkCommentPage(Long galleryId, Long artworkId, int page, int size, Long memberId) {
         memberService.findMember(memberId);
         Page<Comment> commentPage = findCommentByPage(galleryId, artworkId, page, size);
         List<Comment> commentList = commentPage.getContent();
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
         List<CommentArtworkResDto> response = CommentArtworkResDto.toCommentArtworkResponseDtoList(commentList);
-        return new ArtworkPageResponseDto<>(galleryId, artworkId, response, pageInfo);
+        return new CommentArtworkPageResponseDto<>(galleryId, artworkId, response, pageInfo);
     }
 
 

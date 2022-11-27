@@ -37,6 +37,11 @@ public class Gallery extends Auditable {
         this.member = member;
     }
 
+    //jpa 연관관계 맵핑 위해 생성하는 member 엔티티 용 생성자
+    public Gallery(Long galleryId) {
+        this.galleryId = galleryId;
+    }
+
     public void updateTitle(String title) {
         this.title = title;
     }

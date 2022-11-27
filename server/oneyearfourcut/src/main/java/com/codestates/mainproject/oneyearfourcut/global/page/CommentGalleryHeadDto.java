@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommentGalleryHeadDto<T> {
     private Long galleryId;
-    private T replyList;
+    private T commentList;
 }

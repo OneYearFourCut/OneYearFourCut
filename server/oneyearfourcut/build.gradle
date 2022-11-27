@@ -9,21 +9,23 @@ group = 'com.codestates.mainproject'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-configurations {
-	asciidoctorExtensions
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
 repositories {
 	mavenCentral()
 }
+
+configurations {
+	asciidoctorExtensions
+	/*compileOnly {
+		extendsFrom annotationProcessor
+	}*/
+}
+
 
 //REST Docs
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
+
 
 
 dependencies {
@@ -32,7 +34,8 @@ dependencies {
 	implementation 'com.google.code.gson:gson:'
 	implementation	'org.springframework.boot:spring-boot-starter-security'
 	implementation	'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation	'org.springframework.boot:spring-boot-starter-thymeleaf'	//test위해 추가
+	implementation	'org.springframework.boot:spring-boot-starter-thymeleaf'
+	testImplementation 'junit:junit:4.13.2'//test위해 추가
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -51,7 +54,11 @@ dependencies {
 	//REST Docs
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	implementation 'org.springframework.restdocs:spring-restdocs-core:2.0.6.RELEASE'
+	/*implementation group: 'org.springframework.restdocs', name: 'spring-restdocs-core', version: '3.0.0'*/
+
 }
+
 
 //------------REST Docs ------------//
 tasks.named('test') {

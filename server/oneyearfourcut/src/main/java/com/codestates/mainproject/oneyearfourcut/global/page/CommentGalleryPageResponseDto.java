@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class GalleryPageResponseDto<T> {
+public class CommentGalleryPageResponseDto<T> {
     private Long galleryId;
     private T commentList;
     private PageInfo pageInfo;

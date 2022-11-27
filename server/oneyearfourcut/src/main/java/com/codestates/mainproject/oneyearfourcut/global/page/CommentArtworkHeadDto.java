@@ -8,5 +8,5 @@ import lombok.Getter;
 public class CommentArtworkHeadDto<T> {
     private Long galleryId;
     private Long artworkId;
-    private T replyList;
+    private T commentList;
 }

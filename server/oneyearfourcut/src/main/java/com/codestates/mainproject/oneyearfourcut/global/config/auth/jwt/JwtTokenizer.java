@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt;
 
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -95,4 +97,23 @@ public class JwtTokenizer {
 
         return key;
     }
+
+    //test용 jwt만드는 메서드
+    public String testJwtGenerator(Member member) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", member.getEmail());
+        claims.put("role", member.getRole());
+        claims.put("id", member.getMemberId());
+
+        String subject = String.valueOf(member.getEmail());
+        Date expiration = getTokenExpiration(getAccessTokenExpirationMinutes());
+        String base64EncodedSecretKey = encodeBase64SecretKey(getSecretKey());
+
+        String accessToken = generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+
+        return "Bearer " + accessToken;
+    }
+
+
+
 }

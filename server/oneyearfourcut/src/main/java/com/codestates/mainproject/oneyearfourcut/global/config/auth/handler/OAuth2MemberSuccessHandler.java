@@ -58,7 +58,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .nickname(nickname)
                 .profile(profile)
                 .role(Role.USER)
-                .memberStatus(MemberStatus.ACTIVE)
+                .status(MemberStatus.ACTIVE)
                 .build();
         memberService.createMember(member);
     }
