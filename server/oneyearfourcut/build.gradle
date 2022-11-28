@@ -58,6 +58,10 @@ dependencies {
 	//REST Docs
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+	// AWS S3 Upload
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
+
 	implementation 'org.springframework.restdocs:spring-restdocs-core:2.0.6.RELEASE'
 	/*implementation group: 'org.springframework.restdocs', name: 'spring-restdocs-core', version: '3.0.0'*/
 

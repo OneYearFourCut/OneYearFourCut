@@ -31,21 +31,19 @@ public class ArtworkController {
 
     // 작품 전체 조회
     @GetMapping("/{gallery-id}/artworks")
-    public ResponseEntity<?> getArtworks(@LoginMember Long memberId,
-                                         @PathVariable("gallery-id") long galleryId) {
+    public ResponseEntity<?> getArtworks(@PathVariable("gallery-id") long galleryId) {
 
-        List<ArtworkResponseDto> response = artworkService.findArtworkList(memberId, galleryId);
+        List<ArtworkResponseDto> response = artworkService.findArtworkList(galleryId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 작품 개별 조회
     @GetMapping("{gallery-id}/artworks/{artwork-id}")
-    public ResponseEntity<?> getArtwork(@LoginMember Long memberId,
-                                        @PathVariable("gallery-id") long galleryId,
+    public ResponseEntity<?> getArtwork(@PathVariable("gallery-id") long galleryId,
                                         @PathVariable("artwork-id") long artworkId) {
 
-        ArtworkResponseDto response = artworkService.findArtwork(memberId, galleryId, artworkId);
+        ArtworkResponseDto response = artworkService.findArtwork(galleryId, artworkId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -63,10 +61,9 @@ public class ArtworkController {
 
     // 올해네컷 조회
     @GetMapping("/{gallery-id}/artworks/like")
-    public ResponseEntity<?> getOneYearFourCut(@LoginMember Long memberId,
-                                               @PathVariable("gallery-id") long galleryId) {
+    public ResponseEntity<?> getOneYearFourCut(@PathVariable("gallery-id") long galleryId) {
 
-        List<OneYearFourCutResponseDto> response = artworkService.findOneYearFourCut(memberId, galleryId);
+        List<OneYearFourCutResponseDto> response = artworkService.findOneYearFourCut(galleryId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 
