@@ -60,6 +60,9 @@ public class Artwork extends Auditable {
         return this.member.getMemberId();
     }
 
+    public int getLikeCount() {
+        return this.getArtworkLikeList().size();
+    }
 
     /* ################### Setter ################### */
     public void setGallery(Gallery gallery) {
@@ -93,7 +96,7 @@ public class Artwork extends Auditable {
     public void modify(Artwork artwork) {
         // ************************* S3 설정 시 이미지 관련 변경 예정 *************************
         Optional.ofNullable(artwork.getImage())
-                .ifPresent(imagePath -> this.imagePath = "/" + imagePath.getOriginalFilename());
+                .ifPresent(image -> this.imagePath = "/" + image.getOriginalFilename());
         Optional.ofNullable(artwork.getTitle())
                 .ifPresent(title -> this.title = title);
         Optional.ofNullable(artwork.getContent())

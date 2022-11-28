@@ -3,10 +3,8 @@ package com.codestates.mainproject.oneyearfourcut.domain.Like.entity;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -16,7 +14,7 @@ import javax.persistence.*;
 public class ArtworkLike extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long voteId;
+    private Long artworkLikeId;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
@@ -42,7 +40,7 @@ public class ArtworkLike extends Auditable {
         artwork.getArtworkLikeList().add(this);
     }
 
-    public ArtworkLike(Long voteId) {
-        this.voteId = voteId;
+    public ArtworkLike(Long artworkLikeId) {
+        this.artworkLikeId = artworkLikeId;
     }
 }

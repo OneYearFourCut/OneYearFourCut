@@ -7,7 +7,6 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberSer
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,17 +19,17 @@ public class ArtworkLikeService {
     private final ArtworkService artworkService;
     private final MemberService memberService;
 
-    public void updateVote(long memberId, long galleryId, long artworkId) {
+    public void updateArtworkLike(long memberId, long galleryId, long artworkId) {
         Member findMember = memberService.findMember(memberId);
         Artwork findArtwork = artworkService.findVerifiedArtwork(galleryId, artworkId);
 
         // 현재 로그인한 회원이 해당 작품(artworkId)에 좋아요를 했나? -> member pk와 artwork pk의 vote가 존재하는지
-        Optional<ArtworkLike> voteOptional = artworkLikeRepository.findByMemberAndArtwork(findMember, findArtwork);
+        Optional<ArtworkLike> likeOptional = artworkLikeRepository.findByMemberAndArtwork(findMember, findArtwork);
 
-        voteOptional.ifPresentOrElse(
-                // vote가 존재한다면 좋아요를 누른 상태이다. -> 좋아요 취소 -> 좋아요 삭제
+        likeOptional.ifPresentOrElse(
+                // like가 존재한다면 좋아요를 누른 상태이다. -> 좋아요 취소 -> 좋아요 삭제
                 artworkLikeRepository::delete,
-                // vote가 존재하지 않는다면 좋아요를 누른 적이 없다. -> 좋아요 등록 -> 좋아요 생성
+                // like가 존재하지 않는다면 좋아요를 누른 적이 없다. -> 좋아요 등록 -> 좋아요 생성
                 () -> {
                     ArtworkLike artworkLike = new ArtworkLike();
                     artworkLike.setMember(findMember);

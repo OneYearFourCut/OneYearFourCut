@@ -17,11 +17,11 @@ public class ArtworkLikeController {
 
     // 좋아요 등록(생성)과 좋아요 취소(수정)가 동시에 이루어지기 때문에 Post -> Put으로 변경했습니다.
     @PutMapping("/galleries/{gallery-id}/artworks/{artwork-id}/likes")
-    public ResponseEntity<?> postVote(@LoginMember Long memberId,
-                                   @PathVariable("gallery-id") Long galleryId,
-                                   @PathVariable("artwork-id") Long artworkId) {
+    public ResponseEntity<?> putArtworkLike(@LoginMember Long memberId,
+                                            @PathVariable("gallery-id") Long galleryId,
+                                            @PathVariable("artwork-id") Long artworkId) {
 
-        artworkLikeService.updateVote(memberId, galleryId, artworkId);
+        artworkLikeService.updateArtworkLike(memberId, galleryId, artworkId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
