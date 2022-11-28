@@ -1,25 +1,25 @@
 import axios from 'axios';
+import { getStoredToken } from 'Intro/hooks/tokenStorage';
+
+let ACCESS_TOKEN = getStoredToken()?.access_token;
 
 //json용도
 const jsonInstance = axios.create({
-  baseURL: 'https://48ce-211-210-144-9.jp.ngrok.io/',
+  baseURL: process.env.REACT_APP_SERVER_URL,
   timeout: 1000,
   headers: {
-    // 'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'any',
+    authorization: ACCESS_TOKEN,
   },
-  // withCredentials: true,
 });
 
 //form-data용도
 const formdataInstance = axios.create({
-
-  baseURL: 'https://3770-211-210-144-9.jp.ngrok.io',
+  baseURL: process.env.REACT_APP_SERVER_URL,
   timeout: 1000,
   headers: {
     'Content-Type': 'multipart/form-data',
-    'ngrok-skip-browser-warning': 'any',
+    authorization: ACCESS_TOKEN,
   },
 });
 

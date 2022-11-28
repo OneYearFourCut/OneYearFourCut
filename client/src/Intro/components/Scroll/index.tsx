@@ -1,7 +1,7 @@
 import * as S from './style';
 import Envelope from '../Envelope';
-import Kakao from '../Kakao';
-import { useEffect, useRef } from 'react';
+import Kakao from '../KakaoBtn';
+import { useRef } from 'react';
 
 const Index = () => {
   const homeRef = useRef<HTMLInputElement>(null);
@@ -17,6 +17,7 @@ const Index = () => {
 
   return (
     <S.Container>
+      <Kakao />
       <Envelope refs={homeRef} />
 
       <S.Box></S.Box>
@@ -31,7 +32,6 @@ const Index = () => {
       <S.Button onClick={onHomeClick}>
         누르면 이동한다고? 진짜 가네 오키
       </S.Button>
-      <Kakao />
     </S.Container>
   );
 };

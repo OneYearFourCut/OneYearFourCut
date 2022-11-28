@@ -1,8 +1,7 @@
-import React from 'react';
 import * as S from './style';
-
 import Camera from 'assets/Icon/camera';
 import { Btn, IconBtn } from 'shared/components/Buttons';
+import { StyledLink } from 'shared/components/LinkButton/style';
 
 const index = () => {
   // api에서 title, content 받아오기
@@ -11,7 +10,9 @@ const index = () => {
       <S.BtnContainer>
         <Btn className='mr'>3D 전시관 보러가기</Btn>
         <IconBtn className='white' icon={<Camera />}>
-          <p>사진 올려주기</p>
+          <StyledLink to='/uploadPicture'>
+            <p>사진 올려주기</p>
+          </StyledLink>
         </IconBtn>
       </S.BtnContainer>
 

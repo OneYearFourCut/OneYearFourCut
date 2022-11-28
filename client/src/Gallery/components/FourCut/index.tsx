@@ -1,5 +1,6 @@
 import * as S from './style';
 import { Btn } from 'shared/components/Buttons';
+import { StyledLink } from 'shared/components/LinkButton/style';
 
 const index = () => {
   return (
@@ -12,8 +13,14 @@ const index = () => {
       </S.FourCut>
 
       <S.BtnContainer>
-        <Btn className='square'>전체 작품 보기</Btn>
-        <Btn className='square white'>나도 전시관 만들기</Btn>
+        <Btn className='square'>
+          <StyledLink to='/allPic' className='white'>
+            전체 작품 보기
+          </StyledLink>
+        </Btn>
+        <Btn className='square white'>
+          <StyledLink to='/'>나도 전시관 만들기</StyledLink>
+        </Btn>
       </S.BtnContainer>
       <div>
         <p>여러분만의 1년이 담긴 전시회도 만들고</p>
