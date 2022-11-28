@@ -1,37 +1,51 @@
 import * as B from './components/AlarmContainer';
 import Alarm from './components/Alarm';
 import Filter from './components/Filter';
+import { useEffect } from 'react';
 import { AlarmStore } from 'store/store';
-const AlarmList = () => {
-  
-  const { alarmIsOpen } = AlarmStore();
+import useHandleIntersection from './hooks/useHandleIntersection';
 
-  let data = [
-    {
-      createAt: '2022-11-21 오전 10:14',
-      title: '작품 댓글 등록',
-      content: 'OO님이 작품 <ㄹㅈ두러ㅏ줃>에 댓글을 등록했습니다.',
-      read: true,
-    },
-    {
-      createAt: '2022-11-15 오전 10:14',
-      title: '전시관 댓글 등록',
-      content:
-        'OO님이 전시관에 댓글을 asdaㄴㅇㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂㅈㄷㄹㄴㅇㄹㄴㅇㄹㄴㅇㄹㄴㅇㄹㄴㅇㄹgsdfgsdfgsdfgsdgfgfgfqweqweq qwerwerwerwqwe dfsdfs sdfsdfsdfsdfqweqweqweqweqweqweqwe ewrwerwerwer q weqweqweqweqw eqw eqweqw',
-      read: false,
-    },
-  ];
+const AlarmList = () => {
+  const { openAlarm, closeAlarm } = AlarmStore();
+  const {
+    isData,
+    alarmListData,
+    target,
+    filter,
+    setFilter,
+    setPage,
+    setAlarmListData,
+    setIsData,
+  } = useHandleIntersection();
+
+  useEffect(() => {
+    openAlarm();
+    window.addEventListener('popstate', closeAlarm);
+
+    return () => {
+      // window.removeEventListener("popstate", closeAlarm);
+    };
+  }, []);
 
   return (
     <>
-      {alarmIsOpen && (
-        <B.DefualtContainer>
-          <Filter />
-          {data.map((data) => (
-            <Alarm data={data}></Alarm>
-          ))}
-        </B.DefualtContainer>
-      )}
+      <B.DefualtContainer>
+        <Filter
+          filter={filter}
+          setFilter={setFilter}
+          setPage={setPage}
+          setAlarmListData={setAlarmListData}
+          setIsData={setIsData}
+        />
+        {alarmListData.map((data) => (
+          <Alarm data={data}></Alarm>
+        ))}
+        {isData && (
+          <B.TriggerBox ref={target}>
+            <div />
+          </B.TriggerBox>
+        )}
+      </B.DefualtContainer>
     </>
   );
 };

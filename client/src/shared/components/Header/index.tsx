@@ -10,14 +10,14 @@ const Header = () => {
     <>
       {target.ProfileModal ? (
         <ModalBackdrop>
-          <Profile></Profile>
+          <Profile />
         </ModalBackdrop>
       ) : (
         <C.HeaderBox>
-          <B.HeaderBackbtn></B.HeaderBackbtn>
+          <B.HeaderBackbtn />
           <h2>올해 네 컷</h2>
-          <B.HeaderBellbtn></B.HeaderBellbtn>
-          <B.HeaderHamburgerbtn></B.HeaderHamburgerbtn>
+          <B.HeaderBellbtn />
+          <B.HeaderHamburgerbtn />
         </C.HeaderBox>
       )}
     </>

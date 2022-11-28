@@ -21,7 +21,7 @@ const ModalStore = create<Modal>((set, get) => ({
     }),
 }));
 
-//알림눌렀을때인데 삭제예정
+// 알림눌렀을때 햄버거와 알람 svg를 삭제를 위함.
 const AlarmStore = create<Alarm>((set) => {
   return {
     alarmIsOpen: false,

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-const FilterBox = styled.div<{isOpen:boolean}>`
+const FilterBox = styled.div<{ isOpen: boolean }>`
   width: ${rem(350)};
   height: ${rem(34)};
   border-bottom: solid 1px ${({ theme }) => theme.colors.black_005};
@@ -11,7 +11,7 @@ const FilterBox = styled.div<{isOpen:boolean}>`
   .DropDownBtn {
     width: ${rem(15)};
     height: ${rem(30)};
-    transform: ${({isOpen}) => isOpen ? 'rotate(270deg)' : 'rotate(90deg)'};
+    transform: ${({ isOpen }) => (isOpen ? 'rotate(270deg)' : 'rotate(90deg)')};
     font-size: ${rem(20)};
     font-weight: 600;
   }
@@ -20,17 +20,21 @@ const FilterListBox = styled.div`
   width: ${rem(350)};
   height: ${rem(100)};
   box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.2);
-  overflow: auto;
   margin-bottom: ${rem(10)};
 
-  &::-webkit-scrollbar{
-    width : ${rem(3)};
+  div {
+    overflow: auto;
+    height: ${rem(100)};
   }
 
-  &::-webkit-scrollbar-thumb{ 
-  background: ${({ theme }) => theme.colors.green_003};
-  border-radius : 2px;
-}
+  & div::-webkit-scrollbar {
+    width: ${rem(3)};
+  }
+
+  & div::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.green_003};
+    border-radius: 2px;
+  }
 
   ul {
     list-style: none;

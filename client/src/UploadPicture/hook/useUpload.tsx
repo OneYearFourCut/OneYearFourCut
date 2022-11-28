@@ -18,8 +18,9 @@ const useUpload = () => {
       onSuccess() {
         setToast(3000, ['작품이 등록되었습니다.', '내 전시관도 만들어보기']);
       },
-      onError() {
+      onError(err) {
         alert('작품 업로드 오류');
+        console.log(err);
       },
     },
   );
