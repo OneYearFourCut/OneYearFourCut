@@ -100,7 +100,7 @@ public class GalleryService {
     //로그인 회원의 갤러리인지 확인하는 로직
     private void isLoginMemberGallery(Gallery findGallery, Long loginId) {
         if (findGallery.getMember().getMemberId() != loginId) {
-            throw new BusinessLogicException(ExceptionCode.NO_AUTHORITY);
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
         }
     }
 }

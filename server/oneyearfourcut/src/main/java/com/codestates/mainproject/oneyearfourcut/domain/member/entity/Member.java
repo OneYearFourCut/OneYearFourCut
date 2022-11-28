@@ -1,20 +1,18 @@
 package com.codestates.mainproject.oneyearfourcut.domain.member.entity;
 
 
+import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alarm;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -29,7 +27,7 @@ public class Member extends Auditable {
     private String nickname;
 
     private String email;
-    
+
     private String profile;
 
     @Enumerated(EnumType.STRING)
@@ -65,7 +63,6 @@ public class Member extends Auditable {
 
     public MemberResponseDto toMemberResponseDto() {
         return MemberResponseDto.builder()
-                .email(this.email)
                 .nickname(this.nickname)
                 .profile(this.profile)
                 .build();

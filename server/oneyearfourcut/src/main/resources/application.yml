@@ -1,5 +1,3 @@
-
-
 server:
   servlet:
     encoding:
@@ -19,7 +17,7 @@ spring:
 
   datasource:
     sql-script-encoding: UTF-8
-    url: jdbc:h2:mem:test
+    url: jdbc:h2:mem:test #;MODE=MySQL #- mysql문법으로 변경하는 설버
     driver-class-name: org.h2.Driver
 
   jpa:
@@ -27,6 +25,7 @@ spring:
       ddl-auto: create  # 스키마 자동 생성
     properties:
       hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect #- mysql문법으로 변경하는 설정
         format_sql: false # 쿼리를 가독성있게 바꿔줌
     show-sql: true      # SQL 쿼리 출력
     defer-datasource-initialization: true

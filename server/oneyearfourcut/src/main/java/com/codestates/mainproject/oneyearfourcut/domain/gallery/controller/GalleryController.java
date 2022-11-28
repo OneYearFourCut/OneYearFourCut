@@ -20,7 +20,6 @@ public class GalleryController {
     @PostMapping
     public ResponseEntity postGallery(@RequestBody GalleryRequestDto galleryRequestDto,
                                       @LoginMember Long memberId) {
-
         GalleryResponseDto galleryResponseDto = galleryService.createGallery(galleryRequestDto, memberId);
 
         return new ResponseEntity<>(galleryResponseDto, HttpStatus.CREATED);
@@ -39,9 +38,9 @@ public class GalleryController {
     public ResponseEntity patchGallery(@RequestBody GalleryRequestDto galleryRequestDto,
                                        @PathVariable("gallery-id") Long galleryId,
                                        @LoginMember Long memberId) {
-
         galleryService.modifyGallery(galleryRequestDto, galleryId, memberId);
-        return new ResponseEntity("갤러리 수정 완료", HttpStatus.OK);
+
+        return new ResponseEntity("전시관 수정 성공", HttpStatus.OK);
     }
 
     //전시관 폐쇄
@@ -50,6 +49,6 @@ public class GalleryController {
                                         @LoginMember Long memberId) {
         galleryService.deleteGallery(galleryId, memberId);
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity("전시관 삭제 성공", HttpStatus.NO_CONTENT);
     }
 }

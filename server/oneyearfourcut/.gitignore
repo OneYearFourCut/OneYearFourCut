@@ -38,3 +38,4 @@ out/
 
 ### Custom ###
 src/main/resources/application-oauth.yml
+.DS_Store

@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public void createMember(Member postMember) {
+    public void createMember(Member postMember) {   //Oauth Kakao 로그인 시 회원가입 진행
         if (!memberRepository.findByEmail(postMember.getEmail()).isPresent()) {
             memberRepository.save(postMember);
         }

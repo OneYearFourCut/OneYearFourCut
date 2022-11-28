@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.global.config.auth;
 
+import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+    private final MemberRepository memberRepository;
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean isLoginMemberAnnotation = parameter.getParameterAnnotation(LoginMember.class) != null;
@@ -22,8 +25,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String credentials = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        PrincipalDto principal = (PrincipalDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return Long.valueOf(credentials);
+        return principal.getId();
     }
 }

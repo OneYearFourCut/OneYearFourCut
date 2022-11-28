@@ -53,7 +53,6 @@ public class Comment extends Auditable {
     }
 
 
-
     public void changeContent(String content) {
         this.content = content;
     }

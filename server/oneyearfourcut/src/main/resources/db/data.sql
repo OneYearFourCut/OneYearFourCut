@@ -40,3 +40,4 @@ INSERT INTO ARTWORK_LIKE (member_id, artwork_id, created_at, last_modified_at) v
 (1, 3, '2022-11-11T23:44:57.764644', '2022-11-16T23:44:57.764644'),
 (2, 3, '2022-11-11T23:45:57.764644', '2022-11-16T23:45:57.764644');
 
+

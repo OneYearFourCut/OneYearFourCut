@@ -13,8 +13,7 @@ public enum ExceptionCode {
     COMMENT_DELETED(400, "이미 삭제된 댓글입니다."),
     UNAUTHORIZED(401, "접근 권한이 없습니다."),
     REPLY_NOT_FOUND_FROM_COMMENT(400, "해당 답글이 댓글에 존재하지 않습니다."),
-    COMMENT_NOT_FOUND_FROM_GALLERY(400, "해당 댓글이 전시관에 존재하지 않습니다." ),
-    NO_AUTHORITY(400, "해당 작업의 권한이 없습니다.");
+    COMMENT_NOT_FOUND_FROM_GALLERY(400, "해당 댓글이 전시관에 존재하지 않습니다." );
 
     @Getter
     private int status;

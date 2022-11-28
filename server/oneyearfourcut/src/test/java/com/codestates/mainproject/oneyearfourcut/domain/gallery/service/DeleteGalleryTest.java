@@ -64,6 +64,6 @@ public class DeleteGalleryTest {
         //then
         assertThatThrownBy(() -> galleryService.deleteGallery(1L, loginId))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ExceptionCode.NO_AUTHORITY.getMessage());
+                .hasMessage(ExceptionCode.UNAUTHORIZED.getMessage());
     }
 }

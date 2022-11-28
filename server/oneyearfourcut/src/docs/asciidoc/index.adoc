@@ -1,0 +1,130 @@
+= 올해 네 컷
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+멤버 전시관 작품 좋아요 댓글 대댓글 알림
+
+***
+== MemberController
+=== 회원 조회
+.curl-request
+include::{snippets}/getMember/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getMember/http-request.adoc[]
+
+.request-headers
+include::{snippets}/getMember/request-headers.adoc[]
+
+.http-response
+include::{snippets}/getMember/http-response.adoc[]
+
+.response-fields
+include::{snippets}/getMember/response-fields.adoc[]
+
+=== 회원 수정
+.curl-request
+include::{snippets}/patchMember/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchMember/http-request.adoc[]
+
+.request-headers
+include::{snippets}/patchMember/request-headers.adoc[]
+
+.request-parts
+include::{snippets}/patchMember/request-parts.adoc[]
+
+.request-parameters
+include::{snippets}/patchMember/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/patchMember/http-response.adoc[]
+
+=== 회원 탈퇴
+.curl-request
+include::{snippets}/deleteMember/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteMember/http-request.adoc[]
+
+.request-headers
+include::{snippets}/deleteMember/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteMember/http-response.adoc[]
+
+***
+== GalleryController
+=== 전시관 등록
+.curl-request
+include::{snippets}/postGallery/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postGallery/http-request.adoc[]
+
+.request-headers
+include::{snippets}/postGallery/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postGallery/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postGallery/http-response.adoc[]
+
+.response-fields
+include::{snippets}/postGallery/response-fields.adoc[]
+
+=== 전시관 조회
+.curl-request
+include::{snippets}/getGallery/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getGallery/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/getGallery/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/getGallery/http-response.adoc[]
+
+.response-fields
+include::{snippets}/getGallery/response-fields.adoc[]
+
+=== 전시관 수정
+.curl-request
+include::{snippets}/patchGallery/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchGallery/http-request.adoc[]
+
+.request-headers
+include::{snippets}/patchGallery/request-headers.adoc[]
+
+.path-parameters
+include::{snippets}/patchGallery/path-parameters.adoc[]
+
+.request-fields
+include::{snippets}/patchGallery/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchGallery/http-response.adoc[]
+
+=== 전시관 삭제
+.curl-request
+include::{snippets}/deleteGallery/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteGallery/http-request.adoc[]
+
+.request-headers
+include::{snippets}/deleteGallery/request-headers.adoc[]
+
+.path-parameters
+include::{snippets}/deleteGallery/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/deleteGallery/http-response.adoc[]

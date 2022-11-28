@@ -138,7 +138,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.commentList.createdAt").value("2022-11-25T11:09:24.94"))
                 .andExpect(jsonPath("$.commentList.modifiedAt").value("2022-11-25T11:09:24.94"))
                 .andExpect(jsonPath("$.commentList.commentId").value(1L))
-                .andExpect(jsonPath("$.commentList.memberId").value(10L))
+                .andExpect(jsonPath("$.commentList.memberId").value(member.getMemberId()))
                 .andExpect(jsonPath("$.commentList.nickname").value("test1"))
                 .andExpect(jsonPath("$.commentList.content").value("댓글입니다"))
                 .andExpect(jsonPath("$.commentList.artworkId").doesNotExist())
@@ -233,7 +233,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.commentList.createdAt").value("2022-11-25T11:09:24.94"))
                 .andExpect(jsonPath("$.commentList.modifiedAt").value("2022-11-25T11:09:24.94"))
                 .andExpect(jsonPath("$.commentList.commentId").value(1L))
-                .andExpect(jsonPath("$.commentList.memberId").value(9L))
+                .andExpect(jsonPath("$.commentList.memberId").value(member.getMemberId()))
                 .andExpect(jsonPath("$.commentList.nickname").value("test1"))
                 .andExpect(jsonPath("$.commentList.content").value("댓글입니다"))
 

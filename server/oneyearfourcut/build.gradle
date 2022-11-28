@@ -15,17 +15,21 @@ repositories {
 
 configurations {
 	asciidoctorExtensions
-	/*compileOnly {
+	compileOnly {
 		extendsFrom annotationProcessor
-	}*/
+	}
 }
 
+
+//배포 설정
+jar {
+	enabled = false
+}
 
 //REST Docs
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
-
 
 
 dependencies {
@@ -57,8 +61,10 @@ dependencies {
 	implementation 'org.springframework.restdocs:spring-restdocs-core:2.0.6.RELEASE'
 	/*implementation group: 'org.springframework.restdocs', name: 'spring-restdocs-core', version: '3.0.0'*/
 
-}
+	//mariadb 드라이버
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client'
 
+}
 
 //------------REST Docs ------------//
 tasks.named('test') {

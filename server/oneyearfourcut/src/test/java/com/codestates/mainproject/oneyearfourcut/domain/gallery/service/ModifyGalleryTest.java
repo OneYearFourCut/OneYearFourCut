@@ -141,6 +141,6 @@ public class ModifyGalleryTest {
         //then
         assertThatThrownBy(() -> galleryService.modifyGallery(galleryRequestDto, 1L, memberId))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ExceptionCode.NO_AUTHORITY.getMessage());
+                .hasMessage(ExceptionCode.UNAUTHORIZED.getMessage());
     }
 }

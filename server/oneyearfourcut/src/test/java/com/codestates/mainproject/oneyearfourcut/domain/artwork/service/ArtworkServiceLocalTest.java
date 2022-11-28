@@ -59,7 +59,7 @@ public class ArtworkServiceLocalTest {
 
         @BeforeEach
         void setUp() throws IOException {
-            MockMultipartFile image = new MockMultipartFile("율무", "율무.jpeg", "image/jpeg", new FileInputStream("/Users/wk/Downloads/율무.jpeg"));
+            MockMultipartFile image = new MockMultipartFile("율무", "율무.jpeg", "image/jpeg", "file".getBytes());
             String title = "제목1";
             String content = "작품에 대한 설명";
             artworkRequestDto = ArtworkRequestDto.builder()
@@ -72,8 +72,8 @@ public class ArtworkServiceLocalTest {
         @Test
         @DisplayName("정상적인 요청")
         void successfulCreateArtwork() {
-            Gallery gallery = Gallery.builder().galleryId(galleyId).artworkList(new ArrayList<>()).status(GalleryStatus.OPEN).build();
-            Member member = Member.builder().memberId(memberId).artworkList(new ArrayList<>()).build();
+            Gallery gallery = new Gallery(galleyId);
+            Member member = new Member(memberId);
             Artwork artwork = artworkRequestDto.toEntity();
 
             artwork.setGallery(gallery);
@@ -95,8 +95,8 @@ public class ArtworkServiceLocalTest {
         Artwork artwork2 = Artwork.builder().artworkId(2L).title("제목2").content("설명2").imagePath("/2.png").build();
         Artwork artwork3 = Artwork.builder().artworkId(3L).title("제목3").content("설명3").imagePath("/3.png").build();
         Artwork artwork4 = Artwork.builder().artworkId(4L).title("제목4").content("설명4").imagePath("/4.png").build();
-        Member loginMember = Member.builder().memberId(loginMemberId).artworkList(new ArrayList<>()).artworkLikeList(new ArrayList<>()).build();
-        Gallery gallery = Gallery.builder().galleryId(galleryId).status(GalleryStatus.OPEN).artworkList(new ArrayList<>()).build();
+        Member loginMember = new Member(loginMemberId);
+        Gallery gallery = new Gallery(galleryId);
         ArtworkLike like1 = new ArtworkLike(1L);
         ArtworkLike like2 = new ArtworkLike(2L);
         ArtworkLike like3 = new ArtworkLike(3L);

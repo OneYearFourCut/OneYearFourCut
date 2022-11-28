@@ -1,7 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.global.config.auth.filter;
 
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
-import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,8 +31,12 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
-        } catch (Exception se) {
+        } catch (SignatureException se) {
             request.setAttribute("exception", se);
+        } catch (ExpiredJwtException ee) {
+            request.setAttribute("exception", ee);
+        } catch (Exception e) {
+            request.setAttribute("exception", e);
         }
         filterChain.doFilter(request, response);
     }
@@ -53,9 +57,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String username = (String) claims.get("username");
-        String id = (String) claims.get("id");
+        Long id = Long.valueOf((Integer) claims.get("id")); //Integer 로 변환 후 저장해야함. id값이 int 범위를 넘어가면 어떻게 하지?
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, id, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

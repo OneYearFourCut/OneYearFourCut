@@ -49,7 +49,6 @@ public class ReplyService {
         return new ReplyListResponseDto<>(commentId, result);
     }
 
-
     //Update
     public ReplyListResponseDto<Object> modifyReply(Long commentId, Long replyId, CommentRequestDto commentRequestDto,Long memberId){
         Reply foundReply = findReply(replyId);
