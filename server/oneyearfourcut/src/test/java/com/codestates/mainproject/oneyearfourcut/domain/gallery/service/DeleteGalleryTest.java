@@ -30,40 +30,37 @@ public class DeleteGalleryTest {
     @Test
     void 폐관_시_상태가_CLOSE로_바뀐다() {
         //given
+        Long memberId = 1L;
+
         Gallery findGallery = Gallery.builder()
                 .status(GalleryStatus.OPEN)
-                .member(new Member(1L))
+                .member(new Member(memberId))
                 .build();
 
-        Long loginId = 1L;
 
-        given(galleryRepository.findById(anyLong()))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
 
         //when
-        galleryService.deleteGallery(1L, loginId);
+        galleryService.deleteGallery(memberId);
 
         //then
         assertThat(findGallery.getStatus()).isEqualTo(GalleryStatus.CLOSED);
     }
 
     @Test
-    void 주인이_아니면_폐관이_안된다() {
+    void 오픈된_전시관이_없으면_예외처리() {
         //given
-        Gallery findGallery = Gallery.builder()
-                .status(GalleryStatus.OPEN)
-                .member(new Member(2L))
-                .build();
+        Long memberId = 1L;
+        Gallery findGallery = null;
 
-        Long loginId = 1L;
-
-        given(galleryRepository.findById(anyLong()))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
 
         //when
         //then
-        assertThatThrownBy(() -> galleryService.deleteGallery(1L, loginId))
+        assertThatThrownBy(() -> galleryService.deleteGallery(memberId))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ExceptionCode.UNAUTHORIZED.getMessage());
+                .hasMessage(ExceptionCode.GALLERY_NOT_FOUND.getMessage());
     }
 }

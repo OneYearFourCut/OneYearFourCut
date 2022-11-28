@@ -185,7 +185,7 @@ class GalleryControllerRestDocsTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                patch("/galleries/{galleryId}", gallery.getGalleryId())
+                patch("/galleries/me")
                         .header("Authorization", jwt)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -202,9 +202,6 @@ class GalleryControllerRestDocsTest {
                                 List.of(
                                         headerWithName("Authorization").description("JWT - Access Token")
                                 )
-                        ),
-                        pathParameters(
-                                parameterWithName("galleryId").description("Gallery 식별자")
                         ),
                         requestFields(
                                 List.of(
@@ -240,7 +237,7 @@ class GalleryControllerRestDocsTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                delete("/galleries/{galleryId}", gallery.getGalleryId())
+                delete("/galleries/me")
                         .header("Authorization", jwt)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -257,9 +254,6 @@ class GalleryControllerRestDocsTest {
                                 List.of(
                                         headerWithName("Authorization").description("JWT - Access Token")
                                 )
-                        ),
-                        pathParameters(
-                                parameterWithName("galleryId").description("Gallery 식별자")
                         )
                 ));
     }

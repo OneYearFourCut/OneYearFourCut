@@ -34,20 +34,18 @@ public class GalleryController {
     }
 
     //전시관 수정
-    @PatchMapping("/{gallery-id}")
+    @PatchMapping("/me")
     public ResponseEntity patchGallery(@RequestBody GalleryRequestDto galleryRequestDto,
-                                       @PathVariable("gallery-id") Long galleryId,
                                        @LoginMember Long memberId) {
-        galleryService.modifyGallery(galleryRequestDto, galleryId, memberId);
+        galleryService.modifyGallery(galleryRequestDto, memberId);
 
         return new ResponseEntity("전시관 수정 성공", HttpStatus.OK);
     }
 
-    //전시관 폐쇄
-    @DeleteMapping("/{gallery-id}")
-    public ResponseEntity deleteGallery(@PathVariable("gallery-id") Long galleryId,
-                                        @LoginMember Long memberId) {
-        galleryService.deleteGallery(galleryId, memberId);
+//    전시관 폐쇄
+    @DeleteMapping("/me")
+    public ResponseEntity deleteGallery(@LoginMember Long memberId) {
+        galleryService.deleteGallery(memberId);
 
         return new ResponseEntity("전시관 삭제 성공", HttpStatus.NO_CONTENT);
     }

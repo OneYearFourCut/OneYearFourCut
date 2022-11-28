@@ -47,13 +47,13 @@ public class ModifyGalleryTest {
                 .content(modifiedContent)
                 .build();
 
-        given(galleryRepository.findById(1L))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(modifiedTitle);
@@ -67,13 +67,13 @@ public class ModifyGalleryTest {
                 .title(modifiedTitle)
                 .build();
 
-        given(galleryRepository.findById(1L))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(modifiedTitle);
@@ -87,13 +87,13 @@ public class ModifyGalleryTest {
                 .content(modifiedContent)
                 .build();
 
-        given(galleryRepository.findById(1L))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
@@ -106,13 +106,13 @@ public class ModifyGalleryTest {
         GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
                 .build();
 
-        given(galleryRepository.findById(1L))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
         given(galleryRepository.save(findGallery))
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, 1L, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
@@ -122,25 +122,20 @@ public class ModifyGalleryTest {
     @Test
     void 주인이_아니면_수정이_안된다() {
         //given
-        Gallery findGallery = Gallery.builder()
-                .status(GalleryStatus.OPEN)
-                .title(title)
-                .content(content)
-                .member(new Member(2L))
-                .build();
+        Gallery findGallery = null;
 
         GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
                 .title(modifiedTitle)
                 .content(modifiedContent)
                 .build();
 
-        given(galleryRepository.findById(1L))
+        given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
 
         //when
         //then
-        assertThatThrownBy(() -> galleryService.modifyGallery(galleryRequestDto, 1L, memberId))
+        assertThatThrownBy(() -> galleryService.modifyGallery(galleryRequestDto, memberId))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ExceptionCode.UNAUTHORIZED.getMessage());
+                .hasMessage(ExceptionCode.GALLERY_NOT_FOUND.getMessage());
     }
 }

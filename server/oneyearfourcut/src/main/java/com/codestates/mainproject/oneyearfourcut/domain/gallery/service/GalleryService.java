@@ -3,6 +3,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
@@ -36,10 +37,8 @@ public class GalleryService {
         return savedGallery.toGalleryResponseDto();
     }
 
-    public GalleryResponseDto modifyGallery(GalleryRequestDto galleryRequestDto, long galleryId, Long loginId) {
-        Gallery findGallery = findGallery(galleryId);
-
-        isLoginMemberGallery(findGallery, loginId);
+    public GalleryResponseDto modifyGallery(GalleryRequestDto galleryRequestDto, Long loginId) {
+        Gallery findGallery = findLoginGallery(loginId);
 
         Optional.ofNullable(galleryRequestDto.getTitle())
                 .ifPresent(findGallery::updateTitle);
@@ -64,10 +63,8 @@ public class GalleryService {
         return findGallery;
     }
 
-    public void deleteGallery(Long galleryId, Long loginId) {
-        Gallery findGallery = findGallery(galleryId);
-
-        isLoginMemberGallery(findGallery, loginId);
+    public void deleteGallery(Long loginId) {
+        Gallery findGallery = findLoginGallery(loginId);
 
         findGallery.updateStatus(CLOSED);
     }
@@ -84,6 +81,14 @@ public class GalleryService {
         if (findGallery.getStatus() == CLOSED) throw new BusinessLogicException(ExceptionCode.CLOSED_GALLERY);
     }
 
+    //로그인 유저의 갤러리를 가져오는 메서드
+    @Transactional(readOnly = true)
+    private Gallery findLoginGallery(Long memberId) {
+        Optional<Gallery> findGallery = galleryRepository.findByMember_MemberIdAndStatus(memberId, OPEN);
+
+        return findGallery.orElseThrow(() -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));
+    }
+
 
     //유저가 전시관을 열 수 있는지 확인하는 메서드(이미 오픈된 전시관을 가지고 있으면 에러)
     private void verifiedMemberCanOpenGallery(Long memberId) {
@@ -97,10 +102,4 @@ public class GalleryService {
                     });
         }
 
-    //로그인 회원의 갤러리인지 확인하는 로직
-    private void isLoginMemberGallery(Gallery findGallery, Long loginId) {
-        if (findGallery.getMember().getMemberId() != loginId) {
-            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-        }
-    }
 }
