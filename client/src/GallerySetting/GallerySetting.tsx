@@ -1,19 +1,25 @@
 import Input from './components/Input';
 import { jsonInstance } from 'shared/utils/axios';
-import { useGalleryData } from './hooks/useGalleryData';
+import { GetGalleryData } from './hooks/useGalleryData';
+import { getGallery, updateGallery, postGallery } from './api';
+import { loginStore } from 'store/store';
 
-const postGallery = (form: { title: string; content: string }) => {
-  // return jsonInstance.post(`/galleries/${galleryId}`, form);
-  // return jsonInstance.post(`/galleries`, form);
-  console.log(form);
-};
+// const postGallery = (form: { title: string; content: string }) => {
+//   // return jsonInstance.post(`/galleries/${galleryId}`, form);
+//   // return jsonInstance.post(`/galleries`, form);
+//   console.log(form);
+// };
 
 const GallerySetting = () => {
+  const { user } = loginStore();
+  const galleryId = user?.galleryId;
+
   const onSubmit = (form: { title: string; content: string }) => {
-    postGallery(form);
+    console.log(form);
+
+    // galleryId !== null ? updateGallery(form) : postGallery(form);
   };
 
-  // console.log(useGalleryData(1));
   return (
     <div>
       <Input onSubmit={onSubmit} />

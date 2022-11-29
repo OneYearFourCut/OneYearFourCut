@@ -43,6 +43,7 @@ const RedirectPage = (): ReactElement => {
     return (
       <>
         <div>{user.nickname}</div>
+        <div>{user.galleryId}</div>
         <img src={user.profile}></img>
       </>
     );
