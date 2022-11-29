@@ -1,4 +1,4 @@
-import { ModalBackdropBox } from './ModalContainer';
+import { ModalBackdropBox, ModalBackdropCloseBox } from './ModalContainer';
 import { ModalStore } from 'store/store';
 import React from 'react';
 
@@ -7,7 +7,12 @@ interface childernProps {
 }
 const ModalBackdrop = ({ children }: childernProps) => {
   const { resetTarget } = ModalStore();
-  return <ModalBackdropBox onClick={resetTarget}>{children}</ModalBackdropBox>;
+  return (
+    <ModalBackdropBox>
+      <ModalBackdropCloseBox onClick={resetTarget} />
+      {children}
+    </ModalBackdropBox>
+  );
 };
 
 export default ModalBackdrop;

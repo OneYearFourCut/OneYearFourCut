@@ -8,22 +8,23 @@ import { ModalStore, UploadStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/components/Alert';
 import { useRef } from 'react';
 import { UploadAlert } from '../../src/shared/components/Modal/AlertData';
-import { useParams } from 'react-router-dom';
+import { loginStore } from 'store/store';
+import type { FormData } from './types';
 
 const UploadPicture = () => {
   const { target, openModal } = ModalStore();
   const { UploadData } = UploadStore();
   const { setToast } = useToast();
-  const { galleryId } = useParams();
+  const { user } = loginStore();
   const { mutate } = useUpload();
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleProgressBtn = () => {
-    const upLoadData = {
+    const upLoadData: FormData = {
       img: UploadData.img!,
       title: UploadData.title,
       content: UploadData.content,
-      galleryId: galleryId!,
+      galleryId: user?.galleryId,
     };
 
     mutate(upLoadData);

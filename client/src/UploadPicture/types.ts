@@ -2,7 +2,7 @@ interface FormData {
   img: File;
   title: string;
   content: string;
-  galleryId: string;
+  galleryId: number | undefined;
 }
 
 export type { FormData };

@@ -8,7 +8,7 @@ const ToastRenderBox = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  z-index: 53;
+  z-index: 55;
   position: absolute;
   top: 5;
 `;

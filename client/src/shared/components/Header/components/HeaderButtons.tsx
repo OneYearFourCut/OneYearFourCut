@@ -49,7 +49,7 @@ const HeaderBellbtn = () => {
               fill='#D99441'
             />
           </svg>
-          {data?.data && <AlarmCheckBox />}
+          {data?.data.readAlarmExist && <AlarmCheckBox />}
         </div>
       )}
     </>

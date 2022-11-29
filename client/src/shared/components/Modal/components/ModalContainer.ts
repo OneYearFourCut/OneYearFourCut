@@ -12,6 +12,18 @@ const ModalBackdropBox = styled.div`
   overflow: hidden;
   ${({ theme }) => theme.flex.center}
 `;
+
+const ModalBackdropCloseBox = styled.div`
+  width: ${rem(428)};
+  height: 100vh;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  overflow: hidden;
+  ${({ theme }) => theme.flex.center}
+`;
+
 //모달창안에 있는 버튼이 들어있는 박스
 const ModalViewBox = styled.div`
   ${({ theme }) => theme.flex.center}
@@ -64,18 +76,21 @@ const HambergurBox = styled.div`
   background-color: ${({ theme }) => theme.colors.black_007};
   margin-left: ${rem(260)};
   animation-name: slide;
-  animation-duration:0.5s;
+  animation-duration: 0.5s;
+  border-top-left-radius: ${rem(15)};
+  border-bottom-left-radius: ${rem(15)};
+
   @keyframes slide {
     from {
       transform: translateX(100%);
     }
-  
+
     to {
       transform: translateX(0%);
     }
-  };
+  }
 
-  h3 {
+  h4 {
     margin-top: ${rem(28)};
     .ModifyNickname {
       margin-left: ${rem(5)};
@@ -84,11 +99,13 @@ const HambergurBox = styled.div`
   ul {
     list-style: none;
     margin-top: ${rem(28)};
+    
   }
 
   ul li {
     font-weight: 600;
     margin-top: ${rem(15)};
+    cursor: pointer;
   }
 
   ulli: hover {
@@ -98,14 +115,13 @@ const HambergurBox = styled.div`
   .Out {
     color: grey;
   }
-  
 `;
 
 const ProfileBox = styled.div`
   width: ${rem(90)};
   height: ${rem(90)};
   margin-top: ${rem(41)};
-  margin-left:${rem(11)};
+  margin-left: ${rem(11)};
   position: relative;
   div {
     width: ${rem(74)};
@@ -125,4 +141,18 @@ const ProfileBox = styled.div`
   }
 `;
 
-export { ModalBackdropBox, ModalViewBox, ModalbtnBox, HambergurBox, ProfileBox };
+const TextBox = styled.textarea`
+  opacity: 0;
+  width: 0;
+  height:0;
+`;
+
+export {
+  ModalBackdropBox,
+  ModalViewBox,
+  ModalbtnBox,
+  HambergurBox,
+  ProfileBox,
+  ModalBackdropCloseBox,
+  TextBox
+};

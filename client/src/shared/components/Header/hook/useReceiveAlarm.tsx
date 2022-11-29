@@ -6,7 +6,6 @@ import apis from '../api';
 const useReceiveAlarm = () => {
   const { alarmIsOpen } = AlarmStore();
   const navigate = useNavigate();
-
   const { data, status, refetch, isStale } = useQuery(
     ['useReceiveAlarm'],
     apis.getCheckAlarm,
