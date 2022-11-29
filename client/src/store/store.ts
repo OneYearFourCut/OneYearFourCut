@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { ModalState, Modal, Alarm, Components, Upload } from './types';
+import { ModalState, Modal, Alarm, Components, Upload, Login } from './types';
 
 //모달
 const initTarget: ModalState = {
@@ -65,4 +65,14 @@ const UploadStore = create<Upload>((set, get) => ({
     }),
   removeData: () => set({ UploadData: { ...initUploadData } }),
 }));
-export { ModalStore, AlarmStore, ToastStore, UploadStore };
+
+const loginStore = create<Login>((set) => ({
+  isLoggedin: false,
+  setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
+
+  user: {},
+  setUser: (data) => set(() => ({ user: data })),
+  setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
+}));
+
+export { ModalStore, AlarmStore, ToastStore, UploadStore, loginStore };

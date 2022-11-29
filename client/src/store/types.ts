@@ -42,3 +42,17 @@ export interface Upload {
   setData: (key: string, data: File | string) => void;
   removeData: () => void;
 }
+
+export interface UserType {
+  nickname?: string;
+  profile?: string;
+  galleryId?: number;
+}
+
+export interface Login {
+  isLoggedin: boolean;
+  setIsLoggedIn: () => void;
+  user: UserType | null;
+  setUser: (data: UserType | undefined) => void;
+  setLoggedOut: () => void;
+}
