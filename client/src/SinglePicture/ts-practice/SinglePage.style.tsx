@@ -39,6 +39,10 @@ const PicZone = styled.div`
 const SinglePic = styled.div`
   width: ${rem(335)} !important;
   height: ${rem(487)};
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
   background-color: ${({ theme }) => theme.colors.black_006};
   border-radius: ${rem(20)};
 
@@ -49,6 +53,12 @@ const SinglePic = styled.div`
   padding: 1rem;
   margin: 0.5rem 0;
   box-shadow: rgba(0, 0, 0, 0.24) 0px ${rem(3)} ${rem(8)};
+
+  /* img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+  } */
 `;
 
 const PrePic = styled.div`

@@ -1,23 +1,34 @@
 import * as S from './Single Comments.style';
-import SingleComment from 'SingleComments'; 
-import COMMENTS_SCRIPT from 'SingleComments/SingleComment/sampledata';
+import SingleComment from './SingleComment/SingleComment';
+import XIcon from 'shared/components/Icons/XIcon';
+
+import CommentStore from 'shared/components/PicFooter/OpenComment';
+
+import useGetSingleComments from './hooks/useGetSingleComments';
 
 const CommentsList = () => {
+  const { setCloseModal, commentCount } = CommentStore();
+  const { data } = useGetSingleComments(1, 1, 1);
+
+  // console.log(data);
   return (
     <S.CommentBody>
       <S.PicTitle>
-        <S.Title>작품제목 훔쳐갈게요 OK</S.Title>
-        <S.CommentCount>댓글 8</S.CommentCount>
+        <S.CommentCount>댓글 {commentCount}</S.CommentCount>
+        <div onClick={() => setCloseModal()}>
+          <XIcon />
+        </div>
       </S.PicTitle>
-      {COMMENTS_SCRIPT.map((el) => {
-        return (
-          <SingleComment
-            nickname={el.NICKNAME}
-            time={el.TIME}
-            comment={el.COMMENT}
-          />
-        );
-      })}
+      {data &&
+        data.data.commentList.map((el: any) => {
+          return (
+            <SingleComment
+              nickname={el.nickname}
+              time={el.createdAt}
+              comment={el.content}
+            />
+          );
+        })}
     </S.CommentBody>
   );
 };

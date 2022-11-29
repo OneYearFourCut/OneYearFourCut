@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
+import useCreateComment from './hooks/useCreateComment';
+import { useRef } from 'react';
 
 const Body = styled.div`
   height: 40%;
@@ -11,7 +13,7 @@ const Body = styled.div`
   position: absolute;
   top: 100vh;
   transform: translateY(-100%);
-  width: inherit;
+  width: ${rem(420)};
   pointer-events: none;
 `;
 
@@ -26,6 +28,9 @@ const InputZone = styled.div`
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.black_007};
   pointer-events: auto;
+
+  display: flex;
+  flex-direction: row;
 `;
 
 const Input = styled.input`
@@ -56,11 +61,23 @@ const SubmitButton = styled.button`
 `;
 
 const CommentInput = () => {
+  const text = useRef<HTMLInputElement>(null);
+
+  const { mutate } = useCreateComment(1, 1);
+
+  const SendComment = () => {
+    if (text.current) {
+      mutate(text.current.value);
+    }
+  };
+
   return (
     <Body>
       <InputZone>
-        <Input />
-        <SubmitButton type='button'>입력</SubmitButton>
+        <Input ref={text} />
+        <SubmitButton type='button' onClick={() => SendComment()}>
+          입력
+        </SubmitButton>
       </InputZone>
     </Body>
   );

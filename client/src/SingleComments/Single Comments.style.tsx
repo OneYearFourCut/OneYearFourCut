@@ -14,6 +14,7 @@ const PicTitle = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: ${rem(24)};
+  color: ${({ theme }) => theme.colors.green_002};
 `;
 
 const Title = styled.div`

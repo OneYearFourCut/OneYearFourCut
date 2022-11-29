@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as S from './PicFoot.style';
 import HeartIcon from '../Icons/heartIcon';
 import CommentIcon from '../Icons/commentIcon';
+import CommentStore from './OpenComment';
 
-const Footer = () => {
+const Footer = ({ like, comment }: { like: number; comment: number }) => {
+  const { setChangeComment, setOpenModal } = CommentStore();
+
+  useEffect(() => {
+    setChangeComment(comment);
+  }, []);
+
   return (
-    <S.PicFooter>
+    <S.PicFooter className='Footer' onClick={setOpenModal}>
       <S.CountZone>
         <HeartIcon />
-        <div>25</div>
+        <div>{like}</div>
       </S.CountZone>
       <S.CountZone>
         <CommentIcon />
-        <div>7</div>
+        <div>{comment}</div>
       </S.CountZone>
     </S.PicFooter>
   );

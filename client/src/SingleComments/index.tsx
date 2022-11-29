@@ -2,24 +2,34 @@ import styled from 'styled-components';
 import CommentsList from './CommentsZone';
 import { rem } from 'polished';
 import CommentInput from './CommentInput';
+// import CommentStore from 'shared/components/PicFooter/OpenComment';
 
 const Body = styled.div`
-  width: ${rem('428px')};
-  /* height: ${rem('926px')}; */
+  width: 100%;
   height: 100vh;
-  /* max-height: ${rem('926px')}; */
-  max-width: ${rem(540)};
   padding-top: 50px;
   overflow-x: hidden;
   overflow-y: scroll;
-  background-color: ${({ theme }) => theme.colors.black_007};
+  background-color: rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  justify-content: end;
 `;
 
-const SingleComment = (props:any) => {
+const RoundBody = styled.div`
+  width: 100%;
+  height: fit-content;
+  background-color: ${({ theme }) => theme.colors.black_007};
+  border-radius: ${rem(30)} ${rem(30)} 0 0;
+`;
+
+const SingleComment = () => {
   return (
     <Body>
-      <CommentsList></CommentsList>
-      <CommentInput></CommentInput>
+      <RoundBody>
+        <CommentsList />
+        <CommentInput />
+      </RoundBody>
     </Body>
   );
 };
