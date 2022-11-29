@@ -2,10 +2,8 @@ package com.codestates.mainproject.oneyearfourcut.domain.alarm.entity;
 
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -22,14 +20,14 @@ public class Alarm extends Auditable {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 12)
+    @Column(length = 16)
     private AlarmType alarmType;
 
     @Column
-    private Long targetPlaceId;
+    private Long artworkId;
 
     @Column
-    private Long byWhomMemberId;
+    private String nickname;
 
     @Column
     private Boolean readCheck;

@@ -2,7 +2,9 @@ package com.codestates.mainproject.oneyearfourcut.domain.like.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.controller.ArtworkLikeController;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.service.ArtworkLikeService;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -13,12 +15,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getResponsePreProcessor;
@@ -54,6 +63,16 @@ public class ArtworkLikeControllerTest {
                     .csrf().disable()
                     .build();
         }
+    }
+
+    @BeforeEach
+    public void setup() {
+        //security context holder
+        String username = "test";
+        long id = 1L;
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Test

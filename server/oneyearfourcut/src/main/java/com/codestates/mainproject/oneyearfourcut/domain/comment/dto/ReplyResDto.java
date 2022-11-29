@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReplyResDto extends Auditable {
+public class ReplyResDto {
     private Long replyId;
     private Long memberId;
     private String nickname;

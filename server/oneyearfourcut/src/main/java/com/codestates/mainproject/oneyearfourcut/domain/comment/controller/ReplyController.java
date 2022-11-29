@@ -30,8 +30,8 @@ public class ReplyController {
 
     //GET (Read) Reply
     @GetMapping("/{comment-id}/replies")
-    public ResponseEntity<Object> getReply(@PathVariable("comment-id") Long commentId, @LoginMember Long memberId) {
-        return new ResponseEntity<>(replyService.getReplyList(commentId, memberId), HttpStatus.CREATED);
+    public ResponseEntity<Object> getReply(@PathVariable("comment-id") Long commentId) {
+        return new ResponseEntity<>(replyService.getReplyList(commentId), HttpStatus.OK);
     }
 
     //PATCH (Update) Reply

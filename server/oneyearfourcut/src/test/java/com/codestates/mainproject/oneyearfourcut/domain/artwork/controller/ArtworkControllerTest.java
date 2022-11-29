@@ -9,7 +9,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkS
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -23,7 +25,12 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.SecurityFilterChain;
@@ -75,6 +82,15 @@ public class ArtworkControllerTest {
         }
     }
 
+    @BeforeEach
+    public void setup() {
+        //security context holder
+        String username = "test";
+        long id = 1L;
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
     @Test
     @WithMockUser(username = "test@gmail.com", password = "0000")
@@ -157,7 +173,7 @@ public class ArtworkControllerTest {
 
         List<ArtworkResponseDto> responseListDto = ArtworkResponseDto.toListResponse(artworkList);
 
-        given(artworkService.findArtworkList(any(Long.class), any(Long.class))).willReturn(responseListDto);
+        given(artworkService.findArtworkList(any(Long.class))).willReturn(responseListDto);
 
         ResultActions actions =
                 mockMvc.perform(
@@ -216,7 +232,7 @@ public class ArtworkControllerTest {
 
         String response = gson.toJson(responseDto);
 
-        given(artworkService.findArtwork(any(Long.class), any(Long.class), any(Long.class))).willReturn(responseDto);
+        given(artworkService.findArtwork(any(Long.class), any(Long.class))).willReturn(responseDto);
 
         ResultActions actions =
                 mockMvc.perform(
@@ -309,7 +325,7 @@ public class ArtworkControllerTest {
 
         List<OneYearFourCutResponseDto> responseListDto = OneYearFourCutResponseDto.toListResponse(artworkList);
 
-        given(artworkService.findOneYearFourCut(any(Long.class), any(Long.class))).willReturn(responseListDto);
+        given(artworkService.findOneYearFourCut(any(Long.class))).willReturn(responseListDto);
 
         ResultActions actions =
                 mockMvc.perform(

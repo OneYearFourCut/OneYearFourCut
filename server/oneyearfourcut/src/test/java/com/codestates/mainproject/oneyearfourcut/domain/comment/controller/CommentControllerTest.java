@@ -7,59 +7,46 @@ import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.service.CommentService;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
 import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
-import com.codestates.mainproject.oneyearfourcut.global.page.CommentArtworkHeadDto;
-import com.codestates.mainproject.oneyearfourcut.global.page.CommentGalleryHeadDto;
-import com.codestates.mainproject.oneyearfourcut.global.page.CommentGalleryPageResponseDto;
-import com.codestates.mainproject.oneyearfourcut.global.page.PageInfo;
+import com.codestates.mainproject.oneyearfourcut.global.page.*;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
 import static com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus.ACTIVE;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getResponsePreProcessor;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,14 +68,13 @@ class CommentControllerTest {
     private CommentRepository commentRepository;
     @MockBean
     private CommentService commentService;
+
     @Autowired
     private Gson gson;
-
 
     @Test
     void testPostCommentOnGallery() throws Exception{
         //given
-        //test전 member 등록  //해당 member jwt 생성
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
                 .email("test1@gmail.com")
@@ -99,8 +85,6 @@ class CommentControllerTest {
         String jwt = jwtTokenizer.testJwtGenerator(member);
         Gallery gallery = galleryRepository.save(new Gallery(1L));
 
-
-        //test하려는 gallery request
         CommentRequestDto requestDto = CommentRequestDto.builder()
                 .content("댓글입니다")
                 .build();
@@ -152,6 +136,8 @@ class CommentControllerTest {
                                         headerWithName("Authorization").description("JWT - Access Token")
                                 )
                         ),
+                                pathParameters(
+                                        parameterWithName("galleryId").description("갤러리 Id")),
                         requestFields(
                                 List.of(
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("댓글 내용")
@@ -166,19 +152,15 @@ class CommentControllerTest {
                                         fieldWithPath("commentList.memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
                                         fieldWithPath("commentList.nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
                                         fieldWithPath("commentList.content").type(JsonFieldType.STRING).description("댓글 내용"),
-                                        fieldWithPath("commentList.artworkId").type(JsonFieldType.NULL).description("작품 ID")
+                                        fieldWithPath("commentList.artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional()
                                 )
                         )
                 )
                 );
-
-
     }
-
     @Test
     void testPostCommentOnArtwork() throws Exception {
         //given
-        //test전 member 등록  //해당 member jwt 생성
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
                 .email("test1@gmail.com")
@@ -189,8 +171,6 @@ class CommentControllerTest {
         String jwt = jwtTokenizer.testJwtGenerator(member);
         Gallery gallery = galleryRepository.save(new Gallery(1L));
 
-
-        //test하려는 gallery request
         CommentRequestDto requestDto = CommentRequestDto.builder()
                 .content("댓글입니다")
                 .build();
@@ -246,7 +226,11 @@ class CommentControllerTest {
                                 List.of(
                                         headerWithName("Authorization").description("JWT - Access Token")
                                 )
-                        ),
+                        )
+                                ,pathParameters(
+                                        parameterWithName("galleryId").description("갤러리 Id"),
+                                        parameterWithName("artworkId").description("작품 Id")),
+
                         requestFields(
                                 List.of(
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("댓글 내용")
@@ -269,11 +253,210 @@ class CommentControllerTest {
                 );
 
     }
-
     @Test
     void testGetGalleryComment() throws Exception{
         //given
-        //test전 member 등록  //해당 member jwt 생성
+        Member member = memberRepository.save(Member.builder()
+                .nickname("test1")
+                .email("test1@gmail.com")
+                .role(Role.USER)
+                .profile("/path")
+                .status(ACTIVE)
+                .build());
+
+        Gallery gallery = galleryRepository.save(Gallery.builder()
+                .title("나의 전시관")
+                .content("안녕하세요")
+                .member(member)
+                .status(GalleryStatus.OPEN)
+                .build());
+
+        int page = 1; int size = 10;
+        PageRequest pr = PageRequest.of(page - 1, size);
+        Page<Comment> commentPage = commentRepository.findAllByCommentStatusAndGallery_GalleryIdOrderByCommentIdDesc(VALID,1L, pr);
+
+        given(this.commentService.findCommentByPage(
+                Mockito.any( gallery.getGalleryId().getClass() ),
+                Mockito.any(),
+                eq(page),
+                eq(size)))
+                .willReturn(commentPage);
+
+        Page<Comment> commentPage1 = commentService.findCommentByPage(1L, null, page, size);
+        List<Comment> commentList = commentPage1.getContent();
+        PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage1.getTotalElements(), commentPage1.getTotalPages());
+        List<CommentGalleryResDto> response = CommentGalleryResDto.toCommentGalleryResponseDtoList(commentList);
+
+        given(this.commentService.getGalleryCommentPage(
+                Mockito.any( gallery.getGalleryId().getClass() ),
+                eq(page),
+                eq(size)))
+                .willReturn(new CommentGalleryPageResponseDto<>(gallery.getGalleryId(),response,pageInfo));
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/galleries/{galleryId}/comments",
+                               gallery.getGalleryId())
+                        .param("page", String.valueOf(1))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                /*.with(csrf())*/
+        );
+        commentService.getGalleryCommentPage(gallery.getGalleryId(),1,10);
+
+        //then
+        actions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.galleryId").value( gallery.getGalleryId()))
+                .andExpect(jsonPath("$.commentList[0].createdAt").value("2022-11-14T23:41:52.764644"))
+                .andExpect(jsonPath("$.commentList[0].modifiedAt").value("2022-11-16T23:41:57.764644"))
+                .andExpect(jsonPath("$.commentList[0].commentId").value(4L))
+                .andExpect(jsonPath("$.commentList[0].memberId").value(4L))
+                .andExpect(jsonPath("$.commentList[0].nickname").value("replyPerson"))
+                .andExpect(jsonPath("$.commentList[0].content").value("comment444"))
+                .andExpect(jsonPath("$.commentList[0].artworkId").doesNotExist())
+
+                .andExpect(jsonPath("$.commentList[1].createdAt").value("2022-11-12T23:41:58.764644"))
+                .andExpect(jsonPath("$.commentList[1].modifiedAt").value("2022-11-16T23:41:57.764644"))
+                .andExpect(jsonPath("$.commentList[1].commentId").value(2L))
+                .andExpect(jsonPath("$.commentList[1].memberId").value(1L))
+                .andExpect(jsonPath("$.commentList[1].nickname").value("galleryPerson"))
+                .andExpect(jsonPath("$.commentList[1].content").value("comment2"))
+                .andExpect(jsonPath("$.commentList[1].artworkId").value(2L))
+
+                .andExpect(jsonPath("$.pageInfo.page").value("1"))
+                .andExpect(jsonPath("$.pageInfo.size").value("10"))
+                .andExpect(jsonPath("$.pageInfo.totalElements").value("3"))
+                .andExpect(jsonPath("$.pageInfo.totalPages").value("1"))
+
+
+                .andDo(document(
+                                "getCommentOnGallery",
+                                getRequestPreProcessor(),
+                                getResponsePreProcessor(),
+                                requestParameters(parameterWithName("page").description("페이지 수")
+                        )
+                        ,pathParameters(
+                                parameterWithName("galleryId").description("갤러리 Id"))
+                                , responseFields(
+                                        List.of(
+                                                fieldWithPath("galleryId").type(JsonFieldType.NUMBER).description("전시관 ID"),
+                                                fieldWithPath("commentList[].createdAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("commentList[].modifiedAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("commentList[].commentId").type(JsonFieldType.NUMBER).description("댓글 ID"),
+                                                fieldWithPath("commentList[].memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                                                fieldWithPath("commentList[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
+                                                fieldWithPath("commentList[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                                                fieldWithPath("commentList[].artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional(),
+
+                                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현 페이지 위치"),
+                                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 내용 크기"),
+                                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 댓글 수"),
+                                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+                                        )
+                                )
+                        )
+                );
+    }
+    @Test
+    void testGetArtworkComment() throws Exception {
+        //given
+        Member member = memberRepository.save(Member.builder()
+                .nickname("test1")
+                .email("test1@gmail.com")
+                .role(Role.USER)
+                .profile("/path")
+                .status(ACTIVE)
+                .build());
+
+        Gallery gallery = galleryRepository.save(Gallery.builder()
+                .title("나의 전시관")
+                .content("안녕하세요")
+                .member(member)
+                .status(GalleryStatus.OPEN)
+                .build());
+
+        int page = 1; int size = 10; Long artworkId = 1L;
+        PageRequest pr = PageRequest.of(page - 1, size);
+        Page<Comment> commentPage = commentRepository.findAllByCommentStatusAndArtworkIdOrderByCommentIdDesc(VALID,1L, pr);
+
+        given(this.commentService.findCommentByPage(
+                Mockito.any( gallery.getGalleryId().getClass() ),
+                Mockito.any(),
+                eq(page),
+                eq(size)))
+                .willReturn(commentPage);
+
+        Page<Comment> commentPage1 = commentService.findCommentByPage(1L, 1L, page, size);
+        List<Comment> commentList = commentPage1.getContent();
+        PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage1.getTotalElements(), commentPage1.getTotalPages());
+        List<CommentArtworkResDto> response = CommentArtworkResDto.toCommentArtworkResponseDtoList(commentList);
+
+        given(this.commentService.getArtworkCommentPage(
+                Mockito.any( gallery.getGalleryId().getClass() ), eq(artworkId),
+                eq(page),
+                eq(size)))
+                .willReturn(new CommentArtworkPageResponseDto<>(gallery.getGalleryId(), 1L ,response,pageInfo));
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/galleries/{galleryId}/artworks/{artworkId}/comments",
+                                gallery.getGalleryId(), 1L)
+                        .param("page", String.valueOf(1))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                /*.with(csrf())*/
+        );
+        commentService.getArtworkCommentPage(gallery.getGalleryId(), 1L,1,10);
+
+        //then
+        actions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.galleryId").value( gallery.getGalleryId()))
+                .andExpect(jsonPath("$.artworkId").value( 1L ))
+                .andExpect(jsonPath("$.commentList[0].commentId").value(1L))
+                .andExpect(jsonPath("$.commentList[0].memberId").value(1L))
+                .andExpect(jsonPath("$.commentList[0].nickname").value("galleryPerson"))
+                .andExpect(jsonPath("$.commentList[0].content").value("comment1댓글대스"))
+
+                .andExpect(jsonPath("$.pageInfo.page").value("1"))
+                .andExpect(jsonPath("$.pageInfo.size").value("10"))
+                .andExpect(jsonPath("$.pageInfo.totalElements").value("1"))
+                .andExpect(jsonPath("$.pageInfo.totalPages").value("1"))
+
+
+                .andDo(document(
+                                "getCommentOnArtwork",
+                                getRequestPreProcessor(),
+                                getResponsePreProcessor(),
+                                requestParameters(parameterWithName("page").description("페이지 수")
+                                )
+                                ,pathParameters(
+                                        parameterWithName("galleryId").description("갤러리 Id"),
+                                parameterWithName("artworkId").description("작품 Id"))
+                                , responseFields(
+                                        List.of(
+                                                fieldWithPath("galleryId").type(JsonFieldType.NUMBER).description("전시관 ID"),
+                                                fieldWithPath("artworkId").type(JsonFieldType.NUMBER).description("작품 ID"),
+                                                fieldWithPath("commentList[].createdAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("commentList[].modifiedAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("commentList[].commentId").type(JsonFieldType.NUMBER).description("댓글 ID"),
+                                                fieldWithPath("commentList[].memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                                                fieldWithPath("commentList[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
+                                                fieldWithPath("commentList[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+
+                                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현 페이지 위치"),
+                                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 내용 크기"),
+                                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 댓글 수"),
+                                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+                                        )
+                                )
+                        )
+                );
+    }
+    @Test
+    void testPatchComment() throws Exception {
+        //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
                 .email("test1@gmail.com")
@@ -282,81 +465,161 @@ class CommentControllerTest {
                 .status(ACTIVE)
                 .build());
         String jwt = jwtTokenizer.testJwtGenerator(member);
-        Gallery gallery = galleryRepository.save(new Gallery(1L));
 
-        Comment comment1 = commentRepository.save(Comment.builder()
-                .commentId(1L)
-                .content("댓글1")
+        Gallery gallery = galleryRepository.save(Gallery.builder()
+                .title("나의 전시관")
+                .content("안녕하세요")
+                .member(member)
+                .status(GalleryStatus.OPEN)
+                .build());
+
+        Comment comment = commentRepository.save(Comment.builder()
+                .commentId(5L)
+                .content("오리지널댓글")
                 .member(member)
                 .gallery(gallery)
                 .artworkId(null)
                 .commentStatus(CommentStatus.VALID)
                 .build());
 
-        Comment comment2 = commentRepository.save(Comment.builder()
-                .commentId(2L)
-                .content("댓글2")
+        CommentRequestDto requestDto = CommentRequestDto.builder()
+                .content("수정댓글입니다.")
+                .build();
+        String gsonContent = gson.toJson(requestDto);
+
+        Long commentId = 5L;
+
+        given(this.commentService.findComment(commentId)).willReturn(comment);
+
+        Optional<Comment> foundComment = commentRepository.findById(commentId);
+
+        CommentGalleryResDto responseDto = CommentGalleryResDto.builder()
+                .createdAt(LocalDateTime.parse("2022-11-25T11:09:24.940"))
+                .modifiedAt(LocalDateTime.parse("2022-11-25T11:09:24.940"))
+                .commentId(5L)
+                .memberId(member.getMemberId())
+                .nickname(member.getNickname())
+                .content(requestDto.getContent())
+                .artworkId(null)
+                .build();
+
+        given(this.commentService.modifyComment(Mockito.any( gallery.getGalleryId().getClass()),
+                eq(commentId),
+                Mockito.any( requestDto.getClass() ),
+                Mockito.any( member.getMemberId().getClass() )))
+                .willReturn(new CommentGalleryHeadDto<>( gallery.getGalleryId() , responseDto));
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                RestDocumentationRequestBuilders
+                        .patch("/galleries/{galleryId}/comments/{commentId}",
+                                gallery.getGalleryId(), comment.getCommentId())
+                        .header("Authorization", jwt)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gsonContent)
+                /*.with(csrf())*/
+        );
+        commentService.modifyComment(3L,5L, requestDto, member.getMemberId());
+
+        //then
+        actions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.galleryId").value( gallery.getGalleryId()))
+                .andExpect(jsonPath("$.commentList.commentId").value( 5L ))
+                .andExpect(jsonPath("$.commentList.memberId").value(member.getMemberId()))
+                .andExpect(jsonPath("$.commentList.nickname").value("test1"))
+                .andExpect(jsonPath("$.commentList.content").value("수정댓글입니다."))
+                .andExpect(jsonPath("$.commentList.artworkId").doesNotExist())
+
+                .andDo(document(
+                                "patchComment",
+                                getRequestPreProcessor(),
+                                getResponsePreProcessor(),
+                                requestHeaders(
+                                        List.of(
+                                                headerWithName("Authorization").description("JWT - Access Token")
+                                        )
+                                ),
+                                pathParameters(
+                                        parameterWithName("galleryId").description("갤러리 Id"),
+                                        parameterWithName("commentId").description("댓글 Id")),
+                                requestFields(
+                                        List.of(
+                                                fieldWithPath("content").type(JsonFieldType.STRING).description("댓글 내용")
+                                        )
+                                )
+                                , responseFields(
+                                        List.of(
+                                                fieldWithPath("galleryId").type(JsonFieldType.NUMBER).description("전시관 ID"),
+                                                fieldWithPath("commentList.createdAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("commentList.modifiedAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("commentList.commentId").type(JsonFieldType.NUMBER).description("댓글 ID"),
+                                                fieldWithPath("commentList.memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                                                fieldWithPath("commentList.nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
+                                                fieldWithPath("commentList.content").type(JsonFieldType.STRING).description("댓글 내용"),
+                                                fieldWithPath("commentList.artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional()
+                                        )
+                                )
+                        )
+                );
+    }
+    @Test
+    void testDeleteComment() throws Exception{
+        //given
+        Member member = memberRepository.save(Member.builder()
+                .nickname("test1")
+                .email("test1@gmail.com")
+                .role(Role.USER)
+                .profile("/path")
+                .status(ACTIVE)
+                .build());
+        String jwt = jwtTokenizer.testJwtGenerator(member);
+
+        Gallery gallery = galleryRepository.save(Gallery.builder()
+                .title("나의 전시관")
+                .content("안녕하세요")
+                .member(member)
+                .status(GalleryStatus.OPEN)
+                .build());
+
+        Comment comment = commentRepository.save(Comment.builder()
+                .commentId(6L)
+                .content("댓글")
                 .member(member)
                 .gallery(gallery)
                 .artworkId(1L)
                 .commentStatus(CommentStatus.VALID)
                 .build());
 
-        int page = 1; int size = 10;
-        PageRequest pr = PageRequest.of(page - 1, size);
+        //when
+        ResultActions actions = mockMvc.perform(
+                RestDocumentationRequestBuilders
+                        .delete("/galleries/{galleryId}/comments/{commentId}",
+                                gallery.getGalleryId(), comment.getCommentId())
+                        .header("Authorization", jwt)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                /*.with(csrf())*/
+        );
 
-        given(this.commentService.findCommentByPage(
-                Mockito.any( gallery.getGalleryId().getClass() ),
-                Mockito.any(),
-                eq(page),
-                eq(size)))
-                .willReturn(
-                commentRepository.findAllByCommentStatusAndGallery_GalleryIdOrderByCommentIdDesc(VALID,1L, pr));
+        //then
+        actions.andExpect(status().isNoContent())
+                .andDo(document(
+                        "deleteComment",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestHeaders(
+                                List.of(
+                                        headerWithName("Authorization").description("JWT - Access Token")
+                                )
+                        ),
+                        pathParameters(
+                                parameterWithName("galleryId").description("갤러리 Id"),
+                                parameterWithName("commentId").description("댓글 Id"))
+                        )
 
-        Page<Comment> commentPage = commentService.findCommentByPage(1L, null, page, size);
-        List<Comment> commentList = commentPage.getContent();
-        PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
-
-        given(this.commentService.getGalleryCommentPage(
-                Mockito.any( gallery.getGalleryId().getClass() ),
-                eq(page),
-                eq(size),
-                Mockito.any( member.getMemberId().getClass() )))
-                .willReturn(new CommentGalleryPageResponseDto<>(gallery.getGalleryId(),commentList,pageInfo));
-
-
-        //test하려는 gallery request
-
-        /*CommentArtworkResDto responseDto = CommentArtworkResDto.builder()
-                .createdAt(LocalDateTime.parse("2022-11-25T11:09:24.940"))
-                .modifiedAt(LocalDateTime.parse("2022-11-25T11:09:24.940"))
-                .commentId(1L)
-                .memberId(member.getMemberId())
-                .nickname(member.getNickname())
-                .content(requestDto.getContent())
-                .build();*/
-
-
-
-
-
-
+                );
 
     }
-
-    @Test
-    void getArtworkComment() {
-    }
-
-    @Test
-    void patchComment() {
-    }
-
-    @Test
-    void deleteComment() {
-    }
-
-
-
 
 }

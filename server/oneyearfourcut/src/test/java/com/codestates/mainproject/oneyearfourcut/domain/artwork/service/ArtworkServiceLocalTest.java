@@ -1,3 +1,4 @@
+/*
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
@@ -198,3 +199,4 @@ public class ArtworkServiceLocalTest {
         }
     }
 }
+*/

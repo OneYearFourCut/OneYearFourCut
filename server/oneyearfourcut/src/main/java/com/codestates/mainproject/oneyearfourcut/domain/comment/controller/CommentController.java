@@ -44,18 +44,16 @@ public class CommentController {
     //GET (Read) Comment on Gallery (with pagination)
     @GetMapping("/{gallery-id}/comments")
     public ResponseEntity<Object> getGalleryComment(@PathVariable("gallery-id") Long galleryId,
-                                                    @RequestParam int page/*, @RequestParam int size*/,
-                                                    @LoginMember Long memberId){
-        return new ResponseEntity<>(commentService.getGalleryCommentPage(galleryId, page, 10, memberId), HttpStatus.OK);
+                                                    @RequestParam int page/*, @RequestParam int size*/){
+        return new ResponseEntity<>(commentService.getGalleryCommentPage(galleryId, page, 10), HttpStatus.OK);
     }
 
     //GET (Read) Comment on Artwork (with pagination)
     @GetMapping("/{gallery-id}/artworks/{artwork-id}/comments")
     public ResponseEntity<Object> getArtworkComment(@PathVariable("gallery-id") Long galleryId,
-                                                      @PathVariable("artwork-id") Long artworkId,
-                                                      @RequestParam int page/*, @RequestParam int size*/,
-                                                    @LoginMember Long memberId) {
-        return new ResponseEntity<>(commentService.getArtworkCommentPage(galleryId, artworkId, page, 10, memberId), HttpStatus.OK);
+                                                    @PathVariable("artwork-id") Long artworkId,
+                                                    @RequestParam int page/*, @RequestParam int size*/) {
+        return new ResponseEntity<>(commentService.getArtworkCommentPage(galleryId, artworkId, page, 10), HttpStatus.OK);
     }
 
     //PATCH (Update) Comment

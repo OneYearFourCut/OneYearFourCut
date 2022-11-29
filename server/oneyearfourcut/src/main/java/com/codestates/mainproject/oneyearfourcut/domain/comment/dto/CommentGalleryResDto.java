@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentGalleryResDto extends Auditable {
+public class CommentGalleryResDto{
     private Long commentId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -23,14 +24,10 @@ public class CommentGalleryResDto extends Auditable {
     private String content;
     private Long artworkId; //NULL possible
 
-    public static List<CommentGalleryResDto> toCommentGalleryResponseDtoList(List<Comment> commentList){
-        if(commentList == null){ return Collections.emptyList(); }
-        List<CommentGalleryResDto> resultList = new ArrayList<>( commentList.size() );
-        for ( Comment comment : commentList ) {
-            resultList.add( comment.toCommentGalleryResponseDto( ) );
-        }
-        return resultList;
+    public static List<CommentGalleryResDto>toCommentGalleryResponseDtoList(List<Comment> commentList){
+        return commentList == null ? Collections.emptyList() : commentList
+                                                .stream()
+                                                .map(Comment::toCommentGalleryResponseDto)
+                                                .collect(Collectors.toList());
     }
-
-
 }
