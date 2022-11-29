@@ -6,6 +6,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alarm;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
@@ -62,9 +63,17 @@ public class Member extends Auditable {
     }
 
     public MemberResponseDto toMemberResponseDto() {
+        List<Gallery> galleries = this.getGalleryList();
+        Long galleryId = null;
+        for (Gallery gallery : galleries) {
+            if (gallery.getStatus() == GalleryStatus.OPEN) {
+                galleryId = gallery.getGalleryId();
+            }
+        }
         return MemberResponseDto.builder()
                 .nickname(this.nickname)
                 .profile(this.profile)
+                .galleryId(galleryId)
                 .build();
     }
 

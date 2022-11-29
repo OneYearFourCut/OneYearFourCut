@@ -77,16 +77,6 @@ public class ArtworkLikeControllerTest {
         }
     }
 
-    @BeforeEach
-    public void setup() {
-        //security context holder
-        String username = "test";
-        long id = 1L;
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
     @Test
     @WithMockUser(password = "0000")
     void putArtworkLikeTest() throws Exception {

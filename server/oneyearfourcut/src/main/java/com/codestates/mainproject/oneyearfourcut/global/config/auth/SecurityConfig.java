@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -54,12 +55,15 @@ public class SecurityConfig {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-//                        .antMatchers(HttpMethod.PATCH, "/members/me").hasRole("USER")
-//                        .antMatchers(HttpMethod.DELETE, "/members/me").hasRole("USER")
-//                        .antMatchers(HttpMethod.POST, "/galleries").hasRole("USER")
-//                        .antMatchers(HttpMethod.PATCH, "/galleries/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/galleries/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/").permitAll()
+                        .antMatchers(HttpMethod.GET, "/receive-token").permitAll()
+                        .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
+                        .antMatchers("/h2/**").permitAll()
+//                        .antMatchers("/members/**").hasRole("USER")
+//                        .antMatchers("/galleries/**").hasRole("USER")
 //                        .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
-                        .anyRequest().permitAll() //일단 모두 허용
+                        .anyRequest().hasRole("USER")
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, memberService)));

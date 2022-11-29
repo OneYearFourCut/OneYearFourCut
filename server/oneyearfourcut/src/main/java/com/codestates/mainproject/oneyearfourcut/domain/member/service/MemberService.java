@@ -5,11 +5,13 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberRespons
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
+import com.codestates.mainproject.oneyearfourcut.global.aws.service.AwsS3Service;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final AwsS3Service awsS3Service;
 
     public void createMember(Member postMember) {   //Oauth Kakao 로그인 시 회원가입 진행
         if (!memberRepository.findByEmail(postMember.getEmail()).isPresent()) {
@@ -30,10 +33,17 @@ public class MemberService {
 
         Optional.ofNullable(memberRequestDto.getNickname())
                         .ifPresent(findMember::updateNickname);
+        Optional<MultipartFile> multipartFile = Optional.ofNullable(memberRequestDto.getProfile());
 
-        if (!memberRequestDto.getProfile().isEmpty()) {
+        if (multipartFile.isPresent() && !multipartFile.get().isEmpty()) {
             //이미지 저장하고, 해당 경로를 findMember에 넣어주는 로직
+            String profile = findMember.getProfile();
+            findMember.setProfile(awsS3Service.uploadFile(multipartFile.get()));
+            if (!profile.contains("kakaocdn.net")) {
+                awsS3Service.deleteImage(profile);
+            }
         }
+
 
         Member savedMember = memberRepository.save(findMember);
 

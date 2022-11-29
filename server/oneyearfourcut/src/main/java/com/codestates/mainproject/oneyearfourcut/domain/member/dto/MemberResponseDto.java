@@ -8,4 +8,5 @@ import lombok.Getter;
 public class MemberResponseDto {
     private String nickname;
     private String profile;
+    private Long galleryId;
 }

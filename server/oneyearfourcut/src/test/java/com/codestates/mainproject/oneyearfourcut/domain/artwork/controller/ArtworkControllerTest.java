@@ -175,7 +175,7 @@ public class ArtworkControllerTest {
 
         List<ArtworkResponseDto> responseListDto = ArtworkResponseDto.toListResponse(artworkList);
 
-        given(artworkService.findArtworkList(any(Long.class))).willReturn(responseListDto);
+        given(artworkService.findArtworkList(any(Long.class), any(Long.class))).willReturn(responseListDto);
 
         ResultActions actions =
                 mockMvc.perform(
@@ -234,7 +234,7 @@ public class ArtworkControllerTest {
 
         String response = gson.toJson(responseDto);
 
-        given(artworkService.findArtwork(any(Long.class), any(Long.class))).willReturn(responseDto);
+        given(artworkService.findArtwork(any(Long.class), any(Long.class), any(Long.class))).willReturn(responseDto);
 
         ResultActions actions =
                 mockMvc.perform(

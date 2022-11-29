@@ -124,8 +124,8 @@ public class ArtworkService {
         Optional<MultipartFile> image = Optional.ofNullable(artwork.getImage());
 
         if (image.isPresent()) {
-            awsS3Service.deleteImage(findArtwork.getImagePath());
             String s3Path = awsS3Service.uploadFile(image.get());
+            awsS3Service.deleteImage(findArtwork.getImagePath());
             artwork.setImagePath(s3Path);
         }
 
