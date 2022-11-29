@@ -1,11 +1,13 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
+import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -58,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ArtworkController.class)
-@MockBean({JpaMetamodelMappingContext.class, ClientRegistrationRepository.class})
+@MockBean({JpaMetamodelMappingContext.class, ClientRegistrationRepository.class, MemberRepository.class})
 @AutoConfigureRestDocs
 public class ArtworkControllerTest {
 
@@ -107,10 +109,10 @@ public class ArtworkControllerTest {
         String title = "올해 네 컷 - D25";
         String content = "화이팅!";
 
-        ArtworkRequestDto requestDto = ArtworkRequestDto.builder().image(image).title(title).content(content).build();
+        ArtworkPostDto requestDto = ArtworkPostDto.builder().image(image).title(title).content(content).build();
         String request = gson.toJson(requestDto);
 
-        willDoNothing().given(artworkService).createArtwork(memberId, galleryId, requestDto);
+        willDoNothing().given(artworkService).createArtwork(any(Long.class), any(Long.class), any(ArtworkPostDto.class));
 
         ResultActions actions =
                 mockMvc.perform(
@@ -188,7 +190,7 @@ public class ArtworkControllerTest {
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("JWT - Access Token")
+                                        headerWithName("Authorization").description("JWT - Access Token").optional()
                                 ),
                                 pathParameters(
                                         parameterWithName("gallery-id").description("전시관 식별자")
@@ -256,7 +258,7 @@ public class ArtworkControllerTest {
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("JWT - Access Token")
+                                        headerWithName("Authorization").description("JWT - Access Token").optional()
                                 ),
                                 pathParameters(
                                         parameterWithName("gallery-id").description("전시관 식별자"),
@@ -377,14 +379,14 @@ public class ArtworkControllerTest {
         artwork.setMember(member);
         artwork.setGallery(gallery);
 
-        ArtworkRequestDto requestDto = ArtworkRequestDto.builder().image(image).title(title).content(content).build();
+        ArtworkPostDto requestDto = ArtworkPostDto.builder().image(image).title(title).content(content).build();
         Artwork modifyArtwork = requestDto.toEntity();
 
         artwork.modify(modifyArtwork);
 
         ArtworkResponseDto response = artwork.toArtworkResponseDto();
 
-        given(artworkService.updateArtwork(any(Long.class), any(Long.class), any(Long.class), any(ArtworkRequestDto.class))).willReturn(response);
+        given(artworkService.updateArtwork(any(Long.class), any(Long.class), any(Long.class), any(ArtworkPatchDto.class))).willReturn(response);
 
         MockMultipartHttpServletRequestBuilder builder =
                 RestDocumentationRequestBuilders.

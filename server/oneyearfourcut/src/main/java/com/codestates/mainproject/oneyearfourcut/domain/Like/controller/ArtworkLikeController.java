@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Positive;
+
 @RestController
 @RequiredArgsConstructor
 public class ArtworkLikeController {
@@ -18,8 +20,8 @@ public class ArtworkLikeController {
     // 좋아요 등록(생성)과 좋아요 취소(수정)가 동시에 이루어지기 때문에 Post -> Put으로 변경했습니다.
     @PutMapping("/galleries/{gallery-id}/artworks/{artwork-id}/likes")
     public ResponseEntity<?> putArtworkLike(@LoginMember Long memberId,
-                                            @PathVariable("gallery-id") Long galleryId,
-                                            @PathVariable("artwork-id") Long artworkId) {
+                                            @Positive @PathVariable("gallery-id") Long galleryId,
+                                            @Positive @PathVariable("artwork-id") Long artworkId) {
 
         artworkLikeService.updateArtworkLike(memberId, galleryId, artworkId);
 

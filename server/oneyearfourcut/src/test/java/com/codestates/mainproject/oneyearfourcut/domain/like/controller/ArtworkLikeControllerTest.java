@@ -2,6 +2,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.like.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.controller.ArtworkLikeController;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.service.ArtworkLikeService;
+import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ArtworkLikeController.class)
-@MockBean({JpaMetamodelMappingContext.class, ClientRegistrationRepository.class})
+@MockBean({JpaMetamodelMappingContext.class, ClientRegistrationRepository.class, MemberRepository.class})
 @AutoConfigureRestDocs
 public class ArtworkLikeControllerTest {
 
@@ -53,6 +54,17 @@ public class ArtworkLikeControllerTest {
 
     @Autowired
     private Gson gson;
+
+    @BeforeEach
+    public void setup() {
+        //security context holder
+        String username = "test";
+        long id = 1L;
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
 
     @TestConfiguration
     static class testSecurityConfig {

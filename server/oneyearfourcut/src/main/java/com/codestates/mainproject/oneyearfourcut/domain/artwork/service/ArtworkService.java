@@ -2,7 +2,8 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
@@ -13,13 +14,11 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryS
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.aws.service.AwsS3Service;
-import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,8 +42,14 @@ public class ArtworkService {
     private final ArtworkLikeRepository artworkLikeRepository;
     private final AwsS3Service awsS3Service;
 
-    public void createArtwork(long memberId, long galleryId, ArtworkRequestDto requestDto) {
+    public void createArtwork(long memberId, long galleryId, ArtworkPostDto requestDto) {
         Artwork artwork = requestDto.toEntity();
+
+        // 이미지 유효성(null) 검증
+        if (artwork.getImage() == null) {
+            throw new BusinessLogicException(ExceptionCode.IMAGE_NOT_FOUND_FROM_REQUEST);
+        }
+
         artwork.setGallery(galleryService.findGallery(galleryId));
         artwork.setMember(new Member(memberId));
 
@@ -57,16 +62,12 @@ public class ArtworkService {
     }
 
     @Transactional(readOnly = true)
-    public ArtworkResponseDto findArtwork(long galleryId, long artworkId) {
+    public ArtworkResponseDto findArtwork(long memberId, long galleryId, long artworkId) {
         galleryService.verifiedGalleryExist(galleryId);
 
         Artwork verifiedArtwork = findVerifiedArtwork(galleryId, artworkId);
 
-        Object authentication = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!authentication.equals("anonymousUser")) {
-            PrincipalDto principal = (PrincipalDto) authentication;
-            Long memberId = principal.getId();
-
+        if (memberId != -1) {
             boolean isLiked =
                     artworkLikeRepository.existsByMember_MemberIdAndArtwork_ArtworkId(memberId, artworkId);
             verifiedArtwork.setLiked(isLiked);
@@ -75,7 +76,7 @@ public class ArtworkService {
     }
 
     @Transactional(readOnly = true)
-    public List<ArtworkResponseDto> findArtworkList(long galleryId) {
+    public List<ArtworkResponseDto> findArtworkList(long memberId, long galleryId) {
         galleryService.verifiedGalleryExist(galleryId);
 
         List<Artwork> artworkList = artworkRepository.findAllByGallery_GalleryIdAndStatus(galleryId,
@@ -86,12 +87,7 @@ public class ArtworkService {
             throw new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND);
         }
 
-        Object authentication = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!authentication.equals("anonymousUser")) {
-            PrincipalDto principal = (PrincipalDto) authentication;
-
-            Long memberId = principal.getId();
-
+        if (memberId != -1) {
             Member loginMember = memberService.findMember(memberId);
             List<ArtworkLike> memberLikeList = loginMember.getArtworkLikeList();
             memberLikeList.
@@ -105,7 +101,6 @@ public class ArtworkService {
     @Transactional(readOnly = true)
     public List<OneYearFourCutResponseDto> findOneYearFourCut(long galleryId) {
         galleryService.verifiedGalleryExist(galleryId);
-//        Member loginMember = memberService.findMember(memberId);
 
         List<Artwork> findArtworkList = artworkRepository.findTop4ByGallery_GalleryIdAndStatus(galleryId,
                 Sort.by(desc("likeCount"), desc("createdAt")), ArtworkStatus.REGISTRATION);
@@ -114,16 +109,11 @@ public class ArtworkService {
         if (findArtworkList.isEmpty()) {
             throw new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND);
         }
-//        List<ArtworkLike> memberLikeList = loginMember.getArtworkLikeList();
-//
-//        memberLikeList.
-//                forEach(like -> like.getArtwork()
-//                        .setLiked(findArtworkList.contains(like.getArtwork())));
 
         return OneYearFourCutResponseDto.toListResponse(findArtworkList);
     }
 
-    public ArtworkResponseDto updateArtwork(long memberId, long galleryId, long artworkId, ArtworkRequestDto request) {
+    public ArtworkResponseDto updateArtwork(long memberId, long galleryId, long artworkId, ArtworkPatchDto request) {
         galleryService.verifiedGalleryExist(galleryId);
 
         Artwork findArtwork = findVerifiedArtwork(galleryId, artworkId);
@@ -137,8 +127,8 @@ public class ArtworkService {
             awsS3Service.deleteImage(findArtwork.getImagePath());
             String s3Path = awsS3Service.uploadFile(image.get());
             artwork.setImagePath(s3Path);
-
         }
+
         findArtwork.modify(artwork);
 
         return findArtwork.toArtworkResponseDto();
