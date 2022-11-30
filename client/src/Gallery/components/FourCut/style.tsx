@@ -24,26 +24,25 @@ export const Frame = styled.img`
   width: ${rem(170)};
   height: ${rem(150)};
 
-  &.box {
-    background-color: #333;
-    border-radius: ${rem(5)};
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: sans-serif;
-  }
+  background-color: ${({ theme }) => theme.colors.black_006};
+  border-radius: ${rem(5)};
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
 
-  &.tl {
+  &:nth-child(1) {
     border-top-left-radius: ${rem(35)};
   }
-  &.tr {
+
+  &:nth-child(2) {
     border-top-right-radius: ${rem(35)};
   }
-  &.bl {
+  &:nth-child(3) {
     border-bottom-left-radius: ${rem(35)};
   }
-  &.br {
+  &:nth-child(4) {
     border-bottom-right-radius: ${rem(35)};
   }
 `;

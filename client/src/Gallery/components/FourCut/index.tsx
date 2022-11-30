@@ -1,17 +1,25 @@
 import * as S from './style';
 import { Btn } from 'shared/components/Buttons';
 import { StyledLink } from 'shared/components/LinkButton/style';
+import { loginStore } from 'store/store';
+import { useLikeData } from 'Gallery/hooks/useLikeData';
 
-const index = () => {
+const Index = () => {
+  const { user } = loginStore();
+  const galleryId = user?.galleryId!;
+  const { data } = useLikeData(galleryId!);
+
   return (
     <S.Container>
       <S.FourCut>
-        <S.Frame className='box tl' src='/images/1.jpg'></S.Frame>
-        <S.Frame className='box tr' src='/images/2.jpg'></S.Frame>
-        <S.Frame className='box bl' src='/images/3.jpg'></S.Frame>
-        <S.Frame className='box br' src='/images/4.jpg'></S.Frame>
+        {data?.map((like: any) => (
+          <S.Frame
+            key={like.artworkId}
+            className='box'
+            src={like.imagePath}
+          ></S.Frame>
+        ))}
       </S.FourCut>
-
       <S.BtnContainer>
         <Btn className='square'>
           <StyledLink to='/allPic' className='white'>
@@ -30,4 +38,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

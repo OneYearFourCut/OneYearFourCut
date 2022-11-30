@@ -4,7 +4,6 @@ import FourCut from './components/FourCut';
 import ButtonBox from './components/ButtonBox';
 
 const Container = styled.div`
-  height: 95vh;
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
 const Gallery = () => {

@@ -11,8 +11,13 @@ const Index = () => {
   return (
     <div>
       <S.Info>
-        <h2>{data.title}</h2>
-        <div>{data.content}</div>
+        <S.ProfileBox>
+          <S.Profile src={user?.profile} />
+        </S.ProfileBox>
+        <div>
+          <h2>{data.title}</h2>
+          <div>{data.content}</div>
+        </div>
       </S.Info>
     </div>
   );
