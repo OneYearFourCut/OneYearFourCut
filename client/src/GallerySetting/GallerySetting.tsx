@@ -1,6 +1,6 @@
 import Input from './components/Input';
 import { jsonInstance } from 'shared/utils/axios';
-import { GetGalleryData } from './hooks/useGalleryData';
+import { useGalleryData } from './hooks/useGalleryData';
 import { getGallery, updateGallery, postGallery } from './api';
 import { loginStore } from 'store/store';
 

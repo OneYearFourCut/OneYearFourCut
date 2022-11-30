@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './ts-practice/singlepage.style';
+import * as S from './ts-practice/SinglePage.style';
 import LikeButton from 'shared/components/Buttons/likeButton';
 // import { rem } from 'polished';
 
