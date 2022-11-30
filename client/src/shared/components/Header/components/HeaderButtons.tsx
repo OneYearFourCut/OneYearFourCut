@@ -1,9 +1,6 @@
 import { rem } from 'polished';
 import { useNavigate } from 'react-router-dom';
-import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
-import { Profile } from 'shared/components/Modal/components/Profile';
 import { ModalStore, AlarmStore } from 'store/store';
-import { useEffect } from 'react';
 import { AlarmCheckBox } from './HeaderBox';
 import useReceiveAlarm from '../hook/useReceiveAlarm';
 

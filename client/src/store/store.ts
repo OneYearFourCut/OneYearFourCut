@@ -6,6 +6,8 @@ import { ModalState, Modal, Alarm, Components, Upload, Login } from './types';
 const initTarget: ModalState = {
   AlertModal: false,
   ProfileModal: false,
+  DeleteGalleryModal: false,
+  DeleteUserModal: false,
 };
 
 const ModalStore = create<Modal>((set, get) => ({
@@ -64,7 +66,13 @@ const UploadStore = create<Upload>((set, get) => ({
     set({
       UploadData: { ...Object.assign(get().UploadData, { [key]: data }) },
     }),
-  removeData: () => set({ UploadData: { ...initUploadData } }),
+  removeData: () =>
+    set({
+      UploadData: Object.assign(
+        { ...get().UploadData },
+        { img: initUploadData.content },
+      ),
+    }),
 }));
 
 type MyPersist = (
@@ -87,14 +95,5 @@ const loginStore = create<Login>(
     },
   ),
 );
-
-// const loginStore = create<Login>((set) => ({
-//   isLoggedin: false,
-//   setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
-
-//   user: {},
-//   setUser: (data) => set(() => ({ user: data })),
-//   setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
-// }));
 
 export { ModalStore, AlarmStore, ToastStore, UploadStore, loginStore };

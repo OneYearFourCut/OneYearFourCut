@@ -12,16 +12,20 @@ const HeaderBox = styled.div`
   z-index: 50;
   .HeaderBackbtn {
     margin: 0 ${rem(135)} 0 ${rem(18)};
+    cursor: pointer;
   }
   h2 {
     color: ${({ theme }) => theme.colors.green_002};
+    cursor: pointer;
   }
   .HeaderBellbtn {
     margin-left: ${rem(84)};
     position: relative;
+    cursor: pointer;
   }
   .HeaderHamburgerbtn {
     margin-left: ${rem(26)};
+    cursor: pointer;
   }
 `;
 const AlarmCheckBox = styled.div`

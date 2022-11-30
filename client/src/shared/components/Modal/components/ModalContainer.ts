@@ -64,6 +64,7 @@ const ModalbtnBox = styled.div`
     margin: ${rem(7)};
     font-weight: bold;
     background-color: white;
+    cursor: pointer;
   }
 `;
 //햄버거 버튼 눌렀을시 나오는 div
@@ -108,11 +109,10 @@ const HambergurBox = styled.div`
     cursor: pointer;
   }
 
-  ulli: hover {
+  ul li: hover {
     font-weight: 1000;
-    font-style: italic;
   }
-  .Out {
+  ul li:nth-child(n+3){
     color: grey;
   }
 `;

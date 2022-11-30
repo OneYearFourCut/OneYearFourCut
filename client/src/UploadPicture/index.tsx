@@ -5,9 +5,9 @@ import useUpload from './hook/useUpload';
 import Upload from './components/Upload';
 import { Input } from './components/Input';
 import { ModalStore, UploadStore } from 'store/store';
-import { Alert } from 'shared/components/Modal/components/Alert';
+import { Alert } from 'shared/components/Modal/Alert';
 import { useRef } from 'react';
-import { UploadAlert } from '../../src/shared/components/Modal/AlertData';
+import { UploadAlert } from '../shared/components/Modal/AlertData';
 import { loginStore } from 'store/store';
 import type { FormData } from './types';
 
@@ -15,7 +15,7 @@ const UploadPicture = () => {
   const { target, openModal } = ModalStore();
   const { UploadData } = UploadStore();
   const { setToast } = useToast();
-  const { user } = loginStore();
+  const { user, isLoggedin } = loginStore();
   const { mutate } = useUpload();
   const formRef = useRef<HTMLFormElement>(null);
 

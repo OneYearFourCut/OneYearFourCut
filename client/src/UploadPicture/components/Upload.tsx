@@ -7,7 +7,7 @@ const Upload = () => {
     <C.UploadPictureContainer>
       <h2>작품 등록하기</h2>
       <C.UploadImgline />
-      <B.UploadUserImgBox />
+      <B.UploadUserImg />
       <label className='DeleteImg' onClick={removeData}>
         삭제
       </label>

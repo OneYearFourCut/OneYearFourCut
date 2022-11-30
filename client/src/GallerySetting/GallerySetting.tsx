@@ -9,9 +9,6 @@ const GallerySetting = () => {
   const setUser = loginStore((state) => state.setUser);
   const galleryId = user?.galleryId;
 
-  // 전시관 확인용
-  const { data } = useGalleryData(galleryId!);
-  console.log(data);
 
   const onSubmit = (form: { title: string; content: string }) => {
     galleryId !== null
@@ -21,17 +18,8 @@ const GallerySetting = () => {
         });
   };
 
-  const onClick = () => {
-    deleteGalleryById();
-    // TODO: galleryId null 처리 목적 - GET 요청 안 보내는 방향으로 추후 수정
-    getUser().then((res) => {
-      setUser(res.data);
-    });
-  };
-
   return (
     <div>
-      <button onClick={onClick}>전시관 폐쇄</button>
       <Input onSubmit={onSubmit} />
     </div>
   );

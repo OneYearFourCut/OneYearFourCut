@@ -1,10 +1,13 @@
 import * as B from './components/HeaderButtons';
 import * as C from './components/HeaderBox';
 import { ModalStore } from 'store/store';
+import { Profile } from '../Modal/Profile';
+import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import ModalBackdrop from '../Modal/components/ModalBackdrop';
-import { Profile } from '../Modal/components/Profile';
+
 const Header = () => {
   const { target } = ModalStore();
+  const navigateSearch = useNavigateSearch();
   if (window.location.pathname === '/') return null;
   return (
     <>
@@ -15,7 +18,7 @@ const Header = () => {
       ) : (
         <C.HeaderBox>
           <B.HeaderBackbtn />
-          <h2>올해 네 컷</h2>
+          <h2 onClick={() => navigateSearch('/', {})}>올해 네 컷</h2>
           <B.HeaderBellbtn />
           <B.HeaderHamburgerbtn />
         </C.HeaderBox>

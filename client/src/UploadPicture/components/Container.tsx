@@ -22,6 +22,9 @@ const UploadPictureContainer = styled.div`
     font-size: ${rem(12)};
     margin-left: ${rem(310)};
   }
+  label {
+    cursor: pointer;
+  }
 `;
 
 //유저가 올린 이미지
@@ -32,13 +35,15 @@ const UploadUserImgBox = styled.div`
   position: absolute;
   top: 17%;
   left: 12%;
+  cursor: pointer;
   label {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
+    cursor: pointer;
   }
   img {
     width: 100%;
@@ -69,6 +74,7 @@ const UploadBtnContainer = styled.div`
     color: white;
     font-size: ${rem(16)};
     margin-left: ${rem(294)};
+    cursor: pointer;
   }
 `;
 const UploadImgline = styled.img`

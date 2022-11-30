@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { loginStore } from 'store/store';
 import useToast from 'shared/components/Toast/hooks/useToast';
+
 const ClipboardCopy = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setToast } = useToast();

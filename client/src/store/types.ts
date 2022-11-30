@@ -1,6 +1,8 @@
 export interface ModalState {
   AlertModal: boolean;
   ProfileModal: boolean;
+  DeleteGalleryModal: boolean;
+  DeleteUserModal: boolean;
 }
 
 export interface Modal {

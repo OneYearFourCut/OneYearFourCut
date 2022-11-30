@@ -1,7 +1,9 @@
 import * as B from './AlarmContainer';
 import { ALData, ALDataType } from 'AlarmList/types';
-
+import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 const Alarm = ({ data }: { data: ALData }) => {
+  const navigateSearch = useNavigateSearch();
+
   const makeContent = (data: ALData): string => {
     let content = `${data.userNickname}님이 `;
     switch (ALDataType[data.type]) {
@@ -20,8 +22,16 @@ const Alarm = ({ data }: { data: ALData }) => {
     }
     return content;
   };
+
   return (
-    <B.AlarmBox read={data.read}>
+    <B.AlarmBox
+      read={data.read}
+      onClick={() =>
+        navigateSearch('/SinglePic', {
+          artworkId: data.artworkId.toString(),
+        })
+      }
+    >
       <B.DecorateBox read={data.read}>
         {/* 알람 왼쪽 데코부분 div 2개 */}
         <div></div>

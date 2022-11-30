@@ -1,6 +1,6 @@
-import * as S from './SvgComponents';
+import * as S from './components/SvgComponents';
 import { ModalStore } from 'store/store';
-import { ModalViewBox, ModalbtnBox } from './ModalContainer';
+import { ModalViewBox, ModalbtnBox } from './components/ModalContainer';
 
 interface Data {
   title: string;
