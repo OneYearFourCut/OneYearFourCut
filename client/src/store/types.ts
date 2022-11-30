@@ -56,3 +56,20 @@ export interface Login {
   setUser: (data: UserType | undefined) => void;
   setLoggedOut: () => void;
 }
+
+
+/**
+ * const loginStore = create<any>(
+  persist(
+    (set) => ({
+      isLoggedin: false,
+      setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
+
+      user: {},
+      setUser: (data: UserType) => set(() => ({ user: data })),
+      setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
+    }),
+    { name: 'user-StoreName' },
+  ),
+);
+ */

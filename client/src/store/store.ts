@@ -1,4 +1,5 @@
-import create from 'zustand';
+import create, { StateCreator } from 'zustand';
+import { persist, PersistOptions } from 'zustand/middleware';
 import { ModalState, Modal, Alarm, Components, Upload, Login } from './types';
 
 //모달
@@ -66,13 +67,34 @@ const UploadStore = create<Upload>((set, get) => ({
   removeData: () => set({ UploadData: { ...initUploadData } }),
 }));
 
-const loginStore = create<Login>((set) => ({
-  isLoggedin: false,
-  setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
+type MyPersist = (
+  config: StateCreator<Login>,
+  options: PersistOptions<Login>,
+) => StateCreator<Login>;
 
-  user: {},
-  setUser: (data) => set(() => ({ user: data })),
-  setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
-}));
+const loginStore = create<Login>(
+  (persist as MyPersist)(
+    (set) => ({
+      isLoggedin: false,
+      setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
+      user: {},
+      setUser: (data) => set(() => ({ user: data })),
+      setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
+    }),
+    {
+      name: 'userStoreName',
+      getStorage: () => sessionStorage,
+    },
+  ),
+);
+
+// const loginStore = create<Login>((set) => ({
+//   isLoggedin: false,
+//   setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
+
+//   user: {},
+//   setUser: (data) => set(() => ({ user: data })),
+//   setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
+// }));
 
 export { ModalStore, AlarmStore, ToastStore, UploadStore, loginStore };

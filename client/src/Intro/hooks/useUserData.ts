@@ -5,6 +5,7 @@ import { getUser } from '../api';
 
 const GetUser = (onSuccess: any, onError: any) => {
   return useQuery(['user'], getUser, {
+    enabled: false,
     onSuccess,
     onError,
     select: (data) => {

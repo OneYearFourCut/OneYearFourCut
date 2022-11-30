@@ -6,21 +6,33 @@ let ACCESS_TOKEN = getStoredToken()?.access_token;
 //json용도
 const jsonInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
-  timeout: 1000,
+  timeout: 2000,
   headers: {
     'Content-Type': 'application/json',
-    authorization: ACCESS_TOKEN,
+    Authorization: ACCESS_TOKEN,
   },
 });
 
 //form-data용도
 const formdataInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
-  timeout: 1000,
+  timeout: 5000,
   headers: {
     'Content-Type': 'multipart/form-data',
-    authorization: ACCESS_TOKEN,
+    Authorization: ACCESS_TOKEN,
   },
+});
+
+jsonInstance.interceptors.request.use((config :any)=> {
+
+  config.headers.Authorization = getStoredToken()?.access_token;
+  return config;
+});
+
+formdataInstance.interceptors.request.use((config :any)=> {
+
+  config.headers.Authorization = getStoredToken()?.access_token;
+  return config;
 });
 
 export { jsonInstance, formdataInstance };

@@ -1,10 +1,15 @@
 import { ReactElement, useEffect } from 'react';
 import { StyledLink } from 'shared/components/LinkButton/style';
-import { setStoredToken } from './hooks/tokenStorage';
+import { setStoredToken, getStoredToken } from './hooks/tokenStorage';
 import { GetUser } from './hooks/useUserData';
 import { loginStore } from 'store/store';
-
+import { jsonInstance } from 'shared/utils/axios';
+import { getUser } from './api';
+import axios from 'axios';
 const RedirectPage = (): ReactElement => {
+  const { isLoggedin, setIsLoggedIn, user } = loginStore();
+  const setUser = loginStore((state) => state.setUser);
+
   useEffect(() => {
     let params = new URL(document.location.toString()).searchParams;
     let access_token = params.get('access_token'); // access_token
@@ -16,27 +21,19 @@ const RedirectPage = (): ReactElement => {
         refresh_token: refresh_token,
       }),
     );
-  }, []);
 
-  const { isLoggedin, setIsLoggedIn, user } = loginStore();
-  const setUser = loginStore((state) => state.setUser);
-  const onSuccess = (data: any) => {
-    // 유저데이터 저장
-    setIsLoggedIn();
-    setUser(data);
-  };
-
-  const onError = () => {
-    console.log('perform side effect after encountering error');
-  };
-  const { isLoading, data, isError } = GetUser(onSuccess, onError);
-
-  if (isLoading) {
-    return <h2>Loading....</h2>;
-  }
-  if (isError) {
-    return <h2>에러 발생</h2>;
-  }
+    axios
+      .get<any>(`${process.env.REACT_APP_SERVER_URL}/members/me`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: access_token,
+        },
+      })
+      .then((res) => {
+        setIsLoggedIn();
+        setUser(res.data);
+      });
+  },[]);
 
   const Child = (props: any) => {
     const user = props.user;
@@ -52,7 +49,7 @@ const RedirectPage = (): ReactElement => {
   return (
     <>
       로그인 완료 후 넘어오는 화면입니다
-      <Child user={data}></Child>
+      <Child user={user}></Child>
       <button>
         <StyledLink to={'/gallerySetting'}>전시관 구경 가기</StyledLink>
       </button>
