@@ -15,9 +15,11 @@ import javax.persistence.*;
 @Entity
 @Builder
 @AllArgsConstructor
+@Table(name = "alarm")
 public class Alarm extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long alarmId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -40,7 +42,7 @@ public class Alarm extends Auditable {
     @Column
     private String userNickname;
 
-    @Column
+    @Column(name = "READ_CHECK")
     private Boolean readCheck;
 
     public AlarmResponseDto toAlarmResponseDto() {

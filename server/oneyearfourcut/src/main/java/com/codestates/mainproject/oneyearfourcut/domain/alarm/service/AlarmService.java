@@ -48,10 +48,13 @@ public class AlarmService {
         alarmRepository.changeReadBoolean(true, memberId);
     }
 
+    @Transactional
     public AlarmReadCheckResponseDto checkReadAlarm(Long memberId) {
-        Boolean alarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, true);
-        if(alarmExist) {return AlarmReadCheckResponseDto.builder().readAlarmExist(false).message("현재 알림이 없습니다.").build();}
-        else return AlarmReadCheckResponseDto.builder().readAlarmExist(true).message("읽지않은 알림이 존재합니다.").build();
+        Boolean alarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
+        if(alarmExist) {
+            return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.TRUE).message("읽지않은 알림이 존재합니다.").build();
+        }
+        else return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build();
     }
 
     @org.springframework.transaction.annotation.Transactional
