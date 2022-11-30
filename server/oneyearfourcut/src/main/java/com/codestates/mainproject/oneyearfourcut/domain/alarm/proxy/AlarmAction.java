@@ -1,4 +1,4 @@
-package com.codestates.mainproject.oneyearfourcut.domain.alarm;
+package com.codestates.mainproject.oneyearfourcut.domain.alarm.proxy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

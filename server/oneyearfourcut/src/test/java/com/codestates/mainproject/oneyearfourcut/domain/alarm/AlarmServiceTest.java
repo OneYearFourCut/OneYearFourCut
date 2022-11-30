@@ -1,13 +1,17 @@
 package com.codestates.mainproject.oneyearfourcut.domain.alarm;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.service.CommentService;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
+import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class AlarmServiceTest {
 
@@ -23,35 +27,56 @@ class AlarmServiceTest {
     @Mock
     private GalleryRepository galleryRepository;
 
+    @Autowired
+    private AlarmRepository alarmRepository;
+    @Autowired
+    private ArtworkRepository artworkRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+
     @InjectMocks
     private AlarmService alarmService;
 
-     void testCreateAlarmByPostArtworkInGallery(){
-         //artwork service에 들어가는 메소드.
-        //artwork가 생성되면,  artworkService.createAlarm () 은 아래와 같음.
-         // alarm 새로 생성함.(builder)
-         //artwork 포함된 갤러리 Gallery 통하여 추적, 알람주인  Member FK 매핑 시킴.
-         // 생성된 artworkId, 행위자 memberId, read False 해서 저장함.
 
-     }
+    /*@Test
+    @DisplayName("create  alarm ")
+    void testCreateAlarm(Long locationId, Long memberId, AlarmType type) {
+        //given
+        Member member = memberRepository.save(
+                Member.builder()
+                        .nickname("홍길동")
+                        .build());
 
-     void testCreateAlarmByLikeArtworkInGallery(){
-         //artwork service에 들어가는 메소드 2
-         //likeId가 생성되면 , artworkService.createAlarm () 을 재사용함.
-         // alarm 새로 생성함. (builder)
-         //artwork 포함된 갤러리 Gallery 통하여 추적, 알람주인  Member FK 매핑 시킴.
-         // 생성된 artworkId, 행위자 memberId, read False 해서 저장함.
+        System.out.println(member.getMemberId());
+        assertThat
+
+        *//*Artwork artwork = new Artwork(locationId);
+
+            given
+
+            if(type != COMMENT_GALLERY) {
+                member = artworkRepository.findById(locationId).orElseThrow().getMember();
+                artwork = artworkRepository.findById(locationId).orElseThrow(); }
+            else { member = galleryService.findGallery(locationId).getMember();
+                artwork = null;}
+
+            assert artwork != null;
+
+            Alarm alarm = Alarm.builder()
+                    .member(member)
+                    .memberIdProducer(memberId)
+                    .alarmType(type)
+                    .artworkId(artwork.getArtworkId())
+                    .artworkTitle(artwork.getTitle())
+                    .userNickname(memberService.findMember(memberId).getNickname())
+                    .readCheck(false)
+                    .build();
+
+            alarmRepository.save(alarm);*//*
+    }
+*/
 
 
-     }
-
-     void testCreateAlarmByPostCommentOnArtwork(){
-
-     }
-
-     void testCreateAlarmByPostCommentOnGallery(){
-
-     }
 
 
 

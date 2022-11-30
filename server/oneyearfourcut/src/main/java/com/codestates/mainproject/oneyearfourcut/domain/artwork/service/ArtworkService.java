@@ -2,6 +2,8 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
@@ -41,6 +43,7 @@ public class ArtworkService {
     private final MemberService memberService;
     private final ArtworkLikeRepository artworkLikeRepository;
     private final AwsS3Service awsS3Service;
+    private final AlarmService alarmService;
 
     public void createArtwork(long memberId, long galleryId, ArtworkPostDto requestDto) {
         Artwork artwork = requestDto.toEntity();
@@ -58,7 +61,11 @@ public class ArtworkService {
         artwork.setImagePath(imageRoot);
         artwork.setStatus(ArtworkStatus.REGISTRATION);
 
-        artworkRepository.save(artwork);
+        Artwork savedArtwork = artworkRepository.save(artwork);
+
+        //알람 생성
+        Long artworkId = savedArtwork.getArtworkId();
+        alarmService.createAlarm( artworkId, memberId, AlarmType.POST_ARTWORK);
     }
 
     @Transactional(readOnly = true)

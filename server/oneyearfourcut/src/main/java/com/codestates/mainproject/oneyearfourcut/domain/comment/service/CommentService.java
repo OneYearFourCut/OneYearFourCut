@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
@@ -33,6 +35,7 @@ public class CommentService {
     private final MemberService memberService;
     private final GalleryService galleryService;
     private final ArtworkService artworkService;
+    private final AlarmService alarmService;
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
@@ -43,7 +46,7 @@ public class CommentService {
                 .commentStatus(VALID)
                 .build();
         commentRepository.save(comment);
-        //alarmService.createAlarm(new AlarmType.COMMENT_GALLERY);
+        alarmService.createAlarm(galleryId, memberId, AlarmType.COMMENT_GALLERY);
         return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
 
@@ -58,7 +61,7 @@ public class CommentService {
                 .commentStatus(VALID)
                 .build();
         commentRepository.save(comment);
-        //alarmService.createAlarm(new AlarmType.COMMENT_ARTWORK);
+        alarmService.createAlarm(artworkId, memberId, AlarmType.COMMENT_ARTWORK);
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 
