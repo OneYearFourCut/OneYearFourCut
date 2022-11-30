@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ALDataType, ALData } from 'AlarmList/types';
+import { ALDataType, type ALData } from 'AlarmList/types';
 import * as B from './FilterContainer';
 const Filter = ({
   filter,

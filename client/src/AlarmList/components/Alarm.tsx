@@ -1,12 +1,12 @@
 import * as B from './AlarmContainer';
-import { ALData, ALDataType } from 'AlarmList/types';
+import { type ALData, ALDataType } from 'AlarmList/types';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 const Alarm = ({ data }: { data: ALData }) => {
   const navigateSearch = useNavigateSearch();
 
   const makeContent = (data: ALData): string => {
     let content = `${data.userNickname}님이 `;
-    switch (ALDataType[data.type]) {
+    switch (ALDataType[data.alarmType]) {
       case ALDataType.LIKE_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 좋아요를 눌렀습니다.`;
         break;
@@ -22,13 +22,13 @@ const Alarm = ({ data }: { data: ALData }) => {
     }
     return content;
   };
-
+  
   return (
     <B.AlarmBox
       read={data.read}
       onClick={() =>
         navigateSearch('/SinglePic', {
-          artworkId: data.artworkId.toString(),
+          artworkId: data.artworkId ? data.artworkId.toString() : 'null',
         })
       }
     >
@@ -40,7 +40,7 @@ const Alarm = ({ data }: { data: ALData }) => {
       <B.ContentBox read={data.read}>
         <ul>
           <li>{data.createdAt}</li>
-          <li>{ALDataType[data.type]}</li>
+          <li>{ALDataType[data.alarmType]}</li>
           <li>{makeContent(data)}</li>
         </ul>
       </B.ContentBox>

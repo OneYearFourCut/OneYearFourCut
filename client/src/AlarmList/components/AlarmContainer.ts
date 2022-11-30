@@ -18,6 +18,7 @@ const AlarmBox = styled.div<{ read: boolean }>`
     read ? theme.colors.beige_005 : theme.colors.beige_002};
   padding: ${rem(16)} ${rem(30)} ${rem(16)} ${rem(30)};
   margin: ${rem(5)} 0 ${rem(5)} 0;
+  cursor: pointer;
   ${({ theme }) => theme.flex.center};
 `;
 
@@ -77,6 +78,7 @@ const DecorateBox = styled.div<{ read: boolean }>`
 const TriggerBox = styled.div`
   width: ${rem(30)};
   height: ${rem(30)};
+  margin: ${rem(10)} 0 ${rem(10)} 0;
   div {
     width: ${rem(30)};
     height: ${rem(30)};

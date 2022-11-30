@@ -1,45 +1,12 @@
 import { useCallback, useState } from 'react';
+import type { ALData } from 'AlarmList/types';
 import useGetAlarmListInfinite from './useGetAlarmListInfinite';
 import useIntersection from './useIntersection';
-import { ALData, ALDataType } from 'AlarmList/types';
-
-//배포시 삭제
-let tempdata: ALData[] = [
-  {
-    type: 'LIKE_ARTWORK',
-    userNickname: 'kdy',
-    read: false,
-    artworkId: 1,
-    createdAt: '2012-11-21 오전 10: 14',
-    artworkTitle: '작품제목입니다.1',
-  },{
-    type: 'COMMENT_ARTWORK',
-    userNickname: 'kdy',
-    read: false,
-    artworkId: 1,
-    createdAt: '2012-11-21 오전 10: 14',
-    artworkTitle: '작품제목입니다.2',
-  },{
-    type: 'COMMENT_GALLERY',
-    userNickname: 'kdy',
-    read: false,
-    artworkId: 1,
-    createdAt: '2012-11-21 오전 10: 14',
-    artworkTitle: '작품제목입니다.3',
-  },{
-    type: 'POST_ARTWORK',
-    userNickname: 'kdy',
-    read: false,
-    artworkId: 1,
-    createdAt: '2012-11-21 오전 10: 14',
-    artworkTitle: '작품제목입니다.4',
-  },
-];
 
 const useHandleIntersection = () => {
   const [isData, setIsData] = useState(true);
-  const [alarmListData, setAlarmListData] = useState<ALData[]>(tempdata);
-  const [filter, setFilter] = useState<string>('All');
+  const [alarmListData, setAlarmListData] = useState<ALData[]>([]);
+  const [filter, setFilter] = useState<string>('ALL');
   const [page, setPage] = useState<number>(1);
 
   const { refetch } = useGetAlarmListInfinite({ filter, page });
@@ -67,7 +34,7 @@ const useHandleIntersection = () => {
               else {
                 setIsData(false);
               }
-            }, 500);
+            }, 1000);
           });
         }
       });

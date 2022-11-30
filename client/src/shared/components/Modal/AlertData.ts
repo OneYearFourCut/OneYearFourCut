@@ -14,7 +14,7 @@ export const DeleteUser = (onClick: () => void) => {
     title: '회원을 탈퇴하시겠습니까?',
     content: '탈퇴하기',
     color: 'red',
-    target: 'DeleteUser',
+    target: 'DeleteUserModal',
     onClick: onClick,
   };
   return data;
@@ -25,7 +25,7 @@ export const DeleteGallery = (onClick: () => void) => {
     title: '전시회를 삭제 하시겠습니까?',
     content: '삭제하기',
     color: 'red',
-    target: 'DeleteGallery',
+    target: 'DeleteGalleryModal',
     onClick: onClick,
   };
   return data;

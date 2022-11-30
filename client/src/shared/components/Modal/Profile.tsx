@@ -21,6 +21,7 @@ const Profile = () => {
   return (
     <>
       <B.HambergurBox>
+        
         {/* Profile */}
         <B.ProfileBox>
           <div>

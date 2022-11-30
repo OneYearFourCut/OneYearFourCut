@@ -7,7 +7,7 @@ export const getUser = async () => {
 
 // 로그아웃
 export const logout = async () => {
-  return await jsonInstance.post<any>('/logout');
+  return await jsonInstance.get<any>('/logout');
 };
 
 // 회원 탈퇴
