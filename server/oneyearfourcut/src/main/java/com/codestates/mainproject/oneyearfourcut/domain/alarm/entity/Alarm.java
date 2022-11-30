@@ -35,7 +35,6 @@ public class Alarm extends Auditable {
 
     @Column
     private Long artworkId;
-
     @Column
     private String artworkTitle;
 
@@ -55,7 +54,7 @@ public class Alarm extends Auditable {
                 .artworkTitle(this.artworkTitle)
                 .build();
     }
-
-
-
+    public void checkRead() {
+        this.readCheck = true;
+    }
 }

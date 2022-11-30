@@ -25,27 +25,24 @@ import static com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alar
 @RequiredArgsConstructor
 @org.springframework.transaction.annotation.Transactional
 public class AlarmService {
-
     private final MemberService memberService;
     private final GalleryService galleryService;
     private final ArtworkRepository artworkRepository;
-
     private final AlarmRepository alarmRepository;
 
-
-    @org.springframework.transaction.annotation.Transactional(readOnly=true)
+    @Transactional
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         memberService.findMember(memberId);
         //Alarm List to Pageination logic
-        Page<Alarm> alarmPage = findAlarmPagesByFilter(filter, memberId, page);
-        List<Alarm> alarmList = alarmPage.getContent();
+        Page<Alarm> alarmPage = null;
+        try {
+            alarmPage = findAlarmPagesByFilter(filter, memberId, page);
+            List<Alarm> alarmList = alarmPage.getContent();
+            return AlarmResponseDto.toAlarmResponseDtoList(alarmList);
+        } finally {
+            alarmPage.getContent().forEach(Alarm::checkRead);
+        }
 
-        return AlarmResponseDto.toAlarmResponseDtoList(alarmList);
-    }
-
-    @org.springframework.transaction.annotation.Transactional
-    public void modifyAlarmReadTrue(Long memberId){
-        alarmRepository.changeReadBoolean(true, memberId);
     }
 
     @Transactional
@@ -57,16 +54,14 @@ public class AlarmService {
         else return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build();
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     private Page<Alarm> findAlarmPagesByFilter(String filter, Long memberId, int page) {
         PageRequest pr = PageRequest.of(page - 1, 7);
         Page<Alarm> alarmPage;
         if(Objects.equals(filter, "ALL")){
-            modifyAlarmReadTrue(memberId);
             alarmPage = alarmRepository.findAllByMember_MemberIdOrderByAlarmIdDesc(memberId,pr);
         }
         else{
-            modifyAlarmReadTrue(memberId);
             alarmPage = alarmRepository.findAllByAlarmTypeAndMember_MemberIdOrderByAlarmIdDesc(
                     AlarmType.valueOf(filter), memberId, pr);
         }
@@ -75,8 +70,6 @@ public class AlarmService {
         }
         return alarmPage;
     }
-
-
 
     @Transactional
     public void createAlarm(Long locationId, Long memberIdProducer, AlarmType type){
@@ -98,7 +91,6 @@ public class AlarmService {
             alarmRepository.save(alarm);
         }
         else { member = galleryService.findGallery(locationId).getMember();
-
             Alarm alarm = Alarm.builder()
                     .member(member)
                     .memberIdProducer(memberIdProducer)
@@ -106,7 +98,6 @@ public class AlarmService {
                     .userNickname(memberService.findMember(memberIdProducer).getNickname())
                     .readCheck(false)
                     .build();
-
             alarmRepository.save(alarm);
         }
     }

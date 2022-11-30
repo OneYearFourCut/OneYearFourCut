@@ -11,15 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
-    @Modifying
-    @Transactional
-    @Query(value = "update alarm a set a.READ_CHECK =:readCheck where a.MEMBER_ID =:memberId", nativeQuery = true)
-    void changeReadBoolean(@Param("readCheck") Boolean readCheck, @Param("memberId") Long memberId);
-
     Page<Alarm> findAllByMember_MemberIdOrderByAlarmIdDesc
             (Long memberId, Pageable pageable);
     Page<Alarm> findAllByAlarmTypeAndMember_MemberIdOrderByAlarmIdDesc
             (AlarmType alarmType, Long memberId, Pageable pageable);
-
     Boolean existsByMember_MemberIdAndReadCheck(Long memberId, Boolean readCheck);
 }

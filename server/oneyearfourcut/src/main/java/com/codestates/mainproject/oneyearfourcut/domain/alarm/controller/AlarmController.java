@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.alarm.controller;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.dto.AlarmResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/members/me/alarms")
@@ -24,7 +27,9 @@ public class AlarmController {
     @GetMapping
     public ResponseEntity<Object> getAlarmListFiltered(@RequestParam String filter, @RequestParam int page,
                                                        @LoginMember Long memberId){
-        return new ResponseEntity<>(alarmService.getAlarmPagesByFilter(filter, page, memberId), HttpStatus.OK);
+
+        List<AlarmResponseDto> response = alarmService.getAlarmPagesByFilter(filter, page, memberId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     //알림 읽은거 있어 없어 체크. (수시로 겟함.)
     @GetMapping("/read")
