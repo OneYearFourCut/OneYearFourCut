@@ -1,16 +1,21 @@
 import React from 'react';
 import * as S from './style';
+import { loginStore } from 'store/store';
+import { useGalleryData } from 'GallerySetting/hooks/useGalleryData';
 
-const index = () => {
+const Index = () => {
   // api에서 title, content 받아오기
+  const { user } = loginStore();
+  const galleryId = user?.galleryId;
+  const { data } = useGalleryData(galleryId!);
   return (
     <div>
       <S.Info>
-        <h2>오은의 1년 졸업 전시회</h2>
-        <div>저의 1년에 대해 재밌는 사진들이나 추억을 올려주세요</div>
+        <h2>{data.title}</h2>
+        <div>{data.content}</div>
       </S.Info>
     </div>
   );
 };
 
-export default index;
+export default Index;

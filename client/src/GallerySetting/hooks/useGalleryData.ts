@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { jsonInstance } from 'shared/utils/axios';
+import { getGallery } from '../api';
 
-export function useGalleryData(galleryId: number) {
-  const { data, isLoading } = useQuery(['galleries'], () =>
-    jsonInstance.get(`/galleries/${galleryId}`),
-  );
-
-  return data?.data;
-}
+export const useGalleryData = (galleryId: number) => {
+  return useQuery(['galleries'], () => getGallery(galleryId), {
+    select: (data: any) => {
+      return data?.data;
+    },
+  });
+};

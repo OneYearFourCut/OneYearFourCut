@@ -1,27 +1,37 @@
 import Input from './components/Input';
-import { jsonInstance } from 'shared/utils/axios';
 import { useGalleryData } from './hooks/useGalleryData';
-import { getGallery, updateGallery, postGallery } from './api';
+import { patchGallery, postGallery, deleteGalleryById } from './api';
 import { loginStore } from 'store/store';
-import { useNavigate } from 'react-router-dom';
-// const postGallery = (form: { title: string; content: string }) => {
-//   // return jsonInstance.post(`/galleries/${galleryId}`, form);
-//   // return jsonInstance.post(`/galleries`, form);
-//   console.log(form);
-// };
+import { getUser } from 'Intro/api';
 
 const GallerySetting = () => {
   const { user } = loginStore();
+  const setUser = loginStore((state) => state.setUser);
   const galleryId = user?.galleryId;
-  const navigate = useNavigate();
+
+  // 전시관 확인용
+  const { data } = useGalleryData(galleryId!);
+  console.log(data);
+
   const onSubmit = (form: { title: string; content: string }) => {
-    console.log(form);
-    navigate('/uploadPicture');
-    // galleryId !== null ? updateGallery(form) : postGallery(form);
+    galleryId !== null
+      ? patchGallery(form)
+      : postGallery(form).then((res) => {
+          setUser(res.data);
+        });
+  };
+
+  const onClick = () => {
+    deleteGalleryById();
+    // TODO: galleryId null 처리 목적 - GET 요청 안 보내는 방향으로 추후 수정
+    getUser().then((res) => {
+      setUser(res.data);
+    });
   };
 
   return (
     <div>
+      <button onClick={onClick}>전시관 폐쇄</button>
       <Input onSubmit={onSubmit} />
     </div>
   );

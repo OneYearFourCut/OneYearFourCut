@@ -53,11 +53,6 @@ const RedirectPage = (): ReactElement => {
       <button>
         <StyledLink to={'/gallerySetting'}>전시관 구경 가기</StyledLink>
       </button>
-      <button>
-        <StyledLink to={'/gallerySetting'}>
-          이전 페이지로 돌아가기(아직 구현 x)
-        </StyledLink>
-      </button>
     </>
   );
 };
