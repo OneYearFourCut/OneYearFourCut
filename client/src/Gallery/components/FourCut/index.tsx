@@ -1,12 +1,14 @@
 import * as S from './style';
-import { Btn } from 'shared/components/Buttons';
-import { StyledLink } from 'shared/components/LinkButton/style';
 import { loginStore } from 'store/store';
 import { useLikeData } from 'Gallery/hooks/useLikeData';
+import { useParams } from 'react-router-dom';
 
 const Index = () => {
-  const { user } = loginStore();
-  const galleryId = user?.galleryId!;
+  // const { user } = loginStore();
+  // const galleryId = user?.galleryId!;
+  const params = useParams();
+  const galleryId = parseInt(params.galleryId!);
+
   const { data } = useLikeData(galleryId!);
 
   return (
@@ -20,20 +22,6 @@ const Index = () => {
           ></S.Frame>
         ))}
       </S.FourCut>
-      <S.BtnContainer>
-        <Btn className='square'>
-          <StyledLink to='/allPic' className='white'>
-            전체 작품 보기
-          </StyledLink>
-        </Btn>
-        <Btn className='square white'>
-          <StyledLink to='/'>나도 전시관 만들기</StyledLink>
-        </Btn>
-      </S.BtnContainer>
-      <div>
-        <p>여러분만의 1년이 담긴 전시회도 만들고</p>
-        <p>친구들에게 공유해보세요!</p>
-      </div>
     </S.Container>
   );
 };

@@ -5,8 +5,9 @@ const Container = styled.form`
   height: 95vh;
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 
-  div {
-    margin: ${rem(5)} 0;
+  h3 {
+    font-size: ${rem(20)};
+    margin-bottom: ${rem(5)};
   }
 
   button {
@@ -15,11 +16,15 @@ const Container = styled.form`
 `;
 
 const Input = styled.input`
-  width: ${rem(280)};
-  height: ${rem(32)};
-  border: ${rem(2)} solid ${({ theme }) => theme.colors.green_001};
+  width: ${rem(357)};
+  height: ${rem(50)};
+  border: ${rem(2)} solid ${({ theme }) => theme.colors.green_004};
   border-radius: ${rem(15)};
   padding: ${rem(10)};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.green_004};
+  }
 `;
 
 const Time = styled.div`
@@ -29,10 +34,10 @@ const Time = styled.div`
 `;
 
 const NameArea = styled.div`
-  margin-bottom: ${rem(40)};
+  margin-bottom: ${rem(20)};
 `;
 const DescArea = styled.div`
-  margin-bottom: ${rem(40)};
+  margin-bottom: ${rem(20)};
 `;
 
 export { Container, Input, Time, NameArea, DescArea };

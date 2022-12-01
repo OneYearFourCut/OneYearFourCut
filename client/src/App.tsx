@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Header from 'shared/components/Header';
 import UploadPicture from 'UploadPicture';
 import AlarmList from 'AlarmList';
@@ -7,11 +7,11 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import ForBidden from 'ForBidden';
 import Intro from 'Intro/Intro';
 import GallerySetting from 'GallerySetting/GallerySetting';
-import GalleryAllPic from 'Gallery/GalleryAllPic';
-import GalleryFourPic from 'Gallery/GalleryFourPic';
 import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import SingleComment from './SingleComments/index';
+const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
+const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
 
 const router = createBrowserRouter([
   {
@@ -33,8 +33,22 @@ const router = createBrowserRouter([
       { path: '/alarmList', element: <AlarmList /> },
       { path: '/uploadPicture', element: <UploadPicture /> },
       { path: '/localStorage', element: <RedirectPage /> },
-      { path: '/allPic', element: <GalleryAllPic /> },
-      { path: '/fourPic', element: <GalleryFourPic /> },
+      {
+        path: '/allPic/:galleryId',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <GalleryAllPic />
+          </Suspense>
+        ),
+      },
+      {
+        path: `/fourPic/:galleryId`,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <GalleryFourPic />
+          </Suspense>
+        ),
+      },
       { path: '/SinglePic', element: <SinglePicPage /> },
       { path: '/testing', element: <SingleComment /> },
     ],
