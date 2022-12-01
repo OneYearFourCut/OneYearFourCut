@@ -16,7 +16,7 @@ public class Reply extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyId;
 
-    @Column
+    @Column(length = 30, nullable = false) // nullable = false 추가해도 될까요?
     private String content; // 댓글 내용
 
     @ManyToOne

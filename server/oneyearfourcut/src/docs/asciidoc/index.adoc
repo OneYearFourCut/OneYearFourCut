@@ -192,9 +192,6 @@ include::{snippets}/get-oneYearFourCut/curl-request.adoc[]
 .http-request
 include::{snippets}/get-oneYearFourCut/http-request.adoc[]
 
-.request-headers
-include::{snippets}/get-oneYearFourCut/request-headers.adoc[]
-
 .http-parameters
 include::{snippets}/get-oneYearFourCut/path-parameters.adoc[]
 

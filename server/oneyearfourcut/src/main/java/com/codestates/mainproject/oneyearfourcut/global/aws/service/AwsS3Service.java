@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import com.codestates.mainproject.oneyearfourcut.global.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +37,7 @@ public class AwsS3Service {
         metadata.setContentType(multipartFile.getContentType());
 
         if (!FileUtils.validFile(multipartFile)) {
-            throw new RuntimeException("잘못된 확장자");
+            throw new BusinessLogicException(ExceptionCode.UNSUPPORTED_FILE_EXTENSION);
         }
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
@@ -63,7 +65,7 @@ public class AwsS3Service {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException se) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
+            throw new BusinessLogicException(ExceptionCode.INVALID_FILE_TYPE);
         }
     }
 }

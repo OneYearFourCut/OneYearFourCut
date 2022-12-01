@@ -1,17 +1,20 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.entity;
 
 
+import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
-import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,25 +27,26 @@ public class Artwork extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long artworkId;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 15, nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 30, nullable = false)
     private String content;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String imagePath;
 
     @Enumerated(EnumType.STRING)
-    private ArtworkStatus status;
+    private ArtworkStatus status = ArtworkStatus.REGISTRATION;
 
     @Transient
     private MultipartFile image;
 
-    @Formula("(select count(*) from artwork_like v where v.artwork_id = artwork_id)")
+    @Formula("(select count(*) from artwork_like v where v.artwork_id = artwork_id and v.status = 'LIKE')")
     private int likeCount;
     @Transient
     private boolean liked;
+
     @Formula("(select count(*) from comment c where c.artwork_id = artwork_id)")
     private int commentCount;
 
@@ -61,7 +65,7 @@ public class Artwork extends Auditable {
     }
 
     public int getLikeCount() {
-        return this.getArtworkLikeList().size();
+        return this.likeCount;
     }
 
     /* ################### Setter ################### */
@@ -105,14 +109,25 @@ public class Artwork extends Auditable {
 
     /* ################### 생성자 ################### */
     @Builder
-    public Artwork(Long artworkId, String title, String content, String imagePath, MultipartFile image) {
-        this.artworkId = artworkId;
+    public Artwork(String title, String content, MultipartFile image) {
         this.title = title;
         this.content = content;
-        this.imagePath = imagePath;
         this.image = image;
-        this.artworkLikeList = new ArrayList<>();
+    }
 
+    // 기본 Test용 생성자
+    public Artwork(Long artworkId) {
+        this.artworkId = artworkId;
+        this.title = "test_title";
+        this.content = "test_content";
+        this.imagePath = "/test.png";
+        super.createdAt = LocalDateTime.now();
+    }
+    // RepositoryTest용 생성자
+    public Artwork(Long artworkId, int likeCount) {
+        this(artworkId);
+        // 테스트할 때 필요한 데이터
+        this.likeCount = likeCount;
     }
 
     /* ################### toDto ################### */

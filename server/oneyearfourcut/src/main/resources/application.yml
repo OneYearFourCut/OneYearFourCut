@@ -35,3 +35,8 @@ spring:
     init:
       data-locations: classpath*:db/data.sql
 
+  # 이미지 파일 용량 제한 수정
+  servlet:
+    multipart:
+      maxFileSize: 5MB
+      maxRequestSize: 5MB

@@ -11,13 +11,17 @@ public enum ExceptionCode {
     ARTWORK_NOT_FOUND_FROM_GALLERY(400, "해당 작품이 전시관에 존재하지 않습니다."),
     COMMENT_NOT_FOUND(400, "댓글이 존재하지 않습니다."),
     COMMENT_DELETED(400, "이미 삭제된 댓글입니다."),
+    ARTWORK_DELETED(400, "삭제된 작품입니다."),
     UNAUTHORIZED(401, "접근 권한이 없습니다."),
     REPLY_NOT_FOUND_FROM_COMMENT(400, "해당 답글이 댓글에 존재하지 않습니다."),
     COMMENT_NOT_FOUND_FROM_GALLERY(400, "해당 댓글이 전시관에 존재하지 않습니다." ),
 
     IMAGE_NOT_FOUND_FROM_REQUEST(400, "요청에 이미지를 넣어주세요."),
 
-    WRONG_JWT(400, "Access Token을 입력하지 않았거나, 잘못된 토큰입니다.");
+    WRONG_JWT(400, "Access Token을 입력하지 않았거나, 잘못된 토큰입니다."),
+    EXCEEDED_FILE_SIZE(400, "파일 사이즈가 5MB를 초과하였습니다."),
+    INVALID_FILE_TYPE(400, "잘못된 파일명입니다."),
+    UNSUPPORTED_FILE_EXTENSION(400, "지원하지 않는 확장자입니다.");
 
     @Getter
     private int status;

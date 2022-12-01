@@ -23,7 +23,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -78,16 +77,12 @@ public class ArtworkLikeControllerTest {
     }
 
     @Test
-    @WithMockUser(password = "0000")
     void putArtworkLikeTest() throws Exception {
-        Long memberId = 1L;
-        Long galleryId = 1L;
-        Long artworkId = 1L;
 
         willDoNothing().given(artworkLikeService).updateArtworkLike(any(Long.class), any(Long.class), any(Long.class));
 
         ResultActions result = mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/galleries/{gallery-id}/artworks/{artwork-id}/likes", galleryId, artworkId)
+                RestDocumentationRequestBuilders.put("/galleries/{gallery-id}/artworks/{artwork-id}/likes", 1L, 1L)
                         .header("Authorization", "Bearer (AccessToken)")
                         .accept(MediaType.APPLICATION_JSON)
         );

@@ -24,6 +24,13 @@ public class ArtworkLike extends Auditable {
     @JoinColumn(name = "ARTWORK_ID")
     private Artwork artwork;
 
+    @Enumerated(EnumType.STRING)
+    private LikeStatus status = LikeStatus.LIKE;
+
+    public void setStatus(LikeStatus status) {
+        this.status = status;
+    }
+
     public void setMember(Member member) {
         if (this.member != null) {
             member.getArtworkLikeList().remove(this);

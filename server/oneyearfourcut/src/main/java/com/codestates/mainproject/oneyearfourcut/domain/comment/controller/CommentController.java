@@ -44,6 +44,7 @@ public class CommentController {
     //GET (Read) Comment on Gallery (with pagination)
     @GetMapping("/{gallery-id}/comments")
     public ResponseEntity<Object> getGalleryComment(@Positive @PathVariable("gallery-id") Long galleryId,
+
                                                     @RequestParam int page/*, @RequestParam int size*/){ // @Min 검증이 필요할 경우 윤재님이 넣어주세요.
                                                     
         return new ResponseEntity<>(commentService.getGalleryCommentPage(galleryId, page, 10), HttpStatus.OK);
