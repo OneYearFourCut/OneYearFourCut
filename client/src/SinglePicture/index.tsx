@@ -25,9 +25,8 @@ const Body = styled.div`
 
 const SinglePicPage = () => {
   const { open } = CommentStore();
-  const { data } = useGetAllPost(1);
+  const { data } = useGetAllPost(17);
 
-  // console.log(open);
   return (
     <Body>
       {open ? (
@@ -52,6 +51,7 @@ const SinglePicPage = () => {
                     title={el.title}
                     scrpit={el.content}
                     username={el.memberId}
+                    artId={el.artworkId}
                   ></SinglePicture>
                   <Footer
                     like={el.likeCount}

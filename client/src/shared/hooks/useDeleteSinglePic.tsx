@@ -4,7 +4,7 @@ import { jsonInstance } from 'shared/utils/axios';
 const useDeleteSinglePic = (galleryId: number, artworks: number) => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
-    ['deleteComment'],
+    ['deleteSinglePic'],
     () => {
       return jsonInstance.delete(`galleries/${galleryId}/artworks/${artworks}`);
     },

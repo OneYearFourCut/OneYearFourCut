@@ -8,9 +8,8 @@ import useGetSingleComments from './hooks/useGetSingleComments';
 
 const CommentsList = () => {
   const { setCloseModal, commentCount } = CommentStore();
-  const { data } = useGetSingleComments(1, 1, 1);
+  const { data } = useGetSingleComments(17, 16, 1);
 
-  // console.log(data);
   return (
     <S.CommentBody>
       <S.PicTitle>
@@ -23,6 +22,8 @@ const CommentsList = () => {
         data.data.commentList.map((el: any) => {
           return (
             <SingleComment
+              key={el.commentId}
+              commentId={el.commentId}
               nickname={el.nickname}
               time={el.createdAt}
               comment={el.content}

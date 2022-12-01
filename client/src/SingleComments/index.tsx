@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import CommentsList from './CommentsZone';
 import { rem } from 'polished';
 import CommentInput from './CommentInput';
-// import CommentStore from 'shared/components/PicFooter/OpenComment';
 
 const Body = styled.div`
   width: 100%;

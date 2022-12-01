@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import HeartIcon from '../Icons/heartIcon';
+import useLikePictures from 'SinglePicture/hooks/useLikePictures';
+import useGetSinglePicture from 'shared/hooks/useGetSinglePicture';
 
 const LikeCircle = styled.div`
   width: ${rem(49)};
@@ -14,9 +16,20 @@ const LikeCircle = styled.div`
 `;
 
 const LikeButton = () => {
+  const { data } = useGetSinglePicture(17, 33);
+  const { mutate } = useLikePictures(17, 33);
+
+  const Like = () => {
+    mutate();
+    console.log(data?.data.liked, data?.data.likeCount);
+  };
   return (
-    <LikeCircle>
-      <HeartIcon />
+    <LikeCircle onClick={Like}>
+      {data?.data.liked ? (
+        <HeartIcon color={'gray'} />
+      ) : (
+        <HeartIcon color={'red'} />
+      )}
     </LikeCircle>
   );
 };

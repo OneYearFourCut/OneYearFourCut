@@ -1,10 +1,10 @@
 import React from 'react';
 import * as S from './ts-practice/SinglePage.style';
 import LikeButton from 'shared/components/Buttons/likeButton';
-// import { rem } from 'polished';
 
 import CommentStore from 'shared/components/PicFooter/OpenComment';
 import useDeleteSinglePic from 'shared/hooks/useDeleteSinglePic';
+import { loginStore } from 'store/store';
 
 const SinglePicture = ({
   picture,
@@ -13,6 +13,7 @@ const SinglePicture = ({
   username,
   idx,
   array,
+  artId,
 }: {
   picture: string;
   title: string;
@@ -20,14 +21,18 @@ const SinglePicture = ({
   username: string;
   idx: number;
   array: number;
+  artId: number;
 }) => {
-  const { open } = CommentStore();
-  const { mutate } = useDeleteSinglePic(1, idx);
+  // const { user } = loginStore();
+  // const setUser = loginStore((state) => state.setUser);
+  // const galleryId = user?.galleryId;
+  // const { open } = CommentStore();
+  // 자기 갤러리 id 말고 현재 페이지의 갤러리 id는 어떻게 만들지?
+
+  const { mutate } = useDeleteSinglePic(17, artId);
 
   const Delete = (): void => {
-    console.log('clcick');
-
-    // mutate();
+    mutate();
   };
 
   return (
@@ -46,7 +51,6 @@ const SinglePicture = ({
         >
           <LikeButton></LikeButton>
         </S.SinglePic>
-        {/* <S.NextPic /> */}
       </S.PicZone>
       <S.Delete onClick={() => Delete()}>삭제</S.Delete>
       <S.PicIntroduct>
