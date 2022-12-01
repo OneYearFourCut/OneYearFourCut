@@ -5,8 +5,6 @@
 :toc-title: Table of Contents
 :source-highlighter: prettify
 
-멤버 전시관 작품 좋아요 댓글 대댓글 알림
-
 ***
 == MemberController
 === 회원 조회
@@ -56,6 +54,36 @@ include::{snippets}/deleteMember/request-headers.adoc[]
 
 .http-response
 include::{snippets}/deleteMember/http-response.adoc[]
+
+=== 로그 아웃
+.curl-request
+include::{snippets}/logout/curl-request.adoc[]
+
+.http-request
+include::{snippets}/logout/http-request.adoc[]
+
+.request-headers
+include::{snippets}/logout/request-headers.adoc[]
+
+.http-response
+include::{snippets}/logout/http-response.adoc[]
+
+=== 토큰 재발급
+.curl-request
+include::{snippets}/refreshToken/curl-request.adoc[]
+
+.http-request
+include::{snippets}/refreshToken/http-request.adoc[]
+
+.request-headers
+include::{snippets}/refreshToken/request-headers.adoc[]
+
+.http-response
+include::{snippets}/refreshToken/http-response.adoc[]
+
+.response-headers
+include::{snippets}/refreshToken/response-headers.adoc[]
+Refresh Token도 만료된 경우 457 에러메세지
 
 ***
 == GalleryController

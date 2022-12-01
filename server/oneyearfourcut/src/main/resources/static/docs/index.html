@@ -450,6 +450,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_회원_조회">1.1. 회원 조회</a></li>
 <li><a href="#_회원_수정">1.2. 회원 수정</a></li>
 <li><a href="#_회원_탈퇴">1.3. 회원 탈퇴</a></li>
+<li><a href="#_로그_아웃">1.4. 로그 아웃</a></li>
+<li><a href="#_토큰_재발급">1.5. 토큰 재발급</a></li>
 </ul>
 </li>
 <li><a href="#_gallerycontroller">2. GalleryController</a>
@@ -499,9 +501,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>멤버 전시관 작품 좋아요 댓글 대댓글 알림</p>
-</div>
 <hr>
 </div>
 </div>
@@ -515,7 +514,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/me' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTgsImV4cCI6MTY2OTc4NDU1OH0.ici9q7pe2SbZc588EVkiSvMkqSwQDkJD8D6w6a13ISYO4dgIzxXAjYZV43B_LfP9' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDcsImV4cCI6MTY2OTk1NzcwN30.qqRD73LCb_g1mZ7hu0NCaKbC5EUfjEnS0eChhuLKWJ8AQdzjLrY4VOO1cyzzwAaZ' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -524,7 +523,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">GET /members/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTgsImV4cCI6MTY2OTc4NDU1OH0.ici9q7pe2SbZc588EVkiSvMkqSwQDkJD8D6w6a13ISYO4dgIzxXAjYZV43B_LfP9
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDcsImV4cCI6MTY2OTk1NzcwN30.qqRD73LCb_g1mZ7hu0NCaKbC5EUfjEnS0eChhuLKWJ8AQdzjLrY4VOO1cyzzwAaZ
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -611,7 +610,7 @@ Content-Length: 72
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/me' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTgsImV4cCI6MTY2OTc4NDU1OH0.p3tQO6TOW5ztwlp3-v9sXjmQhT6TndTMaWJxF-1aYTNvEIHfeUrkh1BVrwudBXAH' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDcsImV4cCI6MTY2OTk1NzcwN30.vChHYFWQ2jen0cqMyag8nUG0NqLmvFZ300STPE_pZGQueM3h5FfF-tuwSbt1Chvr' \
     -F 'profile=@profile;type=image/jpeg' \
     -F 'nickname=수정된 이름'</code></pre>
 </div>
@@ -621,7 +620,7 @@ Content-Length: 72
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /members/me HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTgsImV4cCI6MTY2OTc4NDU1OH0.p3tQO6TOW5ztwlp3-v9sXjmQhT6TndTMaWJxF-1aYTNvEIHfeUrkh1BVrwudBXAH
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDcsImV4cCI6MTY2OTk1NzcwN30.vChHYFWQ2jen0cqMyag8nUG0NqLmvFZ300STPE_pZGQueM3h5FfF-tuwSbt1Chvr
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
@@ -719,14 +718,14 @@ X-Frame-Options: SAMEORIGIN
 <div class="title">curl-request</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/me' -i -X DELETE \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1OCwiZXhwIjoxNjY5Nzg0NTU4fQ.DXtepGyqqaL3aH93qM0fELvnE1vXHTfq_cNUvKmsvjBqghinmTfXWe4BnGnHDB74'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNywiZXhwIjoxNjY5OTU3NzA3fQ.a6njvselbe8junjUJl2ganBiI1CrJPkGvCfQyu8qKyVruGKcoPdNlcZ72dMZSX5D'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /members/me HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1OCwiZXhwIjoxNjY5Nzg0NTU4fQ.DXtepGyqqaL3aH93qM0fELvnE1vXHTfq_cNUvKmsvjBqghinmTfXWe4BnGnHDB74
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNywiZXhwIjoxNjY5OTU3NzA3fQ.a6njvselbe8junjUJl2ganBiI1CrJPkGvCfQyu8qKyVruGKcoPdNlcZ72dMZSX5D
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -768,42 +767,22 @@ X-Frame-Options: SAMEORIGIN
 회원 탈퇴 성공</code></pre>
 </div>
 </div>
-<hr>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_gallerycontroller">2. GalleryController</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_전시관_등록">2.1. 전시관 등록</h3>
+<h3 id="_로그_아웃">1.4. 로그 아웃</h3>
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries' -i -X POST \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTcsImV4cCI6MTY2OTc4NDU1N30.gcjJ475wpOkSr_phA0WD9hIrHJCqNjbxmQ-VjIkef8ATHA0K2E9RsdTLeyi40SQw' \
-    -H 'Accept: application/json' \
-    -d '{
-  "title" : "나의 전시관",
-  "content" : "안녕하세요"
-}'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/auth/logout' -i -X GET \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO''</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTcsImV4cCI6MTY2OTc4NDU1N30.gcjJ475wpOkSr_phA0WD9hIrHJCqNjbxmQ-VjIkef8ATHA0K2E9RsdTLeyi40SQw
-Accept: application/json
-Content-Length: 67
-Host: localhost:8080
-
-{
-  "title" : "나의 전시관",
-  "content" : "안녕하세요"
-}</code></pre>
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /auth/logout HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO'
+Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -825,8 +804,164 @@ Host: localhost:8080
 </tr>
 </tbody>
 </table>
+<div class="listingblock">
+<div class="title">http-response</div>
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_토큰_재발급">1.5. 토큰 재발급</h3>
+<div class="listingblock">
+<div class="title">curl-request</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/auth/refresh' -i -X GET \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO'' \
+    -H 'refresh: eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO''</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">http-request</div>
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO'
+refresh: eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO'
+Host: localhost:8080</code></pre>
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. request-fields</caption>
+<caption class="title">Table 8. request-headers</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - 만료된 Access Token</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refresh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - Refresh Token</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">http-response</div>
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
+Authorization: Bearer Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO'
+refresh: eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTgyNzA2OCwiZXhwIjoxNjY5ODI3MTI4fQ.xNAhFxDcKKHGqvDfh7LQhtJyGzqq2mbjC30adPqPGLzVhmmGlze17Zbaue1LrgxO'
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 39
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+
+새로 토큰이 발급되었습니다.</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. response-headers</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - 새로 발급된 Access Token</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refresh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - 새로 발급된 Refresh Token</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Refresh Token도 만료된 경우 456 에러메세지</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gallerycontroller">2. GalleryController</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_전시관_등록">2.1. 전시관 등록</h3>
+<div class="listingblock">
+<div class="title">curl-request</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDYsImV4cCI6MTY2OTk1NzcwNn0.v6s4l8uNjkzgeA7hbbT7Z2AiQYvsKZWi2hnpaPMIzVhbdJciUBviqITS9o22jwo-' \
+    -H 'Accept: application/json' \
+    -d '{
+  "title" : "나의 전시관",
+  "content" : "안녕하세요"
+}'</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">http-request</div>
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDYsImV4cCI6MTY2OTk1NzcwNn0.v6s4l8uNjkzgeA7hbbT7Z2AiQYvsKZWi2hnpaPMIzVhbdJciUBviqITS9o22jwo-
+Accept: application/json
+Content-Length: 67
+Host: localhost:8080
+
+{
+  "title" : "나의 전시관",
+  "content" : "안녕하세요"
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. request-headers</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - Access Token</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. request-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -872,12 +1007,12 @@ Content-Length: 132
   "galleryId" : 4,
   "title" : "나의 전시관",
   "content" : "안녕하세요",
-  "createdAt" : "2022-11-29T14:02:37.857663"
+  "createdAt" : "2022-12-01T14:08:26.282972"
 }</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. response-fields</caption>
+<caption class="title">Table 12. response-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -934,7 +1069,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. /galleries/{galleryId}</caption>
+<caption class="title">Table 13. /galleries/{galleryId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -972,12 +1107,12 @@ Content-Length: 132
   "galleryId" : 5,
   "title" : "나의 전시관",
   "content" : "안녕하세요",
-  "createdAt" : "2022-11-29T14:02:37.868049"
+  "createdAt" : "2022-12-01T14:08:26.292842"
 }</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. response-fields</caption>
+<caption class="title">Table 14. response-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1021,7 +1156,7 @@ Content-Length: 132
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/me' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTcsImV4cCI6MTY2OTc4NDU1N30.hSea5Ui5dky2dixzWkxNFzzivQy5CLY3ye5TF0zeKsMu6KMNWTFqaimfPwkg90oZ' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDYsImV4cCI6MTY2OTk1NzcwNn0.ICULMtG1pOwf2h1D6OfkrNj_4tVOsjhzsFmiWIOE4wDlWo2fKXmYm4y1_dEGiwpw' \
     -H 'Accept: application/json' \
     -d '{
   "title" : "수정된 제목",
@@ -1034,7 +1169,7 @@ Content-Length: 132
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTcsImV4cCI6MTY2OTc4NDU1N30.hSea5Ui5dky2dixzWkxNFzzivQy5CLY3ye5TF0zeKsMu6KMNWTFqaimfPwkg90oZ
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDYsImV4cCI6MTY2OTk1NzcwNn0.ICULMtG1pOwf2h1D6OfkrNj_4tVOsjhzsFmiWIOE4wDlWo2fKXmYm4y1_dEGiwpw
 Accept: application/json
 Content-Length: 68
 Host: localhost:8080
@@ -1046,7 +1181,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. request-headers</caption>
+<caption class="title">Table 15. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1065,7 +1200,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. request-fields</caption>
+<caption class="title">Table 16. request-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1118,7 +1253,7 @@ X-Frame-Options: SAMEORIGIN
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/me' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1NywiZXhwIjoxNjY5Nzg0NTU3fQ.SMcawEpBNO0rUSxDtyRsCzjpfRdXdRiCy9uJS7mySjFxH5hYspdJxtm50Pvy6u2p' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNiwiZXhwIjoxNjY5OTU3NzA2fQ.6fjx6gDFiRNl0TUnjMgcBRKdyciUQgR2wGBQdgeqUYr7Va-BK3wZpU7laf7o6XuD' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -1127,13 +1262,13 @@ X-Frame-Options: SAMEORIGIN
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1NywiZXhwIjoxNjY5Nzg0NTU3fQ.SMcawEpBNO0rUSxDtyRsCzjpfRdXdRiCy9uJS7mySjFxH5hYspdJxtm50Pvy6u2p
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNiwiZXhwIjoxNjY5OTU3NzA2fQ.6fjx6gDFiRNl0TUnjMgcBRKdyciUQgR2wGBQdgeqUYr7Va-BK3wZpU7laf7o6XuD
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. request-headers</caption>
+<caption class="title">Table 17. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1185,7 +1320,6 @@ X-Frame-Options: SAMEORIGIN
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -H 'Authorization: Bearer (AccessToken)' \
-    -H 'Accept: application/json' \
     -F 'image=@image.png;type=image/png' \
     -F 'title=올해 네 컷 - D25' \
     -F 'content=화이팅!'</code></pre>
@@ -1197,7 +1331,6 @@ X-Frame-Options: SAMEORIGIN
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/1/artworks HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Authorization: Bearer (AccessToken)
-Accept: application/json
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
@@ -1217,7 +1350,7 @@ Content-Type: image/png
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. request-headers</caption>
+<caption class="title">Table 18. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1236,7 +1369,7 @@ Content-Type: image/png
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. /galleries/{gallery-id}/artworks</caption>
+<caption class="title">Table 19. /galleries/{gallery-id}/artworks</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1255,7 +1388,7 @@ Content-Type: image/png
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. request-parts</caption>
+<caption class="title">Table 20. request-parts</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1274,7 +1407,7 @@ Content-Type: image/png
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 18. request-parameters</caption>
+<caption class="title">Table 21. request-parameters</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1331,7 +1464,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 19. request-headers</caption>
+<caption class="title">Table 22. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1350,7 +1483,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 20. /galleries/{gallery-id}/artworks</caption>
+<caption class="title">Table 23. /galleries/{gallery-id}/artworks</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1379,49 +1512,58 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 768
+Content-Length: 1023
 
 [ {
-  "artworkId" : 4,
-  "memberId" : 5,
-  "title" : "(4) 작품 제목",
-  "content" : "화이팅!",
-  "imagePath" : "/4.png",
-  "likeCount" : 0,
+  "artworkId" : 1,
+  "memberId" : 0,
+  "title" : "제목입니다.",
+  "content" : "설명입니다.",
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 32,
   "liked" : false,
-  "commentCount" : 0
-}, {
-  "artworkId" : 3,
-  "memberId" : 4,
-  "title" : "(3) 작품 제목",
-  "content" : "화이팅!",
-  "imagePath" : "/3.png",
-  "likeCount" : 0,
-  "liked" : false,
-  "commentCount" : 0
+  "commentCount" : 3
 }, {
   "artworkId" : 2,
-  "memberId" : 3,
-  "title" : "(2) 작품 제목",
-  "content" : "조금만 더 힘내요!",
-  "imagePath" : "/2.png",
-  "likeCount" : 0,
+  "memberId" : 0,
+  "title" : "제목입니다.",
+  "content" : "설명입니다.",
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 212,
   "liked" : false,
-  "commentCount" : 0
+  "commentCount" : 2
 }, {
-  "artworkId" : 1,
-  "memberId" : 2,
-  "title" : "(1) 작품 제목",
-  "content" : "(1) 설명",
-  "imagePath" : "/1.png",
-  "likeCount" : 0,
+  "artworkId" : 3,
+  "memberId" : 0,
+  "title" : "제목입니다.",
+  "content" : "설명입니다.",
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 26,
   "liked" : false,
-  "commentCount" : 0
+  "commentCount" : 5
+}, {
+  "artworkId" : 4,
+  "memberId" : 0,
+  "title" : "제목입니다.",
+  "content" : "설명입니다.",
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 62,
+  "liked" : false,
+  "commentCount" : 6
+}, {
+  "artworkId" : 5,
+  "memberId" : 0,
+  "title" : "제목입니다.",
+  "content" : "설명입니다.",
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 91,
+  "liked" : false,
+  "commentCount" : 1
 } ]</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. response-fields</caption>
+<caption class="title">Table 24. response-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1484,8 +1626,6 @@ Content-Length: 768
 <div class="title">curl-request</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/1' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Accept: application/json' \
     -H 'Authorization: Bearer (accessToken)'</code></pre>
 </div>
 </div>
@@ -1493,14 +1633,12 @@ Content-Length: 768
 <div class="title">http-request</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">GET /galleries/1/artworks/1 HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Accept: application/json
 Authorization: Bearer (accessToken)
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. request-headers</caption>
+<caption class="title">Table 25. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1519,7 +1657,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 23. /galleries/{gallery-id}/artworks/{artwork-id}</caption>
+<caption class="title">Table 26. /galleries/{gallery-id}/artworks/{artwork-id}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1552,22 +1690,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 189
+Content-Length: 202
 
 {
   "artworkId" : 1,
-  "memberId" : 1,
-  "title" : "올해 네 컷 - D25",
-  "content" : "화이팅!",
-  "imagePath" : "/1.png",
-  "likeCount" : 1,
+  "memberId" : 0,
+  "title" : "제목입니다.",
+  "content" : "설명입니다.",
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 22,
   "liked" : false,
-  "commentCount" : 0
+  "commentCount" : 3
 }</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 24. response-fields</caption>
+<caption class="title">Table 27. response-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1629,43 +1767,18 @@ Content-Length: 189
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/like' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Accept: application/json' \
-    -H 'Authorization: Bearer (accessToken)'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/like' -i -X GET</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">GET /galleries/1/artworks/like HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Accept: application/json
-Authorization: Bearer (accessToken)
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 25. request-headers</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - Access Token</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 26. /galleries/{gallery-id}/artworks/like</caption>
+<caption class="title">Table 28. /galleries/{gallery-id}/artworks/like</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1694,29 +1807,29 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 274
+Content-Length: 321
 
 [ {
-  "artworkId" : 4,
-  "imagePath" : "/4.png",
-  "likeCount" : 4
-}, {
-  "artworkId" : 3,
-  "imagePath" : "/3.png",
-  "likeCount" : 3
+  "artworkId" : 1,
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 200
 }, {
   "artworkId" : 2,
-  "imagePath" : "/2.png",
-  "likeCount" : 2
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 150
 }, {
-  "artworkId" : 1,
-  "imagePath" : "/1.png",
-  "likeCount" : 1
+  "artworkId" : 3,
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 100
+}, {
+  "artworkId" : 4,
+  "imagePath" : "S3 이미지 url",
+  "likeCount" : 50
 } ]</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 27. response-fields</caption>
+<caption class="title">Table 29. response-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1773,7 +1886,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 28. request-headers</caption>
+<caption class="title">Table 30. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1792,7 +1905,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 29. /galleries/{gallery-id}/artworks/{artwork-id}</caption>
+<caption class="title">Table 31. /galleries/{gallery-id}/artworks/{artwork-id}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1815,7 +1928,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 30. request-parts</caption>
+<caption class="title">Table 32. request-parts</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1834,7 +1947,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 31. request-parameters</caption>
+<caption class="title">Table 33. request-parameters</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1867,14 +1980,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 191
+Content-Length: 198
 
 {
   "artworkId" : 1,
-  "memberId" : 1,
+  "memberId" : 0,
   "title" : "수정된 제목",
   "content" : "수정된 설명",
-  "imagePath" : "/1.png",
+  "imagePath" : "/S3_imagePath",
   "likeCount" : 0,
   "liked" : false,
   "commentCount" : 0
@@ -1882,7 +1995,7 @@ Content-Length: 191
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 32. response-fields</caption>
+<caption class="title">Table 34. response-fields</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1945,23 +2058,19 @@ Content-Length: 191
 <div class="title">curl-request</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/1' -i -X DELETE \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer (AccessToken)' \
-    -H 'Accept: application/json'</code></pre>
+    -H 'Authorization: Bearer (AccessToken)'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/1/artworks/1 HTTP/1.1
-Content-Type: application/json;charset=UTF-8
 Authorization: Bearer (AccessToken)
-Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 33. request-headers</caption>
+<caption class="title">Table 35. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1980,7 +2089,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 34. /galleries/{gallery-id}/artworks/{artwork-id}</caption>
+<caption class="title">Table 36. /galleries/{gallery-id}/artworks/{artwork-id}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2041,7 +2150,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 35. request-headers</caption>
+<caption class="title">Table 37. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2060,7 +2169,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 36. /galleries/{gallery-id}/artworks/{artwork-id}/likes</caption>
+<caption class="title">Table 38. /galleries/{gallery-id}/artworks/{artwork-id}/likes</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2108,7 +2217,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/comments' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxNCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTUsImV4cCI6MTY2OTc4NDU1NX0.9YFKQT9A5EixI-gB1IOJwHBgZVKw6wXUp80Xia4n6qZBjwV0nh5G57n_iZFqnK_j' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxNCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDQsImV4cCI6MTY2OTk1NzcwNH0.keO0FLSngIbzxDuNaAXlj_DLqQk59DsJ0JYH20bcc-rNnd8b77mHUfUtM0YDHR9W' \
     -H 'Accept: application/json' \
     -d '{
   "content" : "댓글입니다"
@@ -2120,7 +2229,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxNCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTUsImV4cCI6MTY2OTc4NDU1NX0.9YFKQT9A5EixI-gB1IOJwHBgZVKw6wXUp80Xia4n6qZBjwV0nh5G57n_iZFqnK_j
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxNCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDQsImV4cCI6MTY2OTk1NzcwNH0.keO0FLSngIbzxDuNaAXlj_DLqQk59DsJ0JYH20bcc-rNnd8b77mHUfUtM0YDHR9W
 Accept: application/json
 Content-Length: 35
 Host: localhost:8080
@@ -2131,7 +2240,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 37. request-headers</caption>
+<caption class="title">Table 39. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2150,7 +2259,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 38. /galleries/{galleryId}/comments</caption>
+<caption class="title">Table 40. /galleries/{galleryId}/comments</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2206,7 +2315,7 @@ Content-Length: 261
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/1/comments' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMywidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTUsImV4cCI6MTY2OTc4NDU1NX0._Vz7EEhF9nKNy02xYShE1Iy6DViRstmHDIOcNt33h-NcU5sBgcAlsP4aJfVpo57S' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMywidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDQsImV4cCI6MTY2OTk1NzcwNH0.eqKL75iBlNHyaainFkRkEAsIGnHQGBUw2xAEzLGpLL7mt63UTJ0c4bx1ue7XFCOC' \
     -H 'Accept: application/json' \
     -d '{
   "content" : "댓글입니다"
@@ -2218,7 +2327,7 @@ Content-Length: 261
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/1/artworks/1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMywidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTUsImV4cCI6MTY2OTc4NDU1NX0._Vz7EEhF9nKNy02xYShE1Iy6DViRstmHDIOcNt33h-NcU5sBgcAlsP4aJfVpo57S
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMywidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDQsImV4cCI6MTY2OTk1NzcwNH0.eqKL75iBlNHyaainFkRkEAsIGnHQGBUw2xAEzLGpLL7mt63UTJ0c4bx1ue7XFCOC
 Accept: application/json
 Content-Length: 35
 Host: localhost:8080
@@ -2229,7 +2338,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 39. request-headers</caption>
+<caption class="title">Table 41. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2248,7 +2357,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 40. /galleries/{galleryId}/artworks/{artworkId}/comments</caption>
+<caption class="title">Table 42. /galleries/{galleryId}/artworks/{artworkId}/comments</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2321,7 +2430,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 41. /galleries/{galleryId}/comments</caption>
+<caption class="title">Table 43. /galleries/{galleryId}/comments</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2340,7 +2449,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 42. request-parameters</caption>
+<caption class="title">Table 44. request-parameters</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2431,7 +2540,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 43. /galleries/{galleryId}/artworks/{artworkId}/comments</caption>
+<caption class="title">Table 45. /galleries/{galleryId}/artworks/{artworkId}/comments</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2454,7 +2563,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 44. request-parameters</caption>
+<caption class="title">Table 46. request-parameters</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2516,7 +2625,7 @@ Content-Length: 381
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/5/comments/5' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTUsImV4cCI6MTY2OTc4NDU1NX0.C0IdGgAlvos9Q8twhHG80fuUww_YcJ1PJeWCXrQzzfBNTFZm7RVKcA8nawZocU-_' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDQsImV4cCI6MTY2OTk1NzcwNH0.bcuMEdsVmaBlWOwr7TxEEBeVWK4ZXpsctVVALdlT4Z3VTinjpoU8kUrGQSyNKXVf' \
     -H 'Accept: application/json' \
     -d '{
   "content" : "수정댓글입니다."
@@ -2528,7 +2637,7 @@ Content-Length: 381
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/5/comments/5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTUsImV4cCI6MTY2OTc4NDU1NX0.C0IdGgAlvos9Q8twhHG80fuUww_YcJ1PJeWCXrQzzfBNTFZm7RVKcA8nawZocU-_
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDQsImV4cCI6MTY2OTk1NzcwNH0.bcuMEdsVmaBlWOwr7TxEEBeVWK4ZXpsctVVALdlT4Z3VTinjpoU8kUrGQSyNKXVf
 Accept: application/json
 Content-Length: 42
 Host: localhost:8080
@@ -2539,7 +2648,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 45. request-headers</caption>
+<caption class="title">Table 47. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2558,7 +2667,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 46. /galleries/{galleryId}/comments/{commentId}</caption>
+<caption class="title">Table 48. /galleries/{galleryId}/comments/{commentId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2618,7 +2727,7 @@ Content-Length: 268
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/3/comments/5' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1NSwiZXhwIjoxNjY5Nzg0NTU1fQ.4keYscCvSi5IfS7RHGiBkwGDdeEr3x_a4bZzPTpDTtYWdXEIURXaQBRoc1qjV3K0' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNCwiZXhwIjoxNjY5OTU3NzA0fQ.A4LhwedU1KozuHbWTUpZVQHfi3cIoq9hhN4NBKTpbomXotoqM45uo_EAHhZ2-_bk' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -2627,13 +2736,13 @@ Content-Length: 268
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/3/comments/5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1NSwiZXhwIjoxNjY5Nzg0NTU1fQ.4keYscCvSi5IfS7RHGiBkwGDdeEr3x_a4bZzPTpDTtYWdXEIURXaQBRoc1qjV3K0
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNCwiZXhwIjoxNjY5OTU3NzA0fQ.A4LhwedU1KozuHbWTUpZVQHfi3cIoq9hhN4NBKTpbomXotoqM45uo_EAHhZ2-_bk
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 47. request-headers</caption>
+<caption class="title">Table 49. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2652,7 +2761,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 48. /galleries/{galleryId}/comments/{commentId}</caption>
+<caption class="title">Table 50. /galleries/{galleryId}/comments/{commentId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2703,7 +2812,7 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/1/replies' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTYsImV4cCI6MTY2OTc4NDU1Nn0.w4hFUs5QMwX2Ks2HKqcqyXyRLTR11DlvH7jr6xaiJ5L0ekiH5d_qL-4VdHmm79LN' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDUsImV4cCI6MTY2OTk1NzcwNX0.6wlnhOjBpEEeUAGHKdCNNOYWcDRyk0WOsNjTa9vOozXnTN5Fx3XXIpnODDHhWE4_' \
     -H 'Accept: application/json' \
     -d '{
   "content" : "답글입니다"
@@ -2715,7 +2824,7 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/comments/1/replies HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTYsImV4cCI6MTY2OTc4NDU1Nn0.w4hFUs5QMwX2Ks2HKqcqyXyRLTR11DlvH7jr6xaiJ5L0ekiH5d_qL-4VdHmm79LN
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDUsImV4cCI6MTY2OTk1NzcwNX0.6wlnhOjBpEEeUAGHKdCNNOYWcDRyk0WOsNjTa9vOozXnTN5Fx3XXIpnODDHhWE4_
 Accept: application/json
 Content-Length: 35
 Host: localhost:8080
@@ -2726,7 +2835,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 49. request-headers</caption>
+<caption class="title">Table 51. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2745,7 +2854,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 50. /galleries/comments/{commentId}/replies</caption>
+<caption class="title">Table 52. /galleries/comments/{commentId}/replies</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2813,7 +2922,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 51. /galleries/comments/{commentId}/replies</caption>
+<caption class="title">Table 53. /galleries/comments/{commentId}/replies</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2855,7 +2964,7 @@ Content-Length: 648
     "nickname" : "test1",
     "content" : "답글",
     "createdAt" : "2022-11-14T23:41:52.764644",
-    "modifiedAt" : "2022-11-29T14:02:36.634288"
+    "modifiedAt" : "2022-12-01T14:08:25.377456"
   }, {
     "replyId" : 2,
     "memberId" : 1,
@@ -2882,7 +2991,7 @@ Content-Length: 648
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/4/replies/1' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMiwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTYsImV4cCI6MTY2OTc4NDU1Nn0.WYk1tX1VxrxpI65Hse35VmdtgsnGFETuu0OPs-RIenxyzT6UWlO4iLPtSRvhf8-L' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMiwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDUsImV4cCI6MTY2OTk1NzcwNX0.Tiq_BZjUi0gXHjRCAl32qXpm2Wf-JiljPP3EYmb-gUg419-38j5n-mzkVLoz7ekL' \
     -H 'Accept: application/json' \
     -d '{
   "content" : "수정대댓글입니다."
@@ -2894,7 +3003,7 @@ Content-Length: 648
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/comments/4/replies/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMiwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk2OTgxNTYsImV4cCI6MTY2OTc4NDU1Nn0.WYk1tX1VxrxpI65Hse35VmdtgsnGFETuu0OPs-RIenxyzT6UWlO4iLPtSRvhf8-L
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMiwidXNlcm5hbWUiOiJ0ZXN0MUBnbWFpbC5jb20iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzEzMDUsImV4cCI6MTY2OTk1NzcwNX0.Tiq_BZjUi0gXHjRCAl32qXpm2Wf-JiljPP3EYmb-gUg419-38j5n-mzkVLoz7ekL
 Accept: application/json
 Content-Length: 45
 Host: localhost:8080
@@ -2905,7 +3014,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 52. request-headers</caption>
+<caption class="title">Table 54. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2924,7 +3033,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 53. /galleries/comments/{commentId}/replies/{replyId}</caption>
+<caption class="title">Table 55. /galleries/comments/{commentId}/replies/{replyId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2983,7 +3092,7 @@ Content-Length: 243
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/3/replies/3' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1NiwiZXhwIjoxNjY5Nzg0NTU2fQ.toOL3jo8603M8Q60pCcJ2I7GdSwl__a-T5MfE-MPIRtnv_fNLYJNd3kHIyIRmN1o' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNSwiZXhwIjoxNjY5OTU3NzA1fQ.qWFXBThRR-jEKkhuaYiDIP5WANKTT_l9hmpU8o4gSVJ1lJ2muWJVC93RUDDNLJLh' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -2992,13 +3101,13 @@ Content-Length: 243
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/comments/3/replies/3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTY5ODE1NiwiZXhwIjoxNjY5Nzg0NTU2fQ.toOL3jo8603M8Q60pCcJ2I7GdSwl__a-T5MfE-MPIRtnv_fNLYJNd3kHIyIRmN1o
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6InRlc3QxQGdtYWlsLmNvbSIsInN1YiI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTY2OTg3MTMwNSwiZXhwIjoxNjY5OTU3NzA1fQ.qWFXBThRR-jEKkhuaYiDIP5WANKTT_l9hmpU8o4gSVJ1lJ2muWJVC93RUDDNLJLh
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 54. request-headers</caption>
+<caption class="title">Table 56. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3017,7 +3126,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 55. /galleries/comments/{commentId}/replies/{replyId}</caption>
+<caption class="title">Table 57. /galleries/comments/{commentId}/replies/{replyId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3061,7 +3170,7 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-11-29 02:45:08 +0900
+Last updated 2022-12-01 13:41:54 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

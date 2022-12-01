@@ -5,6 +5,7 @@ import com.codestates.mainproject.oneyearfourcut.global.config.auth.filter.JwtVe
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.MemberAuthenticationEntryPoint;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.OAuth2MemberSuccessHandler;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
+import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,7 @@ public class SecurityConfig {
 
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final RefreshTokenService refreshTokenService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,18 +57,19 @@ public class SecurityConfig {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.GET, "/galleries/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/").permitAll()
-                        .antMatchers(HttpMethod.GET, "/receive-token").permitAll()
-                        .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
-                        .antMatchers("/h2/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/galleries/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/").permitAll()
+                                .antMatchers(HttpMethod.GET, "/receive-token").permitAll()
+                                .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
+                                .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
+                                .antMatchers("/h2/**").permitAll()
 //                        .antMatchers("/members/**").hasRole("USER")
 //                        .antMatchers("/galleries/**").hasRole("USER")
 //                        .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
-                        .anyRequest().hasRole("USER")
+                                .anyRequest().hasRole("USER")
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, memberService)));
+                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, memberService, refreshTokenService)));
         return http.build();
     }
 

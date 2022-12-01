@@ -2,6 +2,8 @@ package com.codestates.mainproject.oneyearfourcut.global.config.auth.filter;
 
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,17 +33,16 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
-        } catch (SignatureException se) {
-            request.setAttribute("exception", se);
         } catch (ExpiredJwtException ee) {
             request.setAttribute("exception", ee);
+            //만료된 토큰이면 특정 에러를 반환하도록 구현
+            request.setAttribute("expiredJwt", "expiredJwt");
         } catch (Exception e) {
             request.setAttribute("exception", e);
         }
         filterChain.doFilter(request, response);
     }
 
-    // (6)
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");

@@ -9,6 +9,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
+import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.entity.RefreshToken;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter // setter 사용중인게 있어서 등록. 나중에 제거 예정
 @NoArgsConstructor
 public class Member extends Auditable {
 
@@ -97,4 +97,6 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "member")
+    private RefreshToken refreshToken;
 }

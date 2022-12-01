@@ -5,6 +5,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStat
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
+import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.entity.RefreshToken;
+import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.service.RefreshTokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -22,16 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final RefreshTokenService refreshTokenService;
 
-    // (2)
-    public OAuth2MemberSuccessHandler(JwtTokenizer jwtTokenizer,
-                                      MemberService memberService) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberService = memberService;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -46,7 +45,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) kakaoProfile.get("nickname");
         String profile = (String) kakaoProfile.get("profile_image_url");
-        List<String> authorities = List.of("USER");
+        List<String> authorities = List.of("USER"); //일단 모든유저 역할 통일
 
         saveMember(email, nickname, profile);
         redirect(request, response, email, authorities);
@@ -64,36 +63,38 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> authorities) throws IOException {
-        String accessToken = delegateAccessToken(username, authorities);
-        String refreshToken = delegateRefreshToken(username);
+        Member member = memberService.findMemberByEmail(username);  //memberId를 accessToken에 담고, refreshToken을 저장하기위함
+        String accessToken = delegateAccessToken(authorities, member);
+        String refreshToken = delegateRefreshToken(member);
 
         String uri = createURI(accessToken, refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private String delegateAccessToken(String username, List<String> authorities) {
-        Member member = memberService.findMemberByEmail(username);
+    private String delegateAccessToken(List<String> authorities, Member member) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
+        claims.put("username", member.getEmail());
         claims.put("roles", authorities);
         claims.put("id", member.getMemberId());
 
-        String subject = username; //subject에 이메일을 저장
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+        String subject = member.getEmail(); //subject에 이메일을 저장
 
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, base64EncodedSecretKey);
 
         return "Bearer " + accessToken;
     }
 
-    private String delegateRefreshToken(String username) {
-        String subject = username;
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+    private String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, base64EncodedSecretKey);
+
+        boolean tokenExist = refreshTokenService.isTokenExist(subject);
+        if (tokenExist) refreshTokenService.updateRefreshToken(subject, refreshToken);
+        else refreshTokenService.saveRefreshToken(member, refreshToken);    //refresh token 생성과 함께 저장
 
         return refreshToken;
     }
