@@ -4,6 +4,7 @@ import { getUser } from 'Intro/api';
 import { logout, deleteUser } from 'Intro/api';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import { clearStoredToken } from 'Intro/hooks/tokenStorage';
+import * as TOAST from 'shared/components/Toast/ToastData';
 import useToast from 'shared/components/Toast/hooks/useToast';
 
 const useHandleService = () => {
@@ -18,10 +19,7 @@ const useHandleService = () => {
           navigateSearch('/', {});
           console.log(res.data);
           setUser(res.data);
-          setToast(3000, [
-            '전시관이 삭제되었습니다',
-            '새로운 전시관을 만들어 보세요',
-          ]);
+          setToast(TOAST.DELETE_GALLERY);
         });
       })
       .catch((err) => console.log(err));
@@ -31,7 +29,7 @@ const useHandleService = () => {
       clearStoredToken();
       navigateSearch('/', {});
       setLoggedOut();
-      setToast(3000, ['로그아웃 되었습니다.', ' ']);
+      setToast(TOAST.LOGOUT);
     });
   };
 
@@ -40,7 +38,7 @@ const useHandleService = () => {
       clearStoredToken();
       navigateSearch('/', {});
       setLoggedOut();
-      setToast(3000, ['회원탈퇴가 완료되었습니다', '내년에 다시만나요!']);
+      setToast(TOAST.DELETE_USER);
     });
   };
 

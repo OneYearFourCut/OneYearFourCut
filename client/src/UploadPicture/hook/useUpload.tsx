@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
-import apis from '../api';
-import { ModalStore } from 'store/store';
+import * as TOAST from 'shared/components/Toast/ToastData';
 import useToast from 'shared/components/Toast/hooks/useToast';
+import apis from '../api';
+import { useMutation } from '@tanstack/react-query';
+import { ModalStore } from 'store/store';
 import { FormData } from '../types';
 
 const useUpload = () => {
@@ -16,7 +17,7 @@ const useUpload = () => {
         closeModal('AlertModal');
       },
       onSuccess() {
-        setToast(3000, ['작품이 등록되었습니다.', '내 전시관도 만들어보기']);
+        setToast(TOAST.UPLOAD_SUCCESSE);
       },
       onError(err) {
         alert('작품 업로드 오류');

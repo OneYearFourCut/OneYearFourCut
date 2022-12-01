@@ -23,6 +23,7 @@ const ToastBox = styled.div<{ time: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   animation: ToastShow ${({ time }) => time / 1000}s linear forwards;
   background-color: white;
 

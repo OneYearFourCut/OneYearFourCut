@@ -34,7 +34,7 @@ const useHandleIntersection = () => {
               else {
                 setIsData(false);
               }
-            }, 1000);
+            }, 700);
           });
         }
       });

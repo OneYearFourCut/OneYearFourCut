@@ -1,19 +1,14 @@
-import { ToastStore } from "store/store";
-
+import { ToastStore } from 'store/store';
+import { ToastData } from '../ToastData';
 const useToast = () => {
-    const { addToast, removeToast } = ToastStore();
+  const { addToast, removeToast } = ToastStore();
 
-    const setToast = (time: number, content: string[]) => {
-        
-        let obj = {
-            time,
-            content
-        }
-        addToast(obj);
-        setTimeout(removeToast, time);
-    }
+  const setToast = (data: ToastData) => {
+    addToast(data);
+    setTimeout(removeToast, data.time);
+  };
 
-    return { setToast };
-}
+  return { setToast };
+};
 
-export default useToast ;
+export default useToast;

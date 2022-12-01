@@ -1,4 +1,5 @@
 import * as C from './components/Container';
+import * as TOAST from 'shared/components/Toast/ToastData';
 import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import useToast from 'shared/components/Toast/hooks/useToast';
 import useUpload from './hook/useUpload';
@@ -38,10 +39,7 @@ const UploadPicture = () => {
       UploadData.content.length > 30 ||
       UploadData.title.length > 15
     ) {
-      setToast(3000, [
-        '입력하지 않은곳이 있는지 확인해주세요',
-        '제목은 15글자, 설명은 30글자 이하여야합니다.',
-      ]);
+      setToast(TOAST.CHECK_FORM);
       return;
     } else {
       openModal('AlertModal');

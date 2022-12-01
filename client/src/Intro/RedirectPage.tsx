@@ -1,14 +1,12 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { StyledLink } from 'shared/components/LinkButton/style';
-import { setStoredToken, getStoredToken } from './hooks/tokenStorage';
-import { GetUser } from './hooks/useUserData';
+import { setStoredToken } from './hooks/tokenStorage';
 import { loginStore } from 'store/store';
-import { jsonInstance } from 'shared/utils/axios';
-import { getUser } from './api';
 import axios from 'axios';
 const RedirectPage = (): ReactElement => {
-  const { isLoggedin, setIsLoggedIn, user } = loginStore();
+  const { setIsLoggedIn, user } = loginStore();
   const setUser = loginStore((state) => state.setUser);
+  const [isRun, setIsRun] = useState(false);
 
   useEffect(() => {
     let params = new URL(document.location.toString()).searchParams;
@@ -32,8 +30,9 @@ const RedirectPage = (): ReactElement => {
       .then((res) => {
         setIsLoggedIn();
         setUser(res.data);
+        setIsRun(true);
       });
-  },[]);
+  }, [isRun]);
 
   const Child = (props: any) => {
     const user = props.user;

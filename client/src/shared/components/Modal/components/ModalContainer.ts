@@ -91,16 +91,9 @@ const HambergurBox = styled.div`
     }
   }
 
-  h4 {
-    margin-top: ${rem(28)};
-    .ModifyNickname {
-      margin-left: ${rem(5)};
-    }
-  }
   ul {
     list-style: none;
     margin-top: ${rem(28)};
-    
   }
 
   ul li {
@@ -109,42 +102,83 @@ const HambergurBox = styled.div`
     cursor: pointer;
   }
 
-  ul li: hover {
+  ulli: hover {
     font-weight: 1000;
   }
-  ul li:nth-child(n+3){
+  ul li:nth-child(n + 4) {
     color: grey;
   }
 `;
 
-const ProfileBox = styled.div`
-  width: ${rem(90)};
-  height: ${rem(90)};
+const ProfileBox = styled.form<{ isModifing: boolean }>`
+  width: ${rem(130)};
+  height: ${rem(140)};
   margin-top: ${rem(41)};
-  margin-left: ${rem(11)};
   position: relative;
-  div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .ProfileImg {
     width: ${rem(74)};
     height: ${rem(74)};
     overflow: hidden;
     border-radius: 70%;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+
   .ModifyProfileImg {
     position: absolute;
     top: ${rem(60)};
-    left: ${rem(55)};
+    left: ${rem(80)};
+    cursor: pointer;
+  }
+  #profile-file {
+    display: none;
+  }
+
+  #Nickname {
+    width: 100%;
+    margin-top: ${rem(28)};
+    border: none;
+    border-bottom: ${({ isModifing }) =>
+      isModifing ? 'solid 1px black' : 'none'};
+    font-size: ${rem(20)};
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+  }
+  .ModifyNickname {
+    position: absolute;
+    top: ${rem(95)};
+    left: ${rem(100)};
+  }
+  .modifyBox {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: ${rem(10)};
+    button {
+      width: ${rem(55)};
+      border: none;
+      border-radius: ${rem(5)};
+      background-color: ${({ theme }) => theme.colors.black_008};
+      cursor: pointer;
+    }
+    .cancel {
+      background-color: white;
+    }
   }
 `;
 
 const TextBox = styled.textarea`
   opacity: 0;
   width: 0;
-  height:0;
+  height: 0;
 `;
 
 export {
@@ -154,5 +188,5 @@ export {
   HambergurBox,
   ProfileBox,
   ModalBackdropCloseBox,
-  TextBox
+  TextBox,
 };

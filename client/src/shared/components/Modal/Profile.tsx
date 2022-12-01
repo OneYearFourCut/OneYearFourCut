@@ -1,11 +1,12 @@
-import * as B from './components/ModalContainer';
-import * as S from './components/SvgComponents';
+import { useState } from 'react';
 import { loginStore, ModalStore } from 'store/store';
 import { DeleteGallery, DeleteUser } from './AlertData';
 import { Alert } from './Alert';
+import * as B from './components/ModalContainer';
 import useHandleService from './hooks/useHandleService';
 import useClipboardCopy from './hooks/useClipboardCopy';
 import ModalBackdrop from './components/ModalBackdrop';
+import ProfileModify from './components/ProfileModify';
 
 const Profile = () => {
   const { textareaRef, handleCopy, URL } = useClipboardCopy();
@@ -17,30 +18,19 @@ const Profile = () => {
   } = useHandleService();
   const { isLoggedin, user } = loginStore();
   const { target, openModal } = ModalStore();
+  const [isModifing, setIsModifing] = useState(false);
 
   return (
     <>
       <B.HambergurBox>
-        
-        {/* Profile */}
-        <B.ProfileBox>
-          <div>
-            <img
-              src={isLoggedin ? user?.profile : '/images/DefaultProfileImg.png'}
-              alt='profileimg'
-            ></img>
-          </div>
-          <S.ModifyProfileImg />
-        </B.ProfileBox>
-        <h4>
-          {isLoggedin ? user?.nickname : '로그인이 필요합니다.'}
-          {isLoggedin && <S.ModifyNickname />}
-        </h4>
+        {/* 프로필수정 */}
+        <ProfileModify isModifing={isModifing} setIsModifing={setIsModifing} />
 
         {/* 라우팅 */}
         {isLoggedin && (
           <>
             <ul>
+              <li onClick={() => setIsModifing(!isModifing)}>프로필 수정</li>
               <li onClick={() => navigateSearch('/gallerySetting', {})}>
                 전시관 편집하기
               </li>

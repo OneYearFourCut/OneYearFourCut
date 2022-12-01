@@ -1,25 +1,10 @@
 import * as B from './Container';
+import * as TOAST from 'shared/components/Toast/ToastData';
+import useToast from 'shared/components/Toast/hooks/useToast';
 import { UploadSvg } from './SvgComponents';
 import { UploadStore } from 'store/store';
 import { useRef } from 'react';
-import useToast from 'shared/components/Toast/hooks/useToast';
-
-const ALLOW_FILE_EXTENSION = 'jpg, jpeg, png, heic';
-
-const uploadHelper = (img: File) => {
-  const name = img.name;
-  const size = img.size;
-
-  if (size > 5 * 1024 * 1024) return false;
-
-  const result = name.split('.').map((el) => el.toLowerCase());
-
-  if (result[1] && ALLOW_FILE_EXTENSION.indexOf(result[1]) > -1) {
-    return true;
-  } else {
-    return false;
-  }
-};
+import { uploadHelper } from 'shared/libs/uploadHelper';
 
 const UploadUserImg = () => {
   const { UploadData, setData } = UploadStore();
@@ -34,10 +19,7 @@ const UploadUserImg = () => {
       if (UploadData.img === undefined || inputRef.current)
         inputRef.current!.value = ''; //onChange 이벤트 활성화를 위한 초기화
 
-      setToast(4000, [
-        '확장자와 파일크기를 확인해주세요',
-        `확장자 : ${ALLOW_FILE_EXTENSION}, 크기: 5MB이하`,
-      ]);
+      setToast(TOAST.CHECK_FILE_INFO);
     }
   };
 
