@@ -46,6 +46,7 @@ public class Alarm extends Auditable {
 
     public AlarmResponseDto toAlarmResponseDto() {
         return AlarmResponseDto.builder()
+                .alarmId(this.alarmId)
                 .alarmType(String.valueOf(this.getAlarmType()))
                 .userNickname(this.getUserNickname())
                 .createdAt(this.getCreatedAt())

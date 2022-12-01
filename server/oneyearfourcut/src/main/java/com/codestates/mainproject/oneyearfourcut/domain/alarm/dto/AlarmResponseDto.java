@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class AlarmResponseDto {
+    private Long alarmId;
     private String alarmType;
     private String userNickname;
     private LocalDateTime createdAt;

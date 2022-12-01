@@ -9,8 +9,10 @@ import com.codestates.mainproject.oneyearfourcut.global.exception.exception.Busi
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import com.codestates.mainproject.oneyearfourcut.global.page.ReplyListResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -101,7 +103,7 @@ public class ReplyService {
             throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
         }
         if (replyList.isEmpty()) {
-            throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "대댓글이 아직 없습니다.");
         }
         return replyList;
     }
