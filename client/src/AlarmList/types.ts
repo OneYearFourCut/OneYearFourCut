@@ -19,6 +19,8 @@ interface ALDataTypeInterface {
   COMMENT_GALLERY: string;
   COMMENT_ARTWORK: string;
   POST_ARTWORK: string;
+  REPLY_GALLERY: string;
+  REPLY_ARTWORK: string;
   [key: string]: string;
 }
 
@@ -28,4 +30,6 @@ export const ALDataType: ALDataTypeInterface = {
   COMMENT_GALLERY: '전시관 댓글 등록',
   COMMENT_ARTWORK: '작품 댓글 등록',
   POST_ARTWORK: '작품 등록',
+  REPLY_GALLERY: '전시관 대댓글 등록',
+  REPLY_ARTWORK: '작품 대댓글 등록',
 };

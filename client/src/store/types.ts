@@ -42,7 +42,8 @@ export interface UploadState {
 export interface Upload {
   UploadData: UploadState;
   setData: (key: string, data: File | string) => void;
-  removeData: () => void;
+  removeImg: () => void;
+  resetData: () => void;
 }
 
 export interface UserType {

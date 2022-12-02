@@ -16,7 +16,7 @@ const Index = ({ galleryId }: GalleryType) => {
           전체 작품 보기
         </Btn>
         <Btn className='square white'>
-          <StyledLink to='/'>나도 전시관 만들기</StyledLink>
+          <StyledLink to='/gallerySetting'>나도 전시관 만들기</StyledLink>
         </Btn>
       </S.BtnContainer>
       <div>

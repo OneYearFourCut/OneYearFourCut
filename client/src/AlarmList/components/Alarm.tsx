@@ -3,8 +3,9 @@ import { type ALData, ALDataType } from 'AlarmList/types';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import { loginStore } from 'store/store';
 const Alarm = ({ data }: { data: ALData }) => {
-  const { user: gallaryId } = loginStore();
+  const { user } = loginStore();
   const navigateSearch = useNavigateSearch();
+  console.log(user?.galleryId);
 
   const handleData = (data: ALData): { content: string; url: string } => {
     let content = `${data.userNickname}님이 `;
@@ -12,21 +13,31 @@ const Alarm = ({ data }: { data: ALData }) => {
     switch (ALDataType[data.alarmType]) {
       case ALDataType.LIKE_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 좋아요를 눌렀습니다.`;
-        url += `/${gallaryId}/${data.artworkId}`;
+        url += `/${user?.galleryId}/${data.artworkId}`;
         break;
       case ALDataType.COMMENT_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 댓글을 남겼습니다.`;
-        url += `/${gallaryId}/${data.artworkId}/comments`;
+        url += `/${user?.galleryId}/${data.artworkId}/comments`;
         break;
       case ALDataType.COMMENT_GALLERY:
         content += `전시관에 댓글을 남겼습니다.`;
-        url += `/${gallaryId}/comments`;
+        url += `/${user?.galleryId}/comments`;
+        break;
+      case ALDataType.REPLY_ARTWORK:
+        content += `작품 < ${data.artworkTitle} >에 남긴 댓글에 댓글이 등록되었습니다.`;
+        url += `/${user?.galleryId}/${data.artworkId}/comments`;
+        break;
+      case ALDataType.REPLY_GALLERY:
+        content += `전시관 에 남긴 댓글에 댓글이 등록되었습니다.`;
+        url += `/${user?.galleryId}/comments`;
         break;
       case ALDataType.POST_ARTWORK:
         content += `작품 < ${data.artworkTitle} >을 등록하셨습니다.`;
-        url += `/${gallaryId}/${data.artworkId}`;
+        url += `/${user?.galleryId}/${data.artworkId}`;
         break;
       default:
+        content = '오류';
+        url += `/`;
         break;
     }
     return { content, url };
@@ -35,9 +46,7 @@ const Alarm = ({ data }: { data: ALData }) => {
   return (
     <B.AlarmBox
       read={data.read}
-      onClick={() =>
-        navigateSearch(handleData(data).url, {})
-      }
+      onClick={() => navigateSearch(handleData(data).url, {})}
     >
       <B.DecorateBox read={data.read}>
         {/* 알람 왼쪽 데코부분 div 2개 */}
@@ -46,7 +55,7 @@ const Alarm = ({ data }: { data: ALData }) => {
       </B.DecorateBox>
       <B.ContentBox read={data.read}>
         <ul>
-          <li>{data.createdAt}</li>
+          <li>{data.createdAt.replace('T', ' ')}</li>
           <li>{ALDataType[data.alarmType]}</li>
           <li>{handleData(data).content}</li>
         </ul>

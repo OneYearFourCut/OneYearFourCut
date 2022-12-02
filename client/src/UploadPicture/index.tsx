@@ -14,7 +14,7 @@ import type { FormData } from './types';
 
 const UploadPicture = () => {
   const { target, openModal } = ModalStore();
-  const { UploadData } = UploadStore();
+  const { UploadData, resetData } = UploadStore();
   const { setToast } = useToast();
   const { user, isLoggedin } = loginStore();
   const { mutate } = useUpload();
@@ -29,6 +29,7 @@ const UploadPicture = () => {
     };
 
     mutate(upLoadData);
+    resetData();
   };
 
   const handlePostbtn = (event: React.FormEvent<HTMLFormElement>) => {

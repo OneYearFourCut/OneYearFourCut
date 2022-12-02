@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import Header from 'shared/components/Header';
 import UploadPicture from 'UploadPicture';
 import AlarmList from 'AlarmList';
 import ToastRender from 'shared/components/Toast';
@@ -10,8 +9,8 @@ import GallerySetting from 'GallerySetting/GallerySetting';
 import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import SingleComment from './SingleComments/index';
-const Header = React.lazy(() => import('shared/components/Header'));
 import AuthCheck from 'shared/hooks/useAuth';
+const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
 
