@@ -449,3 +449,36 @@ include::{snippets}/deleteReply/path-parameters.adoc[]
 
 .http-response
 include::{snippets}/deleteReply/http-response.adoc[]
+
+
+***
+== AlarmController
+=== 현재 알림 페이지 조회
+.curl-request
+include::{snippets}/getAlarmListFiltered/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getAlarmListFiltered/http-request.adoc[]
+
+.request-headers
+include::{snippets}/getAlarmListFiltered/request-headers.adoc[]
+
+.request-parameters
+include::{snippets}/getAlarmListFiltered/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getAlarmListFiltered/http-response.adoc[]
+
+=== 읽지 않은 알림 존재 여부 조회
+.curl-request
+include::{snippets}/checkReadAlarm/curl-request.adoc[]
+
+.http-request
+include::{snippets}/checkReadAlarm/http-request.adoc[]
+
+.request-headers
+include::{snippets}/checkReadAlarm/request-headers.adoc[]
+
+.http-response
+include::{snippets}/checkReadAlarm/http-response.adoc[]
+

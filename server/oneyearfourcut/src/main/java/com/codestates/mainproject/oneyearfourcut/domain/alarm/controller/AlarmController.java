@@ -22,16 +22,11 @@ import java.util.List;
 @AllArgsConstructor
 public class AlarmController {
     private final AlarmService alarmService;
-
-    // 알림 전체 조회 (페이지 리스트로 쏴준다)
     @GetMapping
     public ResponseEntity<Object> getAlarmListFiltered(@RequestParam String filter, @RequestParam int page,
                                                        @LoginMember Long memberId){
-
-        List<AlarmResponseDto> response = alarmService.getAlarmPagesByFilter(filter, page, memberId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(alarmService.getAlarmPagesByFilter(filter, page, memberId), HttpStatus.OK);
     }
-    //알림 읽은거 있어 없어 체크. (수시로 겟함.)
     @GetMapping("/read")
     public ResponseEntity<Object> checkReadAlarm(@LoginMember Long memberId){
         return new ResponseEntity<>(alarmService.checkReadAlarm(memberId), HttpStatus.OK);
