@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 import useCreateComment from './hooks/useCreateComment';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const Body = styled.div`
   height: 40%;
@@ -61,20 +62,31 @@ const SubmitButton = styled.button`
 `;
 
 const CommentInput = () => {
+  const params = useParams();
+  const galleryId = parseInt(params.galleryId!);
+  const artworkId = parseInt(params.artworkId!);
   const text = useRef<HTMLInputElement>(null);
 
-  const { mutate } = useCreateComment(1, 1);
+  const { mutate } = useCreateComment(galleryId, artworkId);
+
+  const [value, setValue] = useState('');
 
   const SendComment = () => {
     if (text.current) {
       mutate(text.current.value);
+      text.current.focus();
+      setValue('');
     }
   };
 
   return (
     <Body>
       <InputZone>
-        <Input ref={text} />
+        <Input
+          ref={text}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
         <SubmitButton type='button' onClick={() => SendComment()}>
           입력
         </SubmitButton>

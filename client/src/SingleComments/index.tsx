@@ -9,7 +9,7 @@ const Body = styled.div`
   padding-top: 50px;
   overflow-x: hidden;
   overflow-y: scroll;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
 
   display: flex;
   justify-content: end;

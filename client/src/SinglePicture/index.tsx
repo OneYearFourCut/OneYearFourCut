@@ -1,6 +1,5 @@
 import Footer from 'shared/components/PicFooter/PicFooter';
 import SinglePicture from './SinglePicture';
-
 import styled from 'styled-components';
 import { rem } from 'polished';
 import React from 'react';
@@ -8,13 +7,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './styles.css';
-
-import CommentStore from 'shared/components/PicFooter/OpenComment';
-import SingleComment from 'SingleComments/index';
-
 import useGetAllPost from '../shared/hooks/useGetAllPost';
-
-import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
+import { useParams } from 'react-router-dom';
 
 const Body = styled.div`
   width: ${rem(420)};
@@ -24,44 +18,45 @@ const Body = styled.div`
 `;
 
 const SinglePicPage = () => {
-  const { open } = CommentStore();
-  const { data } = useGetAllPost(17);
+  const params = useParams();
+  const galleryId = parseInt(params.galleryId!);
+  const { data } = useGetAllPost(galleryId);
+
+  // console.log(data?.data);
 
   return (
     <Body>
-      {open ? (
-        <ModalBackdrop>
-          <SingleComment />
-        </ModalBackdrop>
-      ) : (
-        <Swiper
-          slidesPerView={1}
-          spaceBetween={10}
-          centeredSlides={true}
-          className='swiper'
-        >
-          {data &&
-            data.data.map((el: any, idx: number, array: any) => (
-              <SwiperSlide className='swiper-slide' key={el.artworkId}>
-                <Body className='single'>
-                  <SinglePicture
-                    idx={idx}
-                    array={array.length}
-                    picture={el.imagePath}
-                    title={el.title}
-                    scrpit={el.content}
-                    username={el.memberId}
-                    artId={el.artworkId}
-                  ></SinglePicture>
-                  <Footer
-                    like={el.likeCount}
-                    comment={el.commentCount}
-                  ></Footer>
-                </Body>
-              </SwiperSlide>
-            ))}
-        </Swiper>
-      )}
+      <Swiper
+        slidesPerView={1}
+        spaceBetween={10}
+        centeredSlides={true}
+        className='swiper'
+        pagination={false}
+        initialSlide={0}
+      >
+        {data &&
+          data.data.map((el: any, idx: number, array: any) => (
+            <SwiperSlide className='swiper-slide' key={el.artworkId}>
+              <Body className='single'>
+                <SinglePicture
+                  idx={idx}
+                  array={array.length}
+                  picture={el.imagePath}
+                  title={el.title}
+                  scrpit={el.content}
+                  username={el.memberId}
+                  artId={el.artworkId}
+                ></SinglePicture>
+                <Footer
+                  like={el.likeCount}
+                  comment={el.commentCount}
+                  artworkId={el.artworkId}
+                  galleryId={galleryId}
+                ></Footer>
+              </Body>
+            </SwiperSlide>
+          ))}
+      </Swiper>
     </Body>
   );
 };

@@ -9,6 +9,7 @@ import GallerySetting from 'GallerySetting/GallerySetting';
 import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import SingleComment from './SingleComments/index';
+import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
         ),
       },
       { path: '/localStorage', element: <RedirectPage /> },
+
       {
         path: '/allPic/:galleryId',
         element: (
@@ -71,8 +73,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      { path: '/SinglePic', element: <SinglePicPage /> },
-      { path: '/testing', element: <SingleComment /> },
+      { path: `/allPic/:galleryId/artworks`, element: <SinglePicPage /> },
+      {
+        path: '/allPic/:galleryId/:artworkId',
+        element: <OnePicPage />,
+      },
+      {
+        path: '/allPic/:galleryId/:artworkId/comments',
+        element: <SingleComment />,
+      },
     ],
   },
 ]);

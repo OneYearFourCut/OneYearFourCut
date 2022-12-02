@@ -1,14 +1,20 @@
 import * as S from './Single Comments.style';
 import SingleComment from './SingleComment/SingleComment';
 import XIcon from 'shared/components/Icons/XIcon';
-
 import CommentStore from 'shared/components/PicFooter/OpenComment';
-
 import useGetSingleComments from './hooks/useGetSingleComments';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const CommentsList = () => {
   const { setCloseModal, commentCount } = CommentStore();
-  const { data } = useGetSingleComments(17, 16, 1);
+  const params = useParams();
+  const galleryId = parseInt(params.galleryId!);
+  // const artworkId = parseInt(params.artworkId!);
+  let Page = 1;
+
+  const { data } = useGetSingleComments(galleryId, 33, Page);
+
+  const navigate = useNavigate();
 
   return (
     <S.CommentBody>
@@ -18,7 +24,10 @@ const CommentsList = () => {
           <XIcon />
         </div>
       </S.PicTitle>
-      {data &&
+      {data?.data.length === 0 ? (
+        <div>아무것도없음 </div>
+      ) : (
+        data &&
         data.data.commentList.map((el: any) => {
           return (
             <SingleComment
@@ -29,7 +38,8 @@ const CommentsList = () => {
               comment={el.content}
             />
           );
-        })}
+        })
+      )}
     </S.CommentBody>
   );
 };

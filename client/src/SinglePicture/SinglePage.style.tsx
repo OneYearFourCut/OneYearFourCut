@@ -53,12 +53,6 @@ const SinglePic = styled.div`
   padding: 1rem;
   margin: 0.5rem 0;
   box-shadow: rgba(0, 0, 0, 0.24) 0px ${rem(3)} ${rem(8)};
-
-  /* img {
-    width: inherit;
-    height: inherit;
-    object-fit: cover;
-  } */
 `;
 
 const PrePic = styled.div`
