@@ -1,6 +1,14 @@
 import create, { StateCreator } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
-import { ModalState, Modal, Alarm, Components, Upload, Login } from './types';
+import {
+  ModalState,
+  Modal,
+  Alarm,
+  Components,
+  Upload,
+  Login,
+  History,
+} from './types';
 
 //모달
 const initTarget: ModalState = {
@@ -96,4 +104,19 @@ const loginStore = create<Login>(
   ),
 );
 
-export { ModalStore, AlarmStore, ToastStore, UploadStore, loginStore };
+const historyStore = create<History>()(
+  persist((set) => ({
+    history: '',
+    setHistory: (data) => set(() => ({ history: data })),
+    setReset: () => set(() => ({ history: '' })),
+  })),
+);
+
+export {
+  ModalStore,
+  AlarmStore,
+  ToastStore,
+  UploadStore,
+  loginStore,
+  historyStore,
+};

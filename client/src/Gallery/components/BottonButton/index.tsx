@@ -2,11 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { Btn } from 'shared/components/Buttons';
 import { StyledLink } from 'shared/components/LinkButton/style';
 import * as S from './style';
+import GalleryType from 'GallerySetting/galleryType';
 
-type galleryType = {
-  galleryId: number;
-};
-const Index = ({ galleryId }: galleryType) => {
+const Index = ({ galleryId }: GalleryType) => {
   const navigate = useNavigate();
   const onClick = () => {
     navigate(`/allPic/${galleryId}`);

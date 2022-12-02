@@ -11,8 +11,6 @@ type MyFormProps = {
 
 const Index = ({ onSubmit }: MyFormProps) => {
   const { user } = loginStore();
-  const galleryId = user?.galleryId;
-  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     title: '',
@@ -35,7 +33,6 @@ const Index = ({ onSubmit }: MyFormProps) => {
       title: '',
       content: '',
     });
-    navigate(`/fourPic/${galleryId}`);
   };
 
   return (

@@ -1,18 +1,23 @@
 import Input from './components/Input';
 import { patchGallery, postGallery, deleteGalleryById } from './api';
 import { loginStore } from 'store/store';
-import { getUser } from 'Intro/api';
+import { useNavigate, useParams } from 'react-router-dom';
+import { saveUser } from 'Intro/api';
 
 const GallerySetting = () => {
-  const { user } = loginStore();
-  const setUser = loginStore((state) => state.setUser);
-  const galleryId = user?.galleryId;
-  
+  const { user, setUser } = loginStore();
+  let galleryId = user?.galleryId;
+  const navigate = useNavigate();
   const onSubmit = (form: { title: string; content: string }) => {
-    galleryId !== null
-      ? patchGallery(form)
+    galleryId
+      ? patchGallery(form).then(() => {
+          navigate(`/fourPic/${galleryId}`);
+        })
       : postGallery(form).then((res) => {
-          setUser(res.data);
+          const change = Object.assign(user!);
+          change.galleryId = res.data.galleryId;
+          setUser(change);
+          navigate(`/fourPic/${res.data.galleryId}`);
         });
   };
 

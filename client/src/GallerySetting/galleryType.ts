@@ -1,4 +1,5 @@
 export default interface GalleryType {
-  title: string;
-  content: string;
+  galleryId?: number;
+  title?: string;
+  content?: string;
 }

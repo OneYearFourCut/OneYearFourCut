@@ -13,28 +13,56 @@ const Index = () => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
   const { data } = useGetAllPost(galleryId!);
+  // const data: any = 0;
 
   const odd: any[] = [];
   const even: any[] = [];
-  data?.data.map((el: any, i: number) => {
-    i % 2 ? odd.push(el) : even.push(el);
-  });
+  if (data) {
+    data?.data.map((el: any, i: number) => {
+      i % 2 ? odd.push(el) : even.push(el);
+    });
+  }
 
   return (
     <S.Container>
       <FilterBox />
 
       <S.Thumbnails>
-        <S.Column>
-          {even?.map((artwork: any, idx: any) => (
-            <S.ThumbnailImg key={artwork.artworkId} src={artwork.imagePath} />
-          ))}
-        </S.Column>
-        <S.Column>
-          {odd?.map((artwork: any, idx: any) => (
-            <S.ThumbnailImg key={artwork.artworkId} src={artwork.imagePath} />
-          ))}
-        </S.Column>
+        {data ? (
+          <>
+            <S.Column>
+              {even?.map((artwork: any, idx: any) => (
+                <S.ThumbnailImg
+                  key={artwork.artworkId}
+                  src={artwork.imagePath}
+                />
+              ))}
+            </S.Column>
+            <S.Column>
+              {odd?.map((artwork: any, idx: any) => (
+                <S.ThumbnailImg
+                  key={artwork.artworkId}
+                  src={artwork.imagePath}
+                />
+              ))}
+            </S.Column>
+          </>
+        ) : (
+          <>
+            <S.Column>
+              <S.ThumbnailBox />
+              <S.ThumbnailBox />
+              <S.ThumbnailBox />
+              <S.ThumbnailBox />
+            </S.Column>
+            <S.Column>
+              <S.ThumbnailBox />
+              <S.ThumbnailBox />
+              <S.ThumbnailBox />
+              <S.ThumbnailBox />
+            </S.Column>
+          </>
+        )}
       </S.Thumbnails>
     </S.Container>
   );

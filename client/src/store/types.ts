@@ -59,19 +59,8 @@ export interface Login {
   setLoggedOut: () => void;
 }
 
-
-/**
- * const loginStore = create<any>(
-  persist(
-    (set) => ({
-      isLoggedin: false,
-      setIsLoggedIn: () => set(() => ({ isLoggedin: true })),
-
-      user: {},
-      setUser: (data: UserType) => set(() => ({ user: data })),
-      setLoggedOut: () => set(() => ({ isLoggedin: false, user: {} })),
-    }),
-    { name: 'user-StoreName' },
-  ),
-);
- */
+export interface History {
+  history: string;
+  setHistory: (data: string) => void;
+  setReset: () => void;
+}

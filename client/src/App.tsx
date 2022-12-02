@@ -10,6 +10,7 @@ import GallerySetting from 'GallerySetting/GallerySetting';
 import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import SingleComment from './SingleComments/index';
+import AuthCheck from 'shared/hooks/useAuth';
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
 
@@ -29,9 +30,30 @@ const router = createBrowserRouter([
         index: true,
         element: <Intro />,
       },
-      { path: '/gallerySetting', element: <GallerySetting /> },
-      { path: '/alarmList', element: <AlarmList /> },
-      { path: '/uploadPicture', element: <UploadPicture /> },
+      {
+        path: '/gallerySetting',
+        element: (
+          <AuthCheck>
+            <GallerySetting />
+          </AuthCheck>
+        ),
+      },
+      {
+        path: '/alarmList',
+        element: (
+          <AuthCheck>
+            <AlarmList />
+          </AuthCheck>
+        ),
+      },
+      {
+        path: '/uploadPicture',
+        element: (
+          <AuthCheck>
+            <UploadPicture />
+          </AuthCheck>
+        ),
+      },
       { path: '/localStorage', element: <RedirectPage /> },
       {
         path: '/allPic/:galleryId',
