@@ -4,6 +4,7 @@ export interface getParams {
 }
 
 export interface ALData {
+  alarmId: number;
   alarmType: string;
   userNickname: string;
   read: boolean;

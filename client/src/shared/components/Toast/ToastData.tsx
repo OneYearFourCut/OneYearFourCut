@@ -6,7 +6,7 @@ export interface ToastData {
 }
 
 const PROFILE_MODIFY_SUCCESS = {
-  time: 3000,
+  time: 1500,
   content: ['프로필이 변경되었습니다.', ''],
 };
 const CHECK_FILE_INFO = {
@@ -24,6 +24,15 @@ const CHECK_FORM = {
     '제목은 15글자, 설명은 30글자 이하여야합니다.',
   ],
 };
+
+const CHECK_NICKNAME = {
+  time: 3000,
+  content: [
+    '입력하지 않은곳이 있는지 확인해주세요',
+    '닉네임은 최대 7글자까지 가능합니다'
+  ]
+}
+
 
 const CLIPBOARD_COPY_SUCCESS = {
   time: 3000,
@@ -75,5 +84,6 @@ export {
   DELETE_GALLERY,
   LOGOUT,
   DELETE_USER,
-  UPLOAD_SUCCESSE
+  UPLOAD_SUCCESSE,
+  CHECK_NICKNAME,
 };

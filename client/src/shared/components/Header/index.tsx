@@ -4,13 +4,21 @@ import { ModalStore } from 'store/store';
 import { Profile } from '../Modal/Profile';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import ModalBackdrop from '../Modal/components/ModalBackdrop';
+import { Suspense } from 'react';
 
 const Header = () => {
   const { target } = ModalStore();
   const navigateSearch = useNavigateSearch();
+  // console.log(window.location.pathname);
+  if (
+    window.location.pathname === '/' ||
+    window.location.pathname === '/localStorage'
+  )
+    return null;
   if (window.location.pathname === '/') return null;
+
   return (
-    <>
+    <Suspense fallback={<></>}>
       {target.ProfileModal ? (
         <ModalBackdrop>
           <Profile />
@@ -23,7 +31,7 @@ const Header = () => {
           <B.HeaderHamburgerbtn />
         </C.HeaderBox>
       )}
-    </>
+    </Suspense>
   );
 };
 

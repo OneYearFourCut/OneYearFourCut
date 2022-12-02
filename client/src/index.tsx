@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3, //디버깅용도 추후에 삭제
+      retry: 0,   //디버깅용도 추후에 삭제
       suspense: true,
     },
   },

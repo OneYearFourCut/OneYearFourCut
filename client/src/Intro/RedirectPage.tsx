@@ -17,6 +17,7 @@ const RedirectPage = (): ReactElement => {
         refresh_token: refresh_token,
       }),
     );
+
   console.log('리다이렉트 들렸어요');
   saveUser();
   const { user } = loginStore();

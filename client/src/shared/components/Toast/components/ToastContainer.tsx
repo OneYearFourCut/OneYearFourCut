@@ -38,9 +38,9 @@ const ToastBox = styled.div<{ time: number }>`
     .ToastContent {
       width: ${rem(340)};
       text-align: center;
-
     }
     .OptionSVG {
+      cursor: pointer;
     }
   }
   @keyframes ToastShow {

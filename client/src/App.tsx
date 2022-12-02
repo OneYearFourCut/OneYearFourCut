@@ -10,6 +10,7 @@ import GallerySetting from 'GallerySetting/GallerySetting';
 import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import SingleComment from './SingleComments/index';
+const Header = React.lazy(() => import('shared/components/Header'));
 import AuthCheck from 'shared/hooks/useAuth';
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));

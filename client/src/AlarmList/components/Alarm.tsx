@@ -1,35 +1,42 @@
 import * as B from './AlarmContainer';
 import { type ALData, ALDataType } from 'AlarmList/types';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
+import { loginStore } from 'store/store';
 const Alarm = ({ data }: { data: ALData }) => {
+  const { user: gallaryId } = loginStore();
   const navigateSearch = useNavigateSearch();
 
-  const makeContent = (data: ALData): string => {
+  const handleData = (data: ALData): { content: string; url: string } => {
     let content = `${data.userNickname}님이 `;
+    let url = '/allPic';
     switch (ALDataType[data.alarmType]) {
       case ALDataType.LIKE_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 좋아요를 눌렀습니다.`;
+        url += `/${gallaryId}/${data.artworkId}`;
         break;
       case ALDataType.COMMENT_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 댓글을 남겼습니다.`;
+        url += `/${gallaryId}/${data.artworkId}/comments`;
         break;
       case ALDataType.COMMENT_GALLERY:
         content += `전시관에 댓글을 남겼습니다.`;
+        url += `/${gallaryId}/comments`;
         break;
       case ALDataType.POST_ARTWORK:
         content += `작품 < ${data.artworkTitle} >을 등록하셨습니다.`;
+        url += `/${gallaryId}/${data.artworkId}`;
+        break;
+      default:
         break;
     }
-    return content;
+    return { content, url };
   };
-  
+
   return (
     <B.AlarmBox
       read={data.read}
       onClick={() =>
-        navigateSearch('/SinglePic', {
-          artworkId: data.artworkId ? data.artworkId.toString() : 'null',
-        })
+        navigateSearch(handleData(data).url, {})
       }
     >
       <B.DecorateBox read={data.read}>
@@ -41,7 +48,7 @@ const Alarm = ({ data }: { data: ALData }) => {
         <ul>
           <li>{data.createdAt}</li>
           <li>{ALDataType[data.alarmType]}</li>
-          <li>{makeContent(data)}</li>
+          <li>{handleData(data).content}</li>
         </ul>
       </B.ContentBox>
     </B.AlarmBox>

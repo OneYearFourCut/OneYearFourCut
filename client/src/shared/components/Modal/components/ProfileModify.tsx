@@ -2,8 +2,7 @@ import * as B from './ModalContainer';
 import * as S from './SvgComponents';
 import * as TOAST from 'shared/components/Toast/ToastData';
 import useToast from 'shared/components/Toast/hooks/useToast';
-import { loginStore } from 'store/store';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { uploadHelper } from 'shared/libs/uploadHelper';
 import { useModifyProfile } from '../hooks/useModifyProfile';
 
@@ -15,15 +14,11 @@ const ProfileModify = ({
   setIsModifing: (isModifing: boolean) => void;
 }) => {
   const { setToast } = useToast();
-  const { mutate } = useModifyProfile();
-
-  const { isLoggedin, user } = loginStore();
-
+  const { mutate, isLoggedin, user, profileRef } = useModifyProfile();
   const [name, setName] = useState(user?.nickname);
   const [profileimg, setProfileImg] = useState<string | undefined>(
     user?.profile,
   );
-  const profileRef = useRef<HTMLInputElement>(null);
 
   const handleCancel = () => {
     setProfileImg(user?.profile);
@@ -45,12 +40,13 @@ const ProfileModify = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (profileRef.current?.files && name && profileimg) {
+
+if (profileRef.current?.files && name && profileimg) {
       mutate({ img: profileRef.current!.files[0], nickname: name });
       setIsModifing(!isModifing);
-      setToast(TOAST.PROFILE_MODIFY_SUCCESS);
     } else {
-      setToast(TOAST.CHECK_FORM);
+      setToast(TOAST.CHECK_NICKNAME);
+
     }
   };
 
@@ -80,6 +76,7 @@ const ProfileModify = ({
         id='Nickname'
         readOnly={!isModifing}
         value={isLoggedin ? name : '로그인이 필요합니다.'}
+        maxLength={7}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setName(e.target.value)
         }

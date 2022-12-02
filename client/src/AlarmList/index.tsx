@@ -1,9 +1,9 @@
 import * as B from './components/AlarmContainer';
 import Alarm from './components/Alarm';
 import Filter from './components/Filter';
+import useHandleIntersection from './hooks/useHandleIntersection';
 import { useEffect } from 'react';
 import { AlarmStore } from 'store/store';
-import useHandleIntersection from './hooks/useHandleIntersection';
 
 const AlarmList = () => {
   const { openAlarm, closeAlarm } = AlarmStore();
@@ -38,7 +38,7 @@ const AlarmList = () => {
           setIsData={setIsData}
         />
         {alarmListData.map((data) => (
-          <Alarm data={data}></Alarm>
+          <Alarm key={data.alarmId} data={data}></Alarm>
         ))}
         {isData && (
           <B.TriggerBox ref={target}>
