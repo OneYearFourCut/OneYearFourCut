@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
@@ -28,6 +30,7 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final CommentService commentService;
     private final MemberService memberService;
+    private final AlarmService alarmService;
 
     //Create
     @Transactional
@@ -39,11 +42,14 @@ public class ReplyService {
                 .replyStatus(VALID)
                 .build();
         replyRepository.save(reply);
+        if(commentService.findComment(commentId).getArtworkId() == null ){
+            alarmService.createAlarmBasedOnCommentGallery(commentId, memberId, AlarmType.REPLY_GALLERY);
+        }
+        else alarmService.createAlarmBasedOnCommentArtwork(commentId, memberId, AlarmType.REPLY_ARTWORK);
         return new ReplyListResponseDto<>(commentId, reply.toReplyResponseDto());
     }
 
     //Read
-
     @Transactional(readOnly = true)
     public ReplyListResponseDto<Object> getReplyList(Long commentId)  {
         List<Reply> replyList = findReplyList(commentId); //findReplyList에서 검증진행

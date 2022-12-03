@@ -6,6 +6,11 @@ public enum AlarmType {
     LIKE_ARTWORK,
     COMMENT_GALLERY,
     COMMENT_ARTWORK,
+    REPLY_GALLERY,
+
+    REPLY_ARTWORK,
+
+
 
 
     //2순위
@@ -16,5 +21,4 @@ public enum AlarmType {
     GALLARY_CLOSE,
     MESSAGE,
     FRIEND,
-
 }

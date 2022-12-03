@@ -153,7 +153,7 @@ public class AlarmService {
         }
     }
     @Transactional
-    public void createAlarmBasedOnComment(Long commentId, Long memberIdProducer, AlarmType REPLY) { //type -> Reply
+    public void createAlarmBasedOnCommentGallery(Long commentId, Long memberIdProducer, AlarmType REPLY) { //type -> Reply
         Member memberCommentReceiver = new Member();
         Artwork artwork = new Artwork();
 
@@ -164,6 +164,28 @@ public class AlarmService {
                     .member(memberCommentReceiver)
                     .memberIdProducer(memberIdProducer)
                     .alarmType(REPLY)
+                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
+                    .readCheck(false)
+                    .build();
+
+            alarmRepository.save(alarmOnCommentOwner);
+        }
+    }
+
+    @Transactional
+    public void createAlarmBasedOnCommentArtwork(Long commentId, Long memberIdProducer, AlarmType REPLY) { //type -> Reply
+        Member memberCommentReceiver = new Member();
+        Long artworkId = commentRepository.findById(commentId).orElseThrow().getArtworkId();
+
+        memberCommentReceiver = commentRepository.findById(commentId).orElseThrow().getMember();
+        /*if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer)) */
+        {
+            Alarm alarmOnCommentOwner = Alarm.builder()
+                    .member(memberCommentReceiver)
+                    .memberIdProducer(memberIdProducer)
+                    .alarmType(REPLY)
+                    .artworkId(artworkId)
+                    .artworkTitle(artworkRepository.findById(artworkId).orElseThrow().getTitle())
                     .userNickname(memberService.findMember(memberIdProducer).getNickname())
                     .readCheck(false)
                     .build();
