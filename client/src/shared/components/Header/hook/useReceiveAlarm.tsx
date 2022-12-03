@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import apis from '../api';
 
-const useReceiveAlarm = () => {
+const useReceiveAlarm = (isLoggedin: boolean) => {
   const { alarmIsOpen } = AlarmStore();
   const navigate = useNavigate();
   const { data, status, refetch, isStale } = useQuery(
@@ -11,7 +11,7 @@ const useReceiveAlarm = () => {
     apis.getCheckAlarm,
     {
       // enabled: false, //배포시 삭제
-      refetchInterval: 3000,
+      refetchInterval: () => (isLoggedin && !alarmIsOpen ? 3000 : false),
       retry: true,
       retryDelay: 1000,
       refetchOnWindowFocus: false,

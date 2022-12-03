@@ -11,21 +11,19 @@ const ClipboardCopy = () => {
 
   const handleCopy = () => {
     if (user?.galleryId) {
-      navigator.clipboard
-        .writeText(URL)
-        .then(() => {
-          setToast(TOAST.CLIPBOARD_COPY_SUCCESS);
-        })
-        .catch(() => {
-          if (!document.queryCommandSupported('copy')) {
-            return setToast(TOAST.CLIPBOARD_COPY_FAIL(URL));
-          }
-          textareaRef.current && textareaRef.current.select();
-          document.execCommand('copy');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(URL).then(() => {
           setToast(TOAST.CLIPBOARD_COPY_SUCCESS);
         });
-    } else
-      setToast(TOAST.CHECK_MAKE_GALLERY);
+      } else {
+        if (!document.queryCommandSupported('copy')) {
+          return setToast(TOAST.CLIPBOARD_COPY_FAIL(URL));
+        }
+        textareaRef.current && textareaRef.current.select();
+        document.execCommand('copy');
+        setToast(TOAST.CLIPBOARD_COPY_SUCCESS);
+      }
+    } else setToast(TOAST.CHECK_MAKE_GALLERY);
   };
 
   return { textareaRef, handleCopy, URL };

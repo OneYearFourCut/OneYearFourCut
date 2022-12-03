@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 import { loginStore } from 'store/store';
 const Header = () => {
   const { target } = ModalStore();
-  const { user } = loginStore();
+  const { isLoggedin,user } = loginStore();
   const navigateSearch = useNavigateSearch();
 
   // console.log(window.location.pathname);
@@ -22,7 +22,6 @@ const Header = () => {
     let url = user?.galleryId ? `/fourPic/${user.galleryId}` : '';
     navigateSearch(url, {});
   }
-    
 
   return (
     <Suspense fallback={<></>}>
@@ -34,7 +33,7 @@ const Header = () => {
         <C.HeaderBox>
           <B.HeaderBackbtn />
           <h2 onClick={handleHeaderTitle}>올해 네 컷</h2>
-          <B.HeaderBellbtn />
+          <B.HeaderBellbtn isLoggedin={isLoggedin} />
           <B.HeaderHamburgerbtn />
         </C.HeaderBox>
       )}

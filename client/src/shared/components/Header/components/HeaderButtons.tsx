@@ -25,9 +25,8 @@ const HeaderBackbtn = () => {
   );
 };
 
-const HeaderBellbtn = () => {
-  
-  const { alarmIsOpen, onClick, data, status } = useReceiveAlarm();
+const HeaderBellbtn = ({ isLoggedin }: { isLoggedin: boolean }) => {
+  const { alarmIsOpen, onClick, data, status } = useReceiveAlarm(isLoggedin);
 
   return (
     <>
