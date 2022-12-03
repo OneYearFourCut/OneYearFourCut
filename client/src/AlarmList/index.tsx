@@ -20,13 +20,11 @@ const AlarmList = () => {
 
   useEffect(() => {
     openAlarm();
-    window.addEventListener('popstate', closeAlarm);
-
     return () => {
-      // window.removeEventListener("popstate", closeAlarm);
+      closeAlarm();
     };
   }, []);
-
+  console.log(alarmListData);
   return (
     <>
       <B.DefualtContainer>

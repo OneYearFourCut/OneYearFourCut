@@ -11,7 +11,7 @@ const Header = () => {
   const { isLoggedin,user } = loginStore();
   const navigateSearch = useNavigateSearch();
 
-  // console.log(window.location.pathname);
+  console.log(window.location.pathname);
   if (
     window.location.pathname === '/' ||
     window.location.pathname === '/localStorage'
@@ -19,7 +19,7 @@ const Header = () => {
     return null;
   
   const handleHeaderTitle = () => {
-    let url = user?.galleryId ? `/fourPic/${user.galleryId}` : '';
+    let url = user?.galleryId ? `/fourPic/${user.galleryId}` : '/';
     navigateSearch(url, {});
   }
 

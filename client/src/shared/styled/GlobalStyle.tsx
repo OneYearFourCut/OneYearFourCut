@@ -10,6 +10,10 @@ const GlobalStyle = createGlobalStyle`
 body{
     padding-top: 5vh;
 }
+button{
+    cursor:pointer;
+}
+
 `;
 
 export default GlobalStyle;

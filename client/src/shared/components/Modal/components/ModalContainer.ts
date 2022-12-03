@@ -4,12 +4,11 @@ import { rem } from 'polished';
 //모달 배경(투명한 검은색)
 const ModalBackdropBox = styled.div`
   width: ${rem(428)};
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: 51;
-  overflow: hidden;
   ${({ theme }) => theme.flex.center}
 `;
 
@@ -17,10 +16,9 @@ const ModalBackdropCloseBox = styled.div`
   width: ${rem(428)};
   height: 100vh;
   opacity: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: -1;
-  overflow: hidden;
   ${({ theme }) => theme.flex.center}
 `;
 
@@ -147,7 +145,7 @@ const ProfileBox = styled.form<{ isModifing: boolean }>`
     border: none;
     border-bottom: ${({ isModifing }) =>
       isModifing ? 'solid 1px black' : 'none'};
-    font-size: ${rem(20)};
+    font-size: ${rem(15)};
     font-weight: 600;
     text-align: center;
     outline: none;

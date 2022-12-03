@@ -10,10 +10,8 @@ const useReceiveAlarm = (isLoggedin: boolean) => {
     ['useReceiveAlarm'],
     apis.getCheckAlarm,
     {
-      // enabled: false, //배포시 삭제
+      enabled: isLoggedin,
       refetchInterval: () => (isLoggedin && !alarmIsOpen ? 3000 : false),
-      retry: true,
-      retryDelay: 1000,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchIntervalInBackground: false,

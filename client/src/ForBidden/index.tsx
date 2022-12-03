@@ -1,8 +1,13 @@
 import * as S from './ForBidden.style';
 import FourZeroFour from 'shared/components/Icons/ForbiddenIcon';
 import { Btn } from '../shared/components/Buttons/index';
-
+import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 const ForBidden = () => {
+  const navigate = useNavigateSearch();
+  const handleClick = () => {
+    navigate('/', {});
+  };
+
   return (
     <S.Body>
       <FourZeroFour></FourZeroFour>
@@ -11,7 +16,7 @@ const ForBidden = () => {
         <div>찾을 수 없는 페이지입니다!</div>
         <div> 페이지가 삭제되었거나, 잘못된 경로로 이동하셨습니다!</div>
       </S.Script>
-      <Btn>메인 페이지로 돌아가기</Btn>
+      <Btn onClick={handleClick}>메인 페이지로 돌아가기</Btn>
     </S.Body>
   );
 };
