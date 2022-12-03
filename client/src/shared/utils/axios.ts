@@ -6,14 +6,14 @@ const APPLICATION_JSON = 'application/json';
 const MULTIPART_FORM_DATA = 'multipart/form-data';
 
 let lock = false;
-let subscribers: ((access_token: string) => void)[] = [];
+let requestQueue: ((access_token: string) => void)[] = [];
 
-function subscribeTokenRefresh(callback: (access_token: string) => void) {
-  subscribers.push(callback);
+function handleQueue(callback: (access_token: string) => void) {
+  requestQueue.push(callback);
 }
 
-function onRrefreshed(access_token: string) {
-  subscribers.forEach((callback) => callback(access_token));
+function refreshTrigger(access_token: string) {
+  requestQueue.forEach((callback) => callback(access_token));
 }
 
 //json용도
@@ -81,7 +81,7 @@ const responseInterceptorHandle = async (err: AxiosError, type: string) => {
 
     if (lock) {
       return new Promise((resolve) => {
-        subscribeTokenRefresh((token: string) => {
+        handleQueue((token: string) => {
           resolve(originalRequestReFetch(originalRequest!, token, type)); //의문 2
         });
       });
@@ -115,9 +115,9 @@ const responseInterceptorHandle = async (err: AxiosError, type: string) => {
         type,
       );
 
-      onRrefreshed(access_token!);
+      refreshTrigger(access_token!);
 
-      subscribers = [];
+      requestQueue = [];
       lock = false;
 
       return result;

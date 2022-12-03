@@ -10,7 +10,7 @@ const useReceiveAlarm = () => {
     ['useReceiveAlarm'],
     apis.getCheckAlarm,
     {
-      enabled: false, //배포시 삭제
+      // enabled: false, //배포시 삭제
       refetchInterval: 3000,
       retry: true,
       retryDelay: 1000,

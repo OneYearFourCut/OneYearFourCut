@@ -20,6 +20,7 @@ const HeaderBox = styled.div`
   }
   .HeaderBellbtn {
     margin-left: ${rem(84)};
+    margin-top: ${rem(4)};
     position: relative;
     cursor: pointer;
   }
