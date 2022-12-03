@@ -1,37 +1,44 @@
 import * as S from './style';
 import Envelope from '../Envelope';
 import Kakao from '../KakaoBtn';
-import { useRef } from 'react';
+import Letter from '../Letter';
+import { useEffect, useRef, useState } from 'react';
+import AIntro from '../AIntro';
 
 const Index = () => {
   const homeRef = useRef<HTMLInputElement>(null);
   const goRef = useRef<HTMLInputElement>(null);
+
   const onHomeClick = () => {
     // 그 ref가 있는 곳으로 부드럽게 이동함.
     homeRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
   const onGoClick = () => {
     // 그 ref가 있는 곳으로 부드럽게 이동함.
     goRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const onClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <S.Container>
       <Kakao />
-      <Envelope refs={homeRef} />
-
-      <S.Box></S.Box>
-      <S.Box className='yellow'>
-        <div ref={goRef}>
-          <h1>
-            자 여기에 사이트 소개 페이지를 시작해봅시다 여러분의 올 한 해는
-            어떠셨나요?
-          </h1>
-        </div>
+      <S.EnvelopeWrapper ref={homeRef}>
+        <S.Envelope className={isOpen ? 'open' : 'close'}>
+          <S.Front onClick={onClick} className='flap'></S.Front>
+          <S.Front onClick={onClick} className='pocket'></S.Front>
+          <Letter handleNext={onGoClick} isOpen={isOpen} />
+        </S.Envelope>
+      </S.EnvelopeWrapper>
+      <S.Box ref={goRef}>
+        <AIntro />
       </S.Box>
-      <S.Button onClick={onHomeClick}>
-        누르면 이동한다고? 진짜 가네 오키
-      </S.Button>
+      <S.Button onClick={onHomeClick}>홈으로 이동</S.Button>
     </S.Container>
   );
 };
