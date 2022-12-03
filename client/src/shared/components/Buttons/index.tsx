@@ -34,6 +34,7 @@ interface IconBtnInterface {
   className: string;
   icon?: JSX.Element;
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
 const SmallBtn = styled.button`
@@ -47,9 +48,9 @@ const SmallBtn = styled.button`
   margin-left: ${rem(294)};
 `;
 
-const IconBtn = ({ className, children, icon }: IconBtnInterface) => {
+const IconBtn = ({ className, onClick, children, icon }: IconBtnInterface) => {
   return (
-    <Btn className={className}>
+    <Btn onClick={onClick} className={className}>
       {children}
       {icon}
     </Btn>

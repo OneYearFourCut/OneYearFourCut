@@ -11,6 +11,7 @@ import { useRef } from 'react';
 import { UploadAlert } from '../shared/components/Modal/AlertData';
 import { loginStore } from 'store/store';
 import type { FormData } from './types';
+import { useLocation } from 'react-router-dom';
 
 const UploadPicture = () => {
   const { target, openModal } = ModalStore();
@@ -19,6 +20,7 @@ const UploadPicture = () => {
   const { user, isLoggedin } = loginStore();
   const { mutate } = useUpload();
   const formRef = useRef<HTMLFormElement>(null);
+  const { state } = useLocation(); // << galleryId입니다!
 
   const handleProgressBtn = () => {
     const upLoadData: FormData = {

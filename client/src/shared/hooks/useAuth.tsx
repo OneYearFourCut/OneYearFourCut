@@ -9,7 +9,6 @@ const AuthCheck = ({ children }: any) => {
   const login_url = process.env.REACT_APP_KAKAO_AUTH_URL;
 
   useEffect(() => {
-    console.log('여기는 권한 확인 페이지');
     if (!isLoggedin) {
       setHistory(pathname); // 가야 할 경로
       window.location.replace(login_url!);
