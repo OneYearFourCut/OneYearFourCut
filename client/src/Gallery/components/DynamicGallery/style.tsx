@@ -45,3 +45,22 @@ export const ThumbnailBox = styled.div`
     }
   }
 `;
+
+export function AllPicLoading() {
+  return (
+  <>
+    <Column>
+      <ThumbnailBox />
+      <ThumbnailBox />
+      <ThumbnailBox />
+      <ThumbnailBox />
+    </Column>
+    <Column>
+      <ThumbnailBox />
+      <ThumbnailBox />
+      <ThumbnailBox />
+      <ThumbnailBox />
+    </Column>
+  </>
+  )
+}

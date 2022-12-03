@@ -12,7 +12,7 @@ const Gallery = () => {
   const galleryId = parseInt(params.galleryId!);
   return (
     <Container>
-      <GalleryInfo />
+      <GalleryInfo galleryId={galleryId}/>
       <ButtonBox />
       <FourCut />
       <BottomButton galleryId={galleryId} />

@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './styles.css';
 import useGetAllPost from '../shared/hooks/useGetAllPost';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const Body = styled.div`
   width: ${rem(420)};
@@ -21,8 +21,7 @@ const SinglePicPage = () => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
   const { data } = useGetAllPost(galleryId);
-
-  // console.log(data?.data);
+  const { state } = useLocation(); // << artworkId입니다!
 
   return (
     <Body>
