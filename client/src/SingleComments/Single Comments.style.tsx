@@ -7,6 +7,7 @@ const CommentBody = styled.div`
   flex-direction: column;
   padding: ${rem(19)} ${rem(30)};
   z-index: -1;
+  margin-bottom: ${rem(150)};
 `;
 
 const PicTitle = styled.div`

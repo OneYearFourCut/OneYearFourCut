@@ -13,6 +13,7 @@ const useDeleteComment = (galleryId: number, commentId: number) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['singleComment']);
+        queryClient.invalidateQueries(['allComment']);
       },
       onError(err) {
         console.log(err);

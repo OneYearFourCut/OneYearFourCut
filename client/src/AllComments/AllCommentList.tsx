@@ -1,18 +1,17 @@
-import * as S from './Single Comments.style';
-import SingleComment from './SingleComment/SingleComment';
+import * as S from '../SingleComments/Single Comments.style';
+import SingleComment from 'SingleComments/SingleComment/SingleComment';
 import XIcon from 'shared/components/Icons/XIcon';
 import CommentStore from 'shared/components/PicFooter/OpenComment';
-import useGetSingleComments from './hooks/useGetSingleComments';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import useGetAllComments from 'AllComments/hooks/usGetAllComment';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const CommentsList = () => {
+const AllCommentsList = () => {
   const { commentCount } = CommentStore();
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
-  const { state } = useLocation();
   let Page = 1;
   const navigate = useNavigate();
-  const { data } = useGetSingleComments(galleryId, state, Page);
+  const { data } = useGetAllComments(galleryId, Page);
 
   return (
     <S.CommentBody>
@@ -42,4 +41,4 @@ const CommentsList = () => {
   );
 };
 
-export default CommentsList;
+export default AllCommentsList;

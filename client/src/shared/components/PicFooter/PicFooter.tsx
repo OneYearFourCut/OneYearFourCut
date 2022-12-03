@@ -24,7 +24,9 @@ const Footer = ({
   }, []);
 
   const OnClick = () => {
-    navigate(`/allPic/${galleryId}/${artworkId}/comments`);
+    navigate(`/allPic/${galleryId}/${artworkId}/comments`, {
+      state: artworkId,
+    });
   };
 
   return (

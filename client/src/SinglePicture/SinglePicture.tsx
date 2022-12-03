@@ -3,9 +3,7 @@ import * as S from './SinglePage.style';
 
 import useDeleteSinglePic from 'shared/hooks/useDeleteSinglePic';
 import { useParams } from 'react-router-dom';
-const LikePic = React.lazy(
-  () => import('shared/components/Buttons/likeButton'),
-);
+import LikeButton from 'shared/components/Buttons/likeButton';
 
 const SinglePicture = ({
   picture,
@@ -51,14 +49,19 @@ const SinglePicture = ({
           }}
         >
           <Suspense>
-            <LikePic artworkId={artId}></LikePic>
+            <LikeButton artworkId={artId}></LikeButton>
           </Suspense>
-          {/* 위 코드에서 render 오류 발생  */}
         </S.SinglePic>
       </S.PicZone>
       <S.Delete onClick={() => Delete()}>삭제</S.Delete>
       <S.PicIntroduct>
-        <S.PicTitle>{title}</S.PicTitle>
+        <S.PicTitle
+          onClick={() => {
+            console.log(artId);
+          }}
+        >
+          {title}
+        </S.PicTitle>
         <S.PicDiscription>{scrpit}</S.PicDiscription>
       </S.PicIntroduct>
     </S.Body>

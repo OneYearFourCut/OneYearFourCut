@@ -8,12 +8,13 @@ import Intro from 'Intro/Intro';
 import GallerySetting from 'GallerySetting/GallerySetting';
 import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
-import SingleComment from './SingleComments/index';
 import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
+const SingleComment = React.lazy(() => import('./SingleComments/index'));
+const AllComment = React.lazy(() => import('./AllComments/AllComments'));
 
 const router = createBrowserRouter([
   {
@@ -75,12 +76,24 @@ const router = createBrowserRouter([
       },
       { path: `/allPic/:galleryId/artworks`, element: <SinglePicPage /> },
       {
+        path: '/allPic/:galleryId/artworks/comments',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <AllComment />,
+          </Suspense>
+        ),
+      },
+      {
         path: '/allPic/:galleryId/:artworkId',
         element: <OnePicPage />,
       },
       {
         path: '/allPic/:galleryId/:artworkId/comments',
-        element: <SingleComment />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SingleComment />,
+          </Suspense>
+        ),
       },
     ],
   },
