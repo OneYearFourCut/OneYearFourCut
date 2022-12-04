@@ -8,6 +8,7 @@ import {
   Upload,
   Login,
   History,
+  Comment,
 } from './types';
 
 //모달
@@ -124,6 +125,19 @@ const historyStore = create<History>(
   ),
 );
 
+//comment
+const CommentStore = create<Comment>((set) => ({
+  open: false,
+  commentCount: 0,
+  lastOpen: -1,
+  setOpenModal: () => set(() => ({ open: true })),
+  setCloseModal: () => set(() => ({ open: false })),
+  setChangeComment: (input: number) => set(() => ({ commentCount: input })),
+  setLastOpen: (input: number) => set(() => ({ lastOpen: input })),
+}));
+
+export default CommentStore;
+
 export {
   ModalStore,
   AlarmStore,
@@ -131,4 +145,5 @@ export {
   UploadStore,
   loginStore,
   historyStore,
+  CommentStore,
 };

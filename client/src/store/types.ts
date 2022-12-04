@@ -65,3 +65,13 @@ export interface History {
   setHistory: (data: string) => void;
   setReset: () => void;
 }
+
+export interface Comment {
+  open: boolean;
+  commentCount: number;
+  lastOpen: number;
+  setOpenModal: () => void;
+  setCloseModal: () => void;
+  setChangeComment: (input: number) => void;
+  setLastOpen: (input: number) => void;
+}

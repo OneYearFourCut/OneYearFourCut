@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import * as S from './PicFoot.style';
 import HeartIcon from '../Icons/heartIcon';
 import CommentIcon from '../Icons/commentIcon';
-import CommentStore from './OpenComment';
+import CommentStore from 'store/store';
 import { useNavigate } from 'react-router-dom';
 
 const Footer = ({
@@ -10,20 +10,24 @@ const Footer = ({
   comment,
   galleryId,
   artworkId,
+  idx,
 }: {
   like: number;
   comment: number;
   galleryId: number;
   artworkId: number;
+  idx?: number;
 }) => {
-  const { setChangeComment } = CommentStore();
+  const { setChangeComment, setLastOpen } = CommentStore();
   const navigate = useNavigate();
-
   useEffect(() => {
     setChangeComment(comment);
   }, []);
 
   const OnClick = () => {
+    if (idx) {
+      setLastOpen(idx);
+    }
     navigate(`/allPic/${galleryId}/${artworkId}/comments`, {
       state: artworkId,
     });

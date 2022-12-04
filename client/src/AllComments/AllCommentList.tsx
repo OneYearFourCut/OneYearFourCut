@@ -1,7 +1,7 @@
 import * as S from '../SingleComments/Single Comments.style';
 import SingleComment from 'SingleComments/SingleComment/SingleComment';
 import XIcon from 'shared/components/Icons/XIcon';
-import CommentStore from 'shared/components/PicFooter/OpenComment';
+import CommentStore from 'store/store';
 import useGetAllComments from 'AllComments/hooks/usGetAllComment';
 import { useParams, useNavigate } from 'react-router-dom';
 

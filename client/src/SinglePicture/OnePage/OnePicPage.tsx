@@ -2,7 +2,7 @@ import Footer from 'shared/components/PicFooter/PicFooter';
 import SinglePicture from '../SinglePicture';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import CommentStore from 'shared/components/PicFooter/OpenComment';
+import CommentStore from 'store/store';
 import SingleComment from 'SingleComments/index';
 import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import useGetSinglePicture from 'shared/hooks/useGetSinglePicture';
@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 
 const Body = styled.div`
   width: ${rem(428)};
-  height: auto;
+  height: 95vh;
   display: flex;
   flex-direction: column;
 `;
