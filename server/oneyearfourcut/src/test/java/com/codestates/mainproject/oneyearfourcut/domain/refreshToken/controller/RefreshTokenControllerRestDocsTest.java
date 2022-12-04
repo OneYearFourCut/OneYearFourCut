@@ -84,7 +84,7 @@ class RefreshTokenControllerRestDocsTest {
         given(refreshTokenService.findRefreshTokenByEmail(anyString()))
                 .willReturn(token);
         given(jwtTokenizer.generateAccessToken(any(Claims.class), anyString(), anyString()))
-                .willReturn("Bearer " + jwt);
+                .willReturn(jwt);
         given(jwtTokenizer.generateRefreshToken(anyString(), anyString()))
                 .willReturn(jwt);
         given(jwtTokenizer.isExpiredToken(anyString(), anyString()))

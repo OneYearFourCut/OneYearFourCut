@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create  # 스키마 자동 생성
+    show-sql: true      # SQL 쿼리 출력
+    defer-datasource-initialization: true
+  profiles:
+    include: oauth
+  sql:
+    init:
+      data-locations: classpath*:db/testdata.sql

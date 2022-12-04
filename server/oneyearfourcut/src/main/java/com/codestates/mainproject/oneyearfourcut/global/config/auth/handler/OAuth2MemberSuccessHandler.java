@@ -5,7 +5,6 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStat
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
-import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.entity.RefreshToken;
 import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +34,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var oAuth2User = (OAuth2User)authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        Long kakaoId = (Long) attributes.get("id");
 
         // kakao는 kakao_account에 유저정보가 있다. (email)
         Map<String, Object> kakaoAccount = (Map<String, Object>)attributes.get("kakao_account");
@@ -47,17 +46,18 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String profile = (String) kakaoProfile.get("profile_image_url");
         List<String> authorities = List.of("USER"); //일단 모든유저 역할 통일
 
-        saveMember(email, nickname, profile);
+        saveMember(email, nickname, profile, kakaoId);
         redirect(request, response, email, authorities);
     }
 
-    private void saveMember(String email, String nickname, String profile) {
+    private void saveMember(String email, String nickname, String profile, Long kakaoId) {
         Member member = Member.builder()
                 .email(email)
                 .nickname(nickname)
                 .profile(profile)
                 .role(Role.USER)
                 .status(MemberStatus.ACTIVE)
+                .kakaoId(kakaoId)
                 .build();
         memberService.createMember(member);
     }

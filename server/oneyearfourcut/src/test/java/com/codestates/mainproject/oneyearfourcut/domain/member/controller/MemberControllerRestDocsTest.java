@@ -3,6 +3,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.member.controller;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
@@ -16,11 +17,15 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +34,9 @@ import java.util.List;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getResponsePreProcessor;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -56,6 +63,10 @@ class MemberControllerRestDocsTest {
     private Gson gson;
     @MockBean
     private AwsS3Service awsS3Service;
+    @MockBean
+    private RestTemplate restTemplate;
+    @MockBean
+    private GalleryService galleryService;
 
     @Test
     void getMember() throws Exception {
@@ -170,11 +181,18 @@ class MemberControllerRestDocsTest {
                 .profile("/path")
                 .role(Role.USER)
                 .status(MemberStatus.ACTIVE)
+                        .kakaoId(41234L)
                 .build());
 
         //해당 member jwt 생성
         String jwt = jwtTokenizer.testJwtGenerator(member);
 
+        //kakao 연결끊기 given 처리
+        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        given(restTemplate.exchange(any(RequestEntity.class), any(Class.class)))
+                .willReturn(responseEntity);
+
+        willDoNothing().given(galleryService).deleteGallery(anyLong());
         //when
         ResultActions actions = mockMvc.perform(
                 delete("/members/me")

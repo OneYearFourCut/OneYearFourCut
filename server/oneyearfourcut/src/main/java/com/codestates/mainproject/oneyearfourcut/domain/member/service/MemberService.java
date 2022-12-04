@@ -9,10 +9,16 @@ import com.codestates.mainproject.oneyearfourcut.global.aws.service.AwsS3Service
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -21,11 +27,19 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
+    private final RestTemplate restTemplate;
+    @Value("${kakao.admin-key}")
+    private String adminKey;
 
     public void createMember(Member postMember) {   //Oauth Kakao 로그인 시 회원가입 진행
-        if (!memberRepository.findByEmail(postMember.getEmail()).isPresent()) {
-            memberRepository.save(postMember);
-        }
+        Optional<Member> optionalMember = memberRepository.findByEmail(postMember.getEmail());
+        optionalMember.ifPresentOrElse(
+                member -> {
+                    member.updateStatus(MemberStatus.ACTIVE);
+                    member.updateKakaoId(postMember.getKakaoId());
+                },
+                () -> memberRepository.save(postMember)
+        );
     }
 
     public MemberResponseDto modifyMember(Long memberId, MemberRequestDto memberRequestDto) {
@@ -70,5 +84,24 @@ public class MemberService {
         Member findMember = findMember(memberId);//회원이 존재하는지 확인
 
         findMember.updateStatus(MemberStatus.DELETE);
+        Member member = memberRepository.save(findMember);
+
+        // 카카오 연결끊기 api 요청
+        URI uri = UriComponentsBuilder
+                .fromHttpUrl("https://kapi.kakao.com/v1/user/unlink")
+                .queryParam("target_id_type", "user_id")
+                .queryParam("target_id", member.getKakaoId())
+                .encode()
+                .build()
+                .toUri();
+
+        RequestEntity<Void> request = RequestEntity
+                .post(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("Authorization", "KakaoAK " + adminKey)
+                .build();
+
+//        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.exchange(request, String.class);
     }
 }

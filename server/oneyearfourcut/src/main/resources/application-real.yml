@@ -7,3 +7,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   session:
     store-type: jdbc
+  # 이미지 파일 용량 제한 수정
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 10MB

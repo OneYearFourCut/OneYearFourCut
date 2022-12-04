@@ -82,6 +82,7 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("refresh");  //커스텀 헤더를 보이도록 하는 것
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();   //  CorsConfigurationSource 인터페이스의 구현 클래스인 UrlBasedCorsConfigurationSource 클래스의 객체를 생성한다.
         source.registerCorsConfiguration("/**", configuration);
