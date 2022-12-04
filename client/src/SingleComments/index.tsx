@@ -1,10 +1,13 @@
 import styled from 'styled-components';
-import CommentsList from './CommentsZone';
 import { rem } from 'polished';
 import CommentInput from './CommentInput';
+import { Suspense } from 'react';
+import React from 'react';
+const CommentsList = React.lazy(() => import('./CommentsZone'));
 
 const Body = styled.div`
   width: 100%;
+  max-width: ${rem(428)};
   height: 100vh;
   padding-top: 50px;
   overflow-x: hidden;
@@ -13,6 +16,12 @@ const Body = styled.div`
 
   display: flex;
   justify-content: end;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 const RoundBody = styled.div`
@@ -26,7 +35,9 @@ const SingleComment = () => {
   return (
     <Body>
       <RoundBody>
-        <CommentsList />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CommentsList />
+        </Suspense>
         <CommentInput />
       </RoundBody>
     </Body>

@@ -8,6 +8,8 @@ const CommentBody = styled.div`
   padding: ${rem(19)} ${rem(30)};
   z-index: -1;
   margin-bottom: ${rem(150)};
+  min-height: 80vh;
+  height: fit-content;
 `;
 
 const PicTitle = styled.div`
@@ -32,4 +34,13 @@ const CommentCount = styled.div`
   line-height: ${rem(27)};
 `;
 
-export { CommentBody, PicTitle, Title, CommentCount };
+const NoComment = styled.div`
+  font-style: normal;
+  font-weight: 400;
+  font-size: ${rem(14)};
+  color: ${({ theme }) => theme.colors.gray_004};
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: ${rem(32)};
+`;
+export { CommentBody, PicTitle, Title, CommentCount, NoComment };

@@ -6,10 +6,11 @@ const Body = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.black_005};
   display: flex;
   flex-direction: column;
+  padding-bottom: ${rem(4)};
 `;
 
 const Info = styled.div`
-  margin: ${rem(8)} 0;
+  margin: ${rem(12)} 0 ${rem(8)};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -29,7 +30,7 @@ const Time = styled.div`
   font-weight: 400;
   font-size: ${rem(12)};
   line-height: ${rem(16)};
-  color: 1px solid ${({ theme }) => theme.colors.black_003};
+  color: ${({ theme }) => theme.colors.black_003};
 `;
 
 const Comment = styled.div`
@@ -73,6 +74,7 @@ const Delete = styled.div`
   line-height: ${rem(16)};
   color: ${({ theme }) => theme.colors.black_004};
   margin-left: 0.5rem;
+  cursor: pointer;
 `;
 
 export { Delete, Body, Button, ButtonZone, Comment, Time, NickName, Info };

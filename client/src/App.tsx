@@ -79,19 +79,23 @@ const router = createBrowserRouter([
         path: '/allPic/:galleryId/artworks/comments',
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <AllComment />,
+            <AllComment />
           </Suspense>
         ),
       },
       {
         path: '/allPic/:galleryId/:artworkId',
-        element: <OnePicPage />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <OnePicPage />
+          </Suspense>
+        ),
       },
       {
         path: '/allPic/:galleryId/:artworkId/comments',
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <SingleComment />,
+            <SingleComment />
           </Suspense>
         ),
       },

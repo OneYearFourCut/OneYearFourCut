@@ -14,6 +14,7 @@ const PicFooter = styled.div`
   transform: translateY(-100%);
   left: 0;
   bottom: 0;
+  cursor: pointer;
 `;
 
 const CountZone = styled.div`

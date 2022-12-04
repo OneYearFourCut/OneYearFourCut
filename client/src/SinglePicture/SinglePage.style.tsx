@@ -3,7 +3,7 @@ import { rem } from 'polished';
 
 const Body = styled.div`
   width: ${rem('428px')};
-  height: ${rem('926px')};
+  height: 95vh;
   max-width: ${rem(540)};
   background-color: ${({ theme }) => theme.colors.black_007};
   display: flex;
@@ -27,6 +27,7 @@ const Delete = styled.div`
   justify-content: right;
   padding-right: ${rem(50)};
   margin: 0.5rem 0 1rem 0;
+  cursor: pointer;
 `;
 
 const PicZone = styled.div`
@@ -37,7 +38,8 @@ const PicZone = styled.div`
 `;
 
 const SinglePic = styled.div`
-  width: ${rem(335)} !important;
+  width: ${rem(335)};
+  max-width: ${rem(335)} !important;
   height: ${rem(487)};
   background-repeat: no-repeat;
   background-position: center;

@@ -1,5 +1,8 @@
 import * as S from './SingleComment.style';
 import useDeleteComment from 'SingleComments/hooks/useDeleteComment';
+import 'moment/locale/ko';
+import moment from 'moment';
+import { useParams } from 'react-router-dom';
 
 const SingleComment = ({
   commentId,
@@ -12,19 +15,20 @@ const SingleComment = ({
   time: number;
   comment: string;
 }) => {
-  const { mutate } = useDeleteComment(17, commentId);
+  const params = useParams();
+  const galleryId = parseInt(params.galleryId!);
+  const { mutate } = useDeleteComment(galleryId, commentId);
 
   const Delete = (): void => {
-    console.log(commentId);
-
     mutate();
   };
+  var nowTime = moment(time).format('YYMMDD HH:mm');
 
   return (
     <S.Body>
       <S.Info>
         <S.NickName>{nickname}</S.NickName>
-        <S.Time>{time}</S.Time>
+        <S.Time>{nowTime}</S.Time>
       </S.Info>
       <S.Comment>
         {comment}

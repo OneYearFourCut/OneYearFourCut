@@ -10,9 +10,15 @@ const Body = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   background-color: rgba(0, 0, 0, 0.3);
-
+  width: 100%;
+  max-width: ${rem(428)};
   display: flex;
   justify-content: end;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 const RoundBody = styled.div`

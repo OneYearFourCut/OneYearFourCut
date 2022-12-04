@@ -14,7 +14,7 @@ const Body = styled.div`
   position: absolute;
   top: 100vh;
   transform: translateY(-100%);
-  width: ${rem(420)};
+  width: ${rem(428)};
   pointer-events: none;
 `;
 

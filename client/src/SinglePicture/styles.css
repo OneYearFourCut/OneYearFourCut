@@ -1,4 +1,5 @@
 
+
 .swiper {
   width: 100%;
   height: 100%;
@@ -21,6 +22,7 @@
   -webkit-align-items: center;
   align-items: center;
 
+
 }
 
 .single {
@@ -29,3 +31,9 @@
   height: 100%;
   object-fit: cover;
 }
+
+.swiper-button-prev, .swiper-button-next{
+  --swiper-navigation-size: 1.5rem;
+  --swiper-theme-color: #316232;
+}
+
