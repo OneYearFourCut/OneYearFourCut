@@ -3,7 +3,7 @@ import * as S from './SvgComponents';
 import * as TOAST from 'shared/components/Toast/ToastData';
 import useToast from 'shared/components/Toast/hooks/useToast';
 import { useState } from 'react';
-import { uploadHelper } from 'shared/libs/uploadHelper';
+import { uploadHelper, heicTojpeg } from 'shared/libs/uploadHelper';
 import { useModifyProfile } from '../hooks/useModifyProfile';
 
 const ProfileModify = ({
@@ -26,10 +26,14 @@ const ProfileModify = ({
     setIsModifing(!isModifing);
   };
 
-  const handleProfileImg = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImg = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (!event.target.files?.length) return;
     else if (event.target.files! && uploadHelper(event.target.files[0]))
-      setProfileImg(URL.createObjectURL(event.target.files[0]));
+      setProfileImg(
+        URL.createObjectURL(await heicTojpeg(event.target.files[0])),
+      );
     else {
       if (profileimg === undefined || profileRef.current)
         profileRef.current!.value = ''; //onChange 이벤트 활성화를 위한 초기화
@@ -38,15 +42,17 @@ const ProfileModify = ({
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-if (profileRef.current?.files && name && profileimg) {
-      mutate({ img: profileRef.current!.files[0], nickname: name });
+    if (profileRef.current?.files && name && profileimg) {
+      mutate({
+        img: await heicTojpeg(profileRef.current!.files[0]),
+        nickname: name,
+      });
       setIsModifing(!isModifing);
     } else {
       setToast(TOAST.CHECK_NICKNAME);
-
     }
   };
 

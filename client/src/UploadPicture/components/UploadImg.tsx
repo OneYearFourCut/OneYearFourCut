@@ -4,18 +4,18 @@ import useToast from 'shared/components/Toast/hooks/useToast';
 import { UploadSvg } from './SvgComponents';
 import { UploadStore } from 'store/store';
 import { useRef } from 'react';
-import { uploadHelper } from 'shared/libs/uploadHelper';
+import { uploadHelper, heicTojpeg } from 'shared/libs/uploadHelper';
 
 const UploadUserImg = () => {
   const { UploadData, setData } = UploadStore();
   const { setToast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleOnchange = (event: React.ChangeEvent<HTMLInputElement>) => {
+   const  handleOnchange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
-    else if (event.target.files! && uploadHelper(event.target.files[0]))
-      setData('img', event.target.files[0]);
-    else {
+    else if (event.target.files! && uploadHelper(event.target.files[0])) {
+      setData('img', await heicTojpeg(event.target.files[0]));
+    } else {
       if (UploadData.img === undefined || inputRef.current)
         inputRef.current!.value = ''; //onChange 이벤트 활성화를 위한 초기화
 

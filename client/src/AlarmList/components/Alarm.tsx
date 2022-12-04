@@ -5,7 +5,6 @@ import { loginStore } from 'store/store';
 const Alarm = ({ data }: { data: ALData }) => {
   const { user } = loginStore();
   const navigateSearch = useNavigateSearch();
-  console.log(user?.galleryId);
 
   const handleData = (data: ALData): { content: string; url: string } => {
     let content = `${data.userNickname}님이 `;

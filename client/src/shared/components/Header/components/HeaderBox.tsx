@@ -17,6 +17,7 @@ const HeaderBox = styled.div`
   h2 {
     color: ${({ theme }) => theme.colors.green_002};
     cursor: pointer;
+    user-select: none;
   }
   .HeaderBellbtn {
     margin-left: ${rem(84)};

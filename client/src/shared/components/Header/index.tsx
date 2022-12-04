@@ -8,20 +8,21 @@ import { Suspense } from 'react';
 import { loginStore } from 'store/store';
 const Header = () => {
   const { target } = ModalStore();
-  const { isLoggedin,user } = loginStore();
+  const { isLoggedin, user } = loginStore();
   const navigateSearch = useNavigateSearch();
 
-  console.log(window.location.pathname);
   if (
     window.location.pathname === '/' ||
     window.location.pathname === '/localStorage'
   )
     return null;
-  
+
   const handleHeaderTitle = () => {
     let url = user?.galleryId ? `/fourPic/${user.galleryId}` : '/';
-    navigateSearch(url, {});
-  }
+    url === window.location.pathname
+      ? window.location.reload()
+      : navigateSearch(url, {});
+  };
 
   return (
     <Suspense fallback={<></>}>

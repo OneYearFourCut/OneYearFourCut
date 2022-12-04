@@ -24,7 +24,6 @@ const AlarmList = () => {
       closeAlarm();
     };
   }, []);
-  console.log(alarmListData);
   return (
     <>
       <B.DefualtContainer>
