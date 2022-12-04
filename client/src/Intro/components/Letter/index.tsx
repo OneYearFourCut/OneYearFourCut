@@ -15,8 +15,8 @@ const index = ({ isOpen, handleNext }: Open) => {
     <>
       <S.Letter onClick={handleClick} className={isOpen ? 'open' : 'close'}>
         <h3>
-          <p>올해네컷에 오신 여러분</p>
-          <p>환영합니다!</p>
+          <p>안녕하세요 🎄D25입니다!</p>
+          <p>올해 네 컷에 잘 오셨습니다!</p>
           <S.OpenBtn>GO</S.OpenBtn>
         </h3>
       </S.Letter>

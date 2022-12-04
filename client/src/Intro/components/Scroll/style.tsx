@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Box = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: aliceblue;
+  ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 
   &.yellow {
     background-color: ${({ theme }) => theme.colors.green_004};
@@ -116,5 +116,12 @@ export const OpenBtn = styled.button`
   :hover {
     background-color: ${({ theme }) => theme.colors.red_001};
     color: #fff;
+  }
+
+  &.top {
+    position: sticky;
+    right: 0;
+    border-radius: ${rem(4)} ${({ theme }) => theme.colors.green_001};
+    color: ${({ theme }) => theme.colors.green_001};
   }
 `;

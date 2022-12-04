@@ -13,6 +13,7 @@ const Btn = styled.a`
   color: ${({ theme }) => theme.colors.black_001};
   text-decoration: none;
   outline: none;
+  margin-top: ${rem(50)};
 
   & .label {
     font-size: ${rem(15)};
