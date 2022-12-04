@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -42,7 +43,7 @@ public class ModifyGalleryTest {
     @Test
     void 제목_내용_수정사항이_적용된다() {
         //given
-        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
+        GalleryPatchDto galleryPatchDto = GalleryPatchDto.builder()
                 .title(modifiedTitle)
                 .content(modifiedContent)
                 .build();
@@ -53,7 +54,7 @@ public class ModifyGalleryTest {
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryPatchDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(modifiedTitle);
@@ -63,7 +64,7 @@ public class ModifyGalleryTest {
     @Test
     void 제목_수정사항이_적용된다() {
         //given
-        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
+        GalleryPatchDto galleryPatchDto = GalleryPatchDto.builder()
                 .title(modifiedTitle)
                 .build();
 
@@ -73,7 +74,7 @@ public class ModifyGalleryTest {
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryPatchDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(modifiedTitle);
@@ -83,7 +84,7 @@ public class ModifyGalleryTest {
     @Test
     void 내용_수정사항이_적용된다() {
         //given
-        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
+        GalleryPatchDto galleryPatchDto = GalleryPatchDto.builder()
                 .content(modifiedContent)
                 .build();
 
@@ -93,7 +94,7 @@ public class ModifyGalleryTest {
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryPatchDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
@@ -103,7 +104,7 @@ public class ModifyGalleryTest {
     @Test
     void 수정사항이_없어도_적용된다() {
         //given
-        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
+        GalleryPatchDto galleryPatchDto = GalleryPatchDto.builder()
                 .build();
 
         given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
@@ -112,7 +113,7 @@ public class ModifyGalleryTest {
                 .willReturn(findGallery);
 
         //when
-        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryRequestDto, memberId);
+        GalleryResponseDto galleryResponseDto = galleryService.modifyGallery(galleryPatchDto, memberId);
 
         //then
         assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
@@ -124,7 +125,7 @@ public class ModifyGalleryTest {
         //given
         Gallery findGallery = null;
 
-        GalleryRequestDto galleryRequestDto = GalleryRequestDto.builder()
+        GalleryPatchDto galleryPatchDto = GalleryPatchDto.builder()
                 .title(modifiedTitle)
                 .content(modifiedContent)
                 .build();
@@ -134,7 +135,7 @@ public class ModifyGalleryTest {
 
         //when
         //then
-        assertThatThrownBy(() -> galleryService.modifyGallery(galleryRequestDto, memberId))
+        assertThatThrownBy(() -> galleryService.modifyGallery(galleryPatchDto, memberId))
                 .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(ExceptionCode.GALLERY_NOT_FOUND.getMessage());
     }

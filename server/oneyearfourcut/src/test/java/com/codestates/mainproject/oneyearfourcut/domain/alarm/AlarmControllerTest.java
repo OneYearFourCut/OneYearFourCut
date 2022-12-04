@@ -24,6 +24,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional // 테스트용도로 추가해놨습니다. mock으로 변경되면 삭제해주세요.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -67,7 +69,7 @@ class AlarmControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -184,7 +186,7 @@ class AlarmControllerTest {
         //given
         Member member2 = memberRepository.save(Member.builder()
                 .nickname("test2")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)

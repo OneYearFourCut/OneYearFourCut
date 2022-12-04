@@ -23,7 +23,7 @@ public enum ExceptionCode {
     NO_ACEESS_TOKEN(400, "Access Token이 header에 없습니다."),
     NO_REFRESH_TOKEN(400, "Refresh Token이 header에 없습니다."),
     //파일 관련
-    EXCEEDED_FILE_SIZE(400, "파일 사이즈가 5MB를 초과하였습니다."),
+    EXCEEDED_FILE_SIZE(400, "파일 사이즈가 10MB를 초과하였습니다."),
     INVALID_FILE_TYPE(400, "잘못된 파일명입니다."),
     UNSUPPORTED_FILE_EXTENSION(400, "지원하지 않는 확장자입니다.");
 

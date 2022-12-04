@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -62,7 +63,7 @@ class MemberControllerRestDocsTest {
         // member 등록
         Member member = memberRepository.save(Member.builder()
                 .nickname("홍길동")
-                .email("test1@gmail.com")
+                .email("kang1@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(MemberStatus.ACTIVE)
@@ -70,6 +71,8 @@ class MemberControllerRestDocsTest {
         galleryRepository.save(Gallery.builder()
                 .status(GalleryStatus.OPEN)
                 .member(member)
+                .title("Entity에")
+                .content("컬럼 nullable이 false여서 에러남")
                 .build());
 
         //해당 member jwt 생성
@@ -108,7 +111,7 @@ class MemberControllerRestDocsTest {
         // member 등록
         Member member = memberRepository.save(Member.builder()
                 .nickname("홍길동")
-                .email("test1@gmail.com")
+                .email("kang2@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(MemberStatus.ACTIVE)
@@ -163,7 +166,7 @@ class MemberControllerRestDocsTest {
         // member 등록
         Member member = memberRepository.save(Member.builder()
                 .nickname("홍길동")
-                .email("test1@gmail.com")
+                .email("kang3@gmail.com")
                 .profile("/path")
                 .role(Role.USER)
                 .status(MemberStatus.ACTIVE)

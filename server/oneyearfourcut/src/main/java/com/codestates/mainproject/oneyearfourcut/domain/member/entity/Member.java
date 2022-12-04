@@ -25,10 +25,13 @@ public class Member extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+    @Column(length = 8, nullable = false)
     private String nickname;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String profile;
 
     @Enumerated(EnumType.STRING)

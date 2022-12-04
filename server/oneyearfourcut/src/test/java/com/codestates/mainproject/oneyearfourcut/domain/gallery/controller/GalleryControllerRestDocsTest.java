@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 class GalleryControllerRestDocsTest {
@@ -57,7 +59,7 @@ class GalleryControllerRestDocsTest {
         //test전 member 등록
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(MemberStatus.ACTIVE)
@@ -159,7 +161,7 @@ class GalleryControllerRestDocsTest {
         // member 등록
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(MemberStatus.ACTIVE)
@@ -218,7 +220,7 @@ class GalleryControllerRestDocsTest {
         // member 등록
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(MemberStatus.ACTIVE)

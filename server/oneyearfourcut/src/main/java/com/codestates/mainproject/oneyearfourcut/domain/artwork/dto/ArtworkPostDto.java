@@ -15,11 +15,11 @@ import javax.validation.constraints.Size;
 public class ArtworkPostDto {
 
     private MultipartFile image;
-    @NotBlank
-    @Size(min = 1, max = 15, message = "제목은 최소 1 이상 15 이하까지 작성할 수 있습니다.")
+    @NotBlank(message = "제목은 필수 입력 값입니다.")
+    @Size(min = 1, max = 20, message = "제목은 최소 1 이상 20 이하까지 작성할 수 있습니다.")
     private String title;
-    @NotBlank
-    @Size(min = 1, max = 30, message = "설명은 최소 1 이상 30 이하까지 작성할 수 있습니다.")
+    @NotBlank(message = "설명은 필수 입력 값입니다.")
+    @Size(min = 1, max = 70, message = "설명은 최소 1 이상 70 이하까지 작성할 수 있습니다.")
     private String content;
 
     @Builder

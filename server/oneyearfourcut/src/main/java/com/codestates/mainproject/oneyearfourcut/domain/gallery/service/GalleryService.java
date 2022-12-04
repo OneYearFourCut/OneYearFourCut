@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -37,12 +38,12 @@ public class GalleryService {
         return savedGallery.toGalleryResponseDto();
     }
 
-    public GalleryResponseDto modifyGallery(GalleryRequestDto galleryRequestDto, Long loginId) {
+    public GalleryResponseDto modifyGallery(GalleryPatchDto galleryPatchDto, Long loginId) {
         Gallery findGallery = findLoginGallery(loginId);
 
-        Optional.ofNullable(galleryRequestDto.getTitle())
+        Optional.ofNullable(galleryPatchDto.getTitle())
                 .ifPresent(findGallery::updateTitle);
-        Optional.ofNullable(galleryRequestDto.getContent())
+        Optional.ofNullable(galleryPatchDto.getContent())
                 .ifPresent(findGallery::updateContent);
 
         Gallery savedGallery = galleryRepository.save(findGallery);

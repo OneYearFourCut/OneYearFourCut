@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class CommentRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "댓글은 필수 입력 값입니다.")
     @Size(min = 1, max = 30)
     @SerializedName("content")
     private String content;

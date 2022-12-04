@@ -31,6 +31,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +51,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -77,7 +79,7 @@ class CommentControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -163,7 +165,7 @@ class CommentControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -258,7 +260,7 @@ class CommentControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -312,7 +314,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.commentList[0].modifiedAt").value("2022-11-16T23:41:57.764644"))
                 .andExpect(jsonPath("$.commentList[0].commentId").value(4L))
                 .andExpect(jsonPath("$.commentList[0].memberId").value(4L))
-                .andExpect(jsonPath("$.commentList[0].nickname").value("replyPerson"))
+                .andExpect(jsonPath("$.commentList[0].nickname").value("reply"))
                 .andExpect(jsonPath("$.commentList[0].content").value("comment444"))
                 .andExpect(jsonPath("$.commentList[0].artworkId").doesNotExist())
 
@@ -320,7 +322,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.commentList[1].modifiedAt").value("2022-11-16T23:41:57.764644"))
                 .andExpect(jsonPath("$.commentList[1].commentId").value(2L))
                 .andExpect(jsonPath("$.commentList[1].memberId").value(1L))
-                .andExpect(jsonPath("$.commentList[1].nickname").value("galleryPerson"))
+                .andExpect(jsonPath("$.commentList[1].nickname").value("gallery"))
                 .andExpect(jsonPath("$.commentList[1].content").value("comment2"))
                 .andExpect(jsonPath("$.commentList[1].artworkId").value(2L))
 
@@ -363,7 +365,7 @@ class CommentControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -416,7 +418,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.artworkId").value( 1L ))
                 .andExpect(jsonPath("$.commentList[0].commentId").value(1L))
                 .andExpect(jsonPath("$.commentList[0].memberId").value(1L))
-                .andExpect(jsonPath("$.commentList[0].nickname").value("galleryPerson"))
+                .andExpect(jsonPath("$.commentList[0].nickname").value("gallery"))
                 .andExpect(jsonPath("$.commentList[0].content").value("comment1댓글대스"))
 
                 .andExpect(jsonPath("$.pageInfo.page").value("1"))
@@ -457,37 +459,36 @@ class CommentControllerTest {
     @Test
     void testPatchComment() throws Exception {
         //given
-        Member member = memberRepository.save(Member.builder()
+        Member member3 = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
                 .build());
-        String jwt = jwtTokenizer.testJwtGenerator(member);
+        String jwt = jwtTokenizer.testJwtGenerator(member3);
 
-        Gallery gallery = galleryRepository.save(Gallery.builder()
+        Gallery gallery3 = galleryRepository.save(Gallery.builder()
                 .title("나의 전시관")
                 .content("안녕하세요")
-                .member(member)
+                .member(member3)
                 .status(GalleryStatus.OPEN)
                 .build());
 
         Comment comment = commentRepository.save(Comment.builder()
-                .commentId(5L)
                 .content("오리지널댓글")
-                .member(member)
-                .gallery(gallery)
+                .member(member3)
+                .gallery(gallery3)
                 .artworkId(null)
                 .commentStatus(CommentStatus.VALID)
                 .build());
-
+        System.out.println("comment.getCommentId() = " + comment.getCommentId());
         CommentRequestDto requestDto = CommentRequestDto.builder()
                 .content("수정댓글입니다.")
                 .build();
         String gsonContent = gson.toJson(requestDto);
 
-        Long commentId = 5L;
+        Long commentId = 6L;
 
         given(this.commentService.findComment(commentId)).willReturn(comment);
 
@@ -496,37 +497,38 @@ class CommentControllerTest {
         CommentGalleryResDto responseDto = CommentGalleryResDto.builder()
                 .createdAt(LocalDateTime.parse("2022-11-25T11:09:24.940"))
                 .modifiedAt(LocalDateTime.parse("2022-11-25T11:09:24.940"))
-                .commentId(5L)
-                .memberId(member.getMemberId())
-                .nickname(member.getNickname())
+                .commentId(6L)
+                .memberId(member3.getMemberId())
+                .nickname(member3.getNickname())
                 .content(requestDto.getContent())
                 .artworkId(null)
                 .build();
 
-        given(this.commentService.modifyComment(Mockito.any( gallery.getGalleryId().getClass()),
+        given(this.commentService.modifyComment(Mockito.any( gallery3.getGalleryId().getClass()),
                 eq(commentId),
                 Mockito.any( requestDto.getClass() ),
-                Mockito.any( member.getMemberId().getClass() )))
-                .willReturn(new CommentGalleryHeadDto<>( gallery.getGalleryId() , responseDto));
+                Mockito.any( member3.getMemberId().getClass() )))
+                .willReturn(new CommentGalleryHeadDto<>( gallery3.getGalleryId() , responseDto));
 
         //when
         ResultActions actions = mockMvc.perform(
                 RestDocumentationRequestBuilders
                         .patch("/galleries/{galleryId}/comments/{commentId}",
-                                gallery.getGalleryId(), comment.getCommentId())
+                                gallery3.getGalleryId(), comment.getCommentId())
                         .header("Authorization", jwt)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gsonContent)
                 /*.with(csrf())*/
         );
-        commentService.modifyComment(3L,5L, requestDto, member.getMemberId());
+        commentService.modifyComment(gallery3.getGalleryId(),responseDto.getCommentId(), requestDto, member3.getMemberId());
+        System.out.println("gallery.getGalleryId() = " + gallery3.getGalleryId());
 
         //then
         actions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.galleryId").value( gallery.getGalleryId()))
-                .andExpect(jsonPath("$.commentList.commentId").value( 5L ))
-                .andExpect(jsonPath("$.commentList.memberId").value(member.getMemberId()))
+                .andExpect(jsonPath("$.galleryId").value( gallery3.getGalleryId()))
+                .andExpect(jsonPath("$.commentList.commentId").value( 6L ))
+                .andExpect(jsonPath("$.commentList.memberId").value(member3.getMemberId()))
                 .andExpect(jsonPath("$.commentList.nickname").value("test1"))
                 .andExpect(jsonPath("$.commentList.content").value("수정댓글입니다."))
                 .andExpect(jsonPath("$.commentList.artworkId").doesNotExist())
@@ -568,7 +570,7 @@ class CommentControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)

@@ -7,6 +7,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentSt
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.ReplyRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.service.CommentService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.service.ReplyService;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
@@ -18,6 +19,7 @@ import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtToken
 import com.codestates.mainproject.oneyearfourcut.global.page.ReplyListResponseDto;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -30,16 +32,19 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
 import static com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus.ACTIVE;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getResponsePreProcessor;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -50,6 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @WithMockUser(username = "test@gmail.com", password = "0000")
@@ -72,12 +78,13 @@ class ReplyControllerTest {
     @Autowired
     private Gson gson;
 
+
     @Test
     void testPostReply() throws Exception {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -110,9 +117,9 @@ class ReplyControllerTest {
 
 
         given(this.replyService.createReply(
-                Mockito.any(requestDto.getClass()),
-                Mockito.any( comment.getCommentId().getClass()),
-                Mockito.any( member.getMemberId().getClass() )))
+                any(requestDto.getClass()),
+                any( comment.getCommentId().getClass()),
+                any( member.getMemberId().getClass() )))
                 .willReturn(new ReplyListResponseDto<>(1L,responseDto));
 
         //when
@@ -174,8 +181,8 @@ class ReplyControllerTest {
     void testGetReply() throws Exception {
         //given
         Member member = memberRepository.save(Member.builder()
-                .nickname("test1")
-                .email("test1@gmail.com")
+                .nickname("kang")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -191,7 +198,7 @@ class ReplyControllerTest {
                 .commentStatus(CommentStatus.VALID)
                 .build());
 
-        replyRepository.save(Reply.builder()
+        Reply reply = replyRepository.save(Reply.builder()
                 .replyId(4L)
                 .content("답글")
                 .member(member)
@@ -199,15 +206,16 @@ class ReplyControllerTest {
                 .replyStatus(CommentStatus.VALID)
                 .build());
 
-        given(this.replyService.findReplyList(
-                Mockito.any( comment.getCommentId().getClass() )))
-                .willReturn(replyRepository.findAllByReplyStatusAndComment_CommentIdOrderByReplyIdDesc(VALID, 1L));
+        List<Reply> replyList1 = new ArrayList<>();
+        replyList1.add(reply);
+        given(replyService.findReplyList(Mockito.any( comment.getCommentId().getClass())))
+                .willReturn(replyList1);
 
         List<Reply> replyList = replyService.findReplyList(1L);
         List<ReplyResDto> result = ReplyResDto.toReplyResponseDtoList(replyList);
 
         given(this.replyService.getReplyList(
-                Mockito.any( comment.getCommentId().getClass())))
+                any( comment.getCommentId().getClass())))
                 .willReturn(new ReplyListResponseDto<>(1L,result));
 
         //when
@@ -226,7 +234,7 @@ class ReplyControllerTest {
                 .andExpect(jsonPath("$.commentId").value( comment.getCommentId()))
                 .andExpect(jsonPath("$.replyList[0].replyId").value(4L))
                 .andExpect(jsonPath("$.replyList[0].memberId").value(member.getMemberId()))
-                .andExpect(jsonPath("$.replyList[0].nickname").value("test1"))
+                .andExpect(jsonPath("$.replyList[0].nickname").value("kang"))
                 .andExpect(jsonPath("$.replyList[0].content").value("답글"))
 
                 .andDo(document(
@@ -238,8 +246,8 @@ class ReplyControllerTest {
                                 , responseFields(
                                         List.of(
                                                 fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("댓글 ID"),
-                                                fieldWithPath("replyList[].createdAt").type(JsonFieldType.STRING).description("생성일자"),
-                                                fieldWithPath("replyList[].modifiedAt").type(JsonFieldType.STRING).description("생성일자"),
+                                                fieldWithPath("replyList[].createdAt").type(JsonFieldType.STRING).description("생성일자").optional(),
+                                                fieldWithPath("replyList[].modifiedAt").type(JsonFieldType.STRING).description("생성일자").optional(),
                                                 fieldWithPath("replyList[].replyId").type(JsonFieldType.NUMBER).description("답글 ID"),
                                                 fieldWithPath("replyList[].memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
                                                 fieldWithPath("replyList[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
@@ -256,7 +264,7 @@ class ReplyControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)
@@ -303,7 +311,7 @@ class ReplyControllerTest {
         Long replyId = 1L;
 
         given(this.replyService.findReplyList(
-                Mockito.any( comment.getCommentId().getClass() )))
+                any( comment.getCommentId().getClass() )))
                 .willReturn(replyRepository.findAllByReplyStatusAndComment_CommentIdOrderByReplyIdDesc(VALID, 3L));
 
         List<Reply> replyList = replyService.findReplyList(3L);
@@ -319,10 +327,10 @@ class ReplyControllerTest {
                 .build();
 
         given(this.replyService.modifyReply(
-                Mockito.any( comment.getCommentId().getClass()),
+                any( comment.getCommentId().getClass()),
                 eq(replyId),
-                Mockito.any( requestDto.getClass() ),
-                Mockito.any( member.getMemberId().getClass() )))
+                any( requestDto.getClass() ),
+                any( member.getMemberId().getClass() )))
                 .willReturn(new ReplyListResponseDto<>( gallery.getGalleryId() , responseDto));
 
         replyService.modifyReply(4L,1L, requestDto ,member.getMemberId());
@@ -382,7 +390,7 @@ class ReplyControllerTest {
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
-                .email("test1@gmail.com")
+                .email("kang@gmail.com")
                 .role(Role.USER)
                 .profile("/path")
                 .status(ACTIVE)

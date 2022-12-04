@@ -22,8 +22,10 @@ public class Gallery extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long galleryId;
 
+    @Column(length = 15, nullable = false)
     private String title;
 
+    @Column(length = 30, nullable = false)
     private String content;
 
     @Enumerated(EnumType.STRING)
