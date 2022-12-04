@@ -10,6 +10,7 @@ import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
+import { TriggerBox } from 'AlarmList/components/AlarmContainer';
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
       {
         path: '/allPic/:galleryId',
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<TriggerBox />}>
             <GalleryAllPic />
           </Suspense>
         ),
@@ -69,7 +70,7 @@ const router = createBrowserRouter([
       {
         path: `/fourPic/:galleryId`,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<TriggerBox />}>
             <GalleryFourPic />
           </Suspense>
         ),
@@ -78,8 +79,8 @@ const router = createBrowserRouter([
       {
         path: '/allPic/:galleryId/artworks/comments',
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <AllComment />
+          <Suspense fallback={<TriggerBox />}>
+            <AllComment />,
           </Suspense>
         ),
       },

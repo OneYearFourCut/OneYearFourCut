@@ -75,6 +75,7 @@ export const Frame = styled.img`
   justify-content: center;
   font-family: sans-serif;
   object-fit: cover;
+  cursor: pointer;
 
   &:nth-child(1) {
     border-top-left-radius: ${rem(35)};

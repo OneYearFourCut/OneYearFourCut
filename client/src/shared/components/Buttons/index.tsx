@@ -28,6 +28,12 @@ const Btn = styled.button`
     color: ${({ theme }) => theme.colors.black_007};
     border: 0px;
   }
+
+  &.disabled {
+    background-color: ${({ theme }) => theme.colors.black_006};
+    color: ${({ theme }) => theme.colors.black_003};
+    border: 0px;
+  }
 `;
 
 interface IconBtnInterface {

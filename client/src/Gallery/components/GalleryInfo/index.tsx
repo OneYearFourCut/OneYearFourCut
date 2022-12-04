@@ -8,10 +8,8 @@ const Index = ({ galleryId }: GalleryType) => {
   return (
     <div>
       <S.Info>
-        <div>
-          <h2>{data.title}</h2>
-          <div>{data.content}</div>
-        </div>
+        <S.Title>{data.title}</S.Title>
+        <S.Content>{data.content}</S.Content>
       </S.Info>
     </div>
   );

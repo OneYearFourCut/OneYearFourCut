@@ -19,6 +19,7 @@ export const ThumbnailImg = styled.img`
   width: 100%;
   border-radius: 0.2rem;
   margin-bottom: 0.25rem;
+  cursor: pointer;
 `;
 
 export const ThumbnailBox = styled.div`
@@ -48,19 +49,19 @@ export const ThumbnailBox = styled.div`
 
 export function AllPicLoading() {
   return (
-  <>
-    <Column>
-      <ThumbnailBox />
-      <ThumbnailBox />
-      <ThumbnailBox />
-      <ThumbnailBox />
-    </Column>
-    <Column>
-      <ThumbnailBox />
-      <ThumbnailBox />
-      <ThumbnailBox />
-      <ThumbnailBox />
-    </Column>
-  </>
-  )
+    <>
+      <Column>
+        <ThumbnailBox />
+        <ThumbnailBox />
+        <ThumbnailBox />
+        <ThumbnailBox />
+      </Column>
+      <Column>
+        <ThumbnailBox />
+        <ThumbnailBox />
+        <ThumbnailBox />
+        <ThumbnailBox />
+      </Column>
+    </>
+  );
 }

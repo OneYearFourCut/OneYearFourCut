@@ -1,10 +1,8 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react';
-import { setStoredToken, getStoredToken } from './hooks/tokenStorage';
-import { loginStore } from 'store/store';
-import { saveUser } from './api';
-import AutoRedirect from './hooks/AutoRedirect';
-import { jsonInstance } from 'shared/utils/axios';
+import { ReactElement, useEffect, useState } from 'react';
+import { setStoredToken} from './hooks/tokenStorage';
+import { historyStore, loginStore } from 'store/store';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RedirectPage = (): ReactElement => {
   const { setIsLoggedIn, user, setUser } = loginStore();
@@ -12,6 +10,9 @@ const RedirectPage = (): ReactElement => {
   let params = new URL(document.location.toString()).searchParams;
   let access_token = params.get('access_token'); // access_token
   let refresh_token = params.get('refresh_token'); // refresh_token
+  const navigate = useNavigate();
+  const { history } = historyStore();
+  const setReset = historyStore((state) => state.setHistory);
 
   setStoredToken(
     JSON.stringify({
@@ -31,11 +32,19 @@ const RedirectPage = (): ReactElement => {
       .then((res) => {
         setIsLoggedIn();
         setUser(res.data);
+        if (history) {
+          navigate(history);
+          setReset('');
+        } else {
+          if (res.data.galleryId) {
+            navigate(`/fourPic/${res.data.galleryId}`);
+          } else {
+            navigate(`/gallerySetting`);
+          }
+        }
         setIsRun(true);
       });
   }, [isRun]);
-
-  AutoRedirect(user?.galleryId!);
 
   return <div></div>;
 };

@@ -29,10 +29,9 @@ const CHECK_NICKNAME = {
   time: 3000,
   content: [
     '입력하지 않은곳이 있는지 확인해주세요',
-    '닉네임은 최대 7글자까지 가능합니다'
-  ]
-}
-
+    '닉네임은 최대 7글자까지 가능합니다',
+  ],
+};
 
 const CLIPBOARD_COPY_SUCCESS = {
   time: 3000,
@@ -66,13 +65,18 @@ const LOGOUT = {
 
 const DELETE_USER = {
   time: 3000,
-  content : ['회원탈퇴가 완료되었습니다', '이용해주셔서 감사합니다'],
-}
+  content: ['회원탈퇴가 완료되었습니다', '이용해주셔서 감사합니다'],
+};
 
 const UPLOAD_SUCCESSE = {
   time: 1500,
-  content : ['작품이 등록되었습니다.', '']
-}
+  content: ['작품이 등록되었습니다.', ''],
+};
+
+const GALLERY_SETTING = {
+  time: 1500,
+  content: ['전시관 이름과 소개를 작성해주세요!.', ''],
+};
 
 export {
   PROFILE_MODIFY_SUCCESS,
@@ -86,4 +90,5 @@ export {
   DELETE_USER,
   UPLOAD_SUCCESSE,
   CHECK_NICKNAME,
+  GALLERY_SETTING,
 };

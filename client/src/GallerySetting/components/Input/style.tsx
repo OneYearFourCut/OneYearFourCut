@@ -3,7 +3,7 @@ import { rem } from 'polished';
 
 const Container = styled.form`
   height: 95vh;
-  ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
+  ${({ theme }) => theme.mixins.flexBox('column', 'center', 'start')}
 
   h3 {
     font-size: ${rem(20)};
@@ -21,7 +21,16 @@ const Input = styled.input`
   border: ${rem(2)} solid ${({ theme }) => theme.colors.green_004};
   border-radius: ${rem(15)};
   padding: ${rem(10)};
-
+  &:focus-visible {
+    outline: none !important;
+    border: ${rem(2)} solid
+      ${({ theme, value }) =>
+        value ? theme.colors.green_002 : theme.colors.red_001};
+    color: ${rem(2)} solid ${({ theme }) => theme.colors.green_002};
+    &::placeholder {
+      color: ${({ theme }) => theme.colors.green_002};
+    }
+  }
   &::placeholder {
     color: ${({ theme }) => theme.colors.green_004};
   }
@@ -40,4 +49,8 @@ const DescArea = styled.div`
   margin-bottom: ${rem(20)};
 `;
 
-export { Container, Input, Time, NameArea, DescArea };
+const TitleBox = styled.div`
+  margin: ${rem(50)} 0;
+`;
+
+export { Container, Input, Time, NameArea, DescArea, TitleBox };
