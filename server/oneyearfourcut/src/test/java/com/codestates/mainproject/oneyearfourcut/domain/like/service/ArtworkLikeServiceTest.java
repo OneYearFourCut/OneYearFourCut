@@ -58,7 +58,7 @@ public class ArtworkLikeServiceTest {
         given(memberService.findMember(any())).willReturn(loginMember);
         given(artworkService.findVerifiedArtwork(any(Long.class), any(Long.class))).willReturn(artwork);
         given(artworkLikeRepository.findByMemberAndArtwork(any(), any())).willReturn(Optional.of(like));
-        willDoNothing().given(alarmService).createAlarmBasedOnArtworkAndGallery(anyLong(), anyLong(), any());
+        willDoNothing().given(alarmService).createAlarmBasedOnArtworkAndGallery(anyLong(),anyLong(), anyLong(), any());
         artworkLikeService.updateArtworkLike(1L, 1L, 1L);
 
         assertThat(like.getStatus()).isEqualTo(LikeStatus.LIKE);
@@ -79,7 +79,7 @@ public class ArtworkLikeServiceTest {
         given(memberService.findMember(any())).willReturn(loginMember);
         given(artworkService.findVerifiedArtwork(any(Long.class), any(Long.class))).willReturn(artwork);
         given(artworkLikeRepository.findByMemberAndArtwork(any(), any())).willReturn(Optional.of(like));
-        willDoNothing().given(alarmService).createAlarmBasedOnArtworkAndGallery(anyLong(), anyLong(), any());
+        willDoNothing().given(alarmService).createAlarmBasedOnArtworkAndGallery(anyLong(), anyLong(), anyLong(), any());
         artworkLikeService.updateArtworkLike(1L, 1L, 1L);
 
         assertThat(like.getStatus()).isEqualTo(LikeStatus.CANCEL);

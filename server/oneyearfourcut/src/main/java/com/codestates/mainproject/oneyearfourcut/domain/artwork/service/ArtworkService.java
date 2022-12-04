@@ -65,7 +65,7 @@ public class ArtworkService {
 
         //알람 생성
         Long artworkId = savedArtwork.getArtworkId();
-        alarmService.createAlarmBasedOnArtwork(artworkId, memberId, AlarmType.POST_ARTWORK);
+        alarmService.createAlarmBasedOnArtwork(artworkId, galleryId, memberId, AlarmType.POST_ARTWORK);
 
         return savedArtwork.toArtworkResponseDto();
     }

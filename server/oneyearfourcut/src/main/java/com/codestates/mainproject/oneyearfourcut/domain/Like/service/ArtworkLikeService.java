@@ -44,6 +44,6 @@ public class ArtworkLikeService {
                     artworkLike.setArtwork(findArtwork);
                     artworkLikeRepository.save(artworkLike);
                 });
-        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, memberId, AlarmType.LIKE_ARTWORK);
+        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId,galleryId, memberId, AlarmType.LIKE_ARTWORK);
     }
 }

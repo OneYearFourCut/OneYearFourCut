@@ -9,6 +9,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentReque
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
@@ -63,7 +64,7 @@ public class CommentService {
                 .commentStatus(VALID)
                 .build();
         commentRepository.save(comment);
-        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, memberId, AlarmType.COMMENT_ARTWORK);
+        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, galleryId, memberId, AlarmType.COMMENT_ARTWORK);
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 
@@ -120,6 +121,7 @@ public class CommentService {
     public void deleteComment(Long galleryId, Long commentId, Long memberId) {
         Comment foundComment= findComment(commentId);
         checkGalleryCommentVerification(galleryId, commentId, memberId);
+        checkCommentMemberVerification(commentId,memberId);
         //--검증완료--
         foundComment.changeCommentStatus(DELETED);
     }
@@ -128,6 +130,7 @@ public class CommentService {
     public CommentGalleryHeadDto<Object> modifyComment(Long galleryId, Long commentId, CommentRequestDto commentRequestDto, Long memberId){
         Comment foundComment = findComment(commentId);
         checkGalleryCommentVerification(galleryId, commentId, memberId);
+        checkCommentMemberVerification(commentId,memberId);
         //--검증완료--
         Comment requestComment = commentRequestDto.toCommentEntity();
         Optional.ofNullable(requestComment.getContent())
@@ -142,6 +145,14 @@ public class CommentService {
         galleryService.findGallery(galleryId);
         if (!Objects.equals(galleryId, foundComment.getGallery().getGalleryId())) {
             throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND_FROM_GALLERY);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void checkCommentMemberVerification(Long commentId, Long memberId) {
+        Long foundCommentMemberId = findComment(commentId).getMember().getMemberId();
+        if (!Objects.equals(memberId, foundCommentMemberId)) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
         }
     }
 }

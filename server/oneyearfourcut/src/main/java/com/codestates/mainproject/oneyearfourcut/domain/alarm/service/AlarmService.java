@@ -74,12 +74,12 @@ public class AlarmService {
     }
 
     @Transactional
-    public void createAlarmBasedOnArtwork(Long artworkId, Long memberIdProducer, AlarmType ALARMTYPE) { //type  --> PostArtwork
+    public void createAlarmBasedOnArtwork(Long artworkId, Long galleryId, Long memberIdProducer, AlarmType ALARMTYPE) { //type  --> PostArtwork
         Member memberGalleryReceiver = new Member();
         Artwork artwork = new Artwork();
 
-        memberGalleryReceiver = artworkRepository.findById(artworkId).orElseThrow().getMember();
-        /*if (!Objects.equals(memberGalleryReceiver.getMemberId(), memberIdProducer)) */
+        memberGalleryReceiver = galleryService.findGallery(galleryId).getMember();
+        if (!Objects.equals(memberGalleryReceiver.getMemberId(), memberIdProducer))
         {
             artwork = artworkRepository.findById(artworkId).orElseThrow();
 
@@ -102,7 +102,7 @@ public class AlarmService {
         Member memberGalleryReceiver = new Member();
 
         memberGalleryReceiver = galleryService.findGallery(galleryId).getMember();
-        /*if (!Objects.equals(memberGalleryReceiver.getMemberId(), memberIdProducer)) */
+        if (!Objects.equals(memberGalleryReceiver.getMemberId(), memberIdProducer))
         {
             Alarm alarmOnGalleryOwner = Alarm.builder()
                     .member(memberGalleryReceiver)
@@ -117,13 +117,13 @@ public class AlarmService {
     }
 
     @Transactional
-    public void createAlarmBasedOnArtworkAndGallery(Long artworkId, Long memberIdProducer, AlarmType ALARMTYPE) { //type -> LikeArtwork, CommentArtwork
+    public void createAlarmBasedOnArtworkAndGallery(Long artworkId, Long galleryId, Long memberIdProducer, AlarmType ALARMTYPE) { //type -> LikeArtwork, CommentArtwork
         Member memberArtworkReceiver, memberGalleryReceiver = new Member();
         Artwork artwork = new Artwork();
 
         memberArtworkReceiver = artworkRepository.findById(artworkId).orElseThrow().getMember();
-        memberGalleryReceiver = artworkRepository.findById(artworkId).orElseThrow().getGallery().getMember();
-        /*if (!Objects.equals(memberArtworkReceiver.getMemberId(), memberIdProducer) ) */
+        memberGalleryReceiver = galleryService.findGallery(galleryId).getMember();
+        if (!Objects.equals(memberArtworkReceiver.getMemberId(), memberIdProducer) )
         {
             artwork = artworkRepository.findById(artworkId).orElseThrow();
 
@@ -158,7 +158,7 @@ public class AlarmService {
         Artwork artwork = new Artwork();
 
         memberCommentReceiver = commentRepository.findById(commentId).orElseThrow().getMember();
-        /*if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer)) */
+        if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer))
         {
             Alarm alarmOnCommentOwner = Alarm.builder()
                     .member(memberCommentReceiver)
@@ -178,7 +178,7 @@ public class AlarmService {
         Long artworkId = commentRepository.findById(commentId).orElseThrow().getArtworkId();
 
         memberCommentReceiver = commentRepository.findById(commentId).orElseThrow().getMember();
-        /*if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer)) */
+        if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer))
         {
             Alarm alarmOnCommentOwner = Alarm.builder()
                     .member(memberCommentReceiver)
