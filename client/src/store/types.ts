@@ -9,7 +9,7 @@ export interface Modal {
   target: ModalState;
   openModal: (key: string) => void;
   closeModal: (key: string) => void;
-  resetTarget: () => void;
+  resetModal: () => void;
 }
 
 export interface Alarm {
@@ -21,6 +21,7 @@ export interface Alarm {
 export interface SubToastState {
   time: number;
   content: string[];
+  color: string;
 }
 export interface ToastState extends SubToastState {
   id: number;

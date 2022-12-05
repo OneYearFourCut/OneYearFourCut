@@ -4,10 +4,12 @@ import apis from '../api';
 import { useMutation } from '@tanstack/react-query';
 import { ModalStore } from 'store/store';
 import { FormData } from '../types';
+import { useQueryClient } from '@tanstack/react-query';
 
 const useUpload = () => {
   const { closeModal } = ModalStore();
   const { setToast } = useToast();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation(
     ['useUpload'],
@@ -18,6 +20,7 @@ const useUpload = () => {
       },
       onSuccess() {
         setToast(TOAST.UPLOAD_SUCCESSE);
+        queryClient.invalidateQueries(['like']);
       },
       onError(err) {
         alert('작품 업로드 오류');

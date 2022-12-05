@@ -8,6 +8,9 @@ const DefualtContainer = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.black_007};
+  h4{
+    margin-top: ${rem(20)};
+  }
 `;
 
 const AlarmBox = styled.div<{ read: boolean }>`

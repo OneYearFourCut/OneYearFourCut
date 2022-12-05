@@ -5,11 +5,11 @@ import useToast from 'shared/components/Toast/hooks/useToast';
 import useUpload from './hook/useUpload';
 import Upload from './components/Upload';
 import { Input } from './components/Input';
-import { ModalStore, UploadStore } from 'store/store';
+import { ModalStore, UploadStore, loginStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/Alert';
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { UploadAlert } from '../shared/components/Modal/AlertData';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import type { FormData } from './types';
 
@@ -19,10 +19,12 @@ const UploadPicture = () => {
   const { setToast } = useToast();
   const { mutate } = useUpload();
   const formRef = useRef<HTMLFormElement>(null);
-  const { state } = useLocation();
   const navigate = useNavigateSearch();
+  const params = useParams();
+  const galleryId = parseInt(params.galleryId!);
+
   const handleProgressBtn = () => {
-    if (!state) {
+    if (!galleryId) {
       alert('비 정상적인 접근입니다.');
       navigate('/', {});
       return;
@@ -32,12 +34,12 @@ const UploadPicture = () => {
       img: UploadData.img!,
       title: UploadData.title,
       content: UploadData.content,
-      galleryId: state,
+      galleryId: galleryId,
     };
 
     mutate(upLoadData);
     resetData();
-    navigate(`/fourPic/${state}`, {});
+    navigate(`/fourPic/${galleryId}`, {});
   };
 
   const handlePostbtn = (event: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +56,6 @@ const UploadPicture = () => {
       openModal('AlertModal');
     }
   };
-  // const data2 = new FormData(formRef.current!) 데이터 어떻게 들어가는지 확인해보기
 
   return (
     <>

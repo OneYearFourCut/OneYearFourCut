@@ -15,7 +15,7 @@ const Alert = ({ data }: { data: Data }) => {
 
   return (
     <ModalViewBox color={data.color}>
-      <S.ApplySVG></S.ApplySVG>
+      <S.ApplySVG/>
       <h3>{data.title}</h3>
       <ModalbtnBox>
         <button onClick={() => closeModal(data.target)}>취소</button>

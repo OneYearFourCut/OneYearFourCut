@@ -5,9 +5,11 @@ import { OptionSVG } from './SvgComponents';
 const ToastMessage = ({
   time,
   content,
+  color,
 }: {
   time: number;
   content: string[];
+  color: string;
 }) => {
   const [show, setShow] = useState(true);
 
@@ -22,7 +24,11 @@ const ToastMessage = ({
             </div>
             <OptionSVG onClick={() => setShow(false)} />
           </div>
-          <T.ProgressBar className='ProgressBar' time={time}></T.ProgressBar>
+          <T.ProgressBar
+            className='ProgressBar'
+            time={time}
+            color={color}
+          ></T.ProgressBar>
         </T.ToastBox>
       )}
     </>

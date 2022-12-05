@@ -26,18 +26,17 @@ const Header = () => {
 
   return (
     <Suspense fallback={<></>}>
-      {target.ProfileModal ? (
+      {target.ProfileModal && (
         <ModalBackdrop>
           <Profile />
         </ModalBackdrop>
-      ) : (
-        <C.HeaderBox>
-          <B.HeaderBackbtn />
-          <h2 onClick={handleHeaderTitle}>올해 네 컷</h2>
-          <B.HeaderBellbtn isLoggedin={isLoggedin} />
-          <B.HeaderHamburgerbtn />
-        </C.HeaderBox>
       )}
+      <C.HeaderBox>
+        <B.HeaderBackbtn />
+        <h2 onClick={handleHeaderTitle}>올해 네 컷</h2>
+        <B.HeaderBellbtn isLoggedin={isLoggedin} />
+        <B.HeaderHamburgerbtn />
+      </C.HeaderBox>
     </Suspense>
   );
 };

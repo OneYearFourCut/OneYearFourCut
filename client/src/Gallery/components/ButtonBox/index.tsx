@@ -11,7 +11,7 @@ const Index = ({ galleryId }: GalleryType) => {
   const { data } = useGalleryData(galleryId!);
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate('/uploadPicture', { state: galleryId });
+    navigate(`/uploadPicture/${galleryId}`);
   };
 
   const disabledClick = () => {

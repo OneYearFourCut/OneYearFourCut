@@ -2,9 +2,9 @@ import { useNavigate, createSearchParams, URLSearchParamsInit } from 'react-rout
 import { ModalStore } from 'store/store';
 export const useNavigateSearch = () => {
   const navigate = useNavigate();
-  const { resetTarget } = ModalStore();
+  const { resetModal } = ModalStore();
   return (pathname: string, params: URLSearchParamsInit) => {
     navigate({ pathname, search: `${createSearchParams(params)}` });
-    resetTarget();
+    resetModal();
   }
 };

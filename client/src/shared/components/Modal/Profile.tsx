@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loginStore, ModalStore } from 'store/store';
+import { ModalStore } from 'store/store';
 import { DeleteGallery, DeleteUser } from './AlertData';
 import { Alert } from './Alert';
 import * as B from './components/ModalContainer';
@@ -15,8 +15,8 @@ const Profile = () => {
     handleDeleteUser,
     handleLogout,
     navigateSearch,
+    isLoggedin,
   } = useHandleService();
-  const { isLoggedin, user } = loginStore();
   const { target, openModal } = ModalStore();
   const [isModifing, setIsModifing] = useState(false);
 

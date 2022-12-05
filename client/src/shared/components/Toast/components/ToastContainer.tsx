@@ -60,10 +60,11 @@ const ToastBox = styled.div<{ time: number }>`
 `;
 
 //실제 Toast 메세지의 progress bar
-const ProgressBar = styled.div<{ time: number }>`
+const ProgressBar = styled.div<{ time: number; color: string }>`
   width: ${rem(395)};
   height: ${rem(4)};
-  background-color: ${({ theme }) => theme.colors.green_007};
+  background-color: ${({ theme, color }) =>
+    color === 'green' ? theme.colors.green_007 : theme.colors.red_005};
   position: relative;
   border-radius: ${rem(10)};
 
@@ -83,7 +84,8 @@ const ProgressBar = styled.div<{ time: number }>`
     left: 0;
     width: 0;
     height: ${rem(4)};
-    background-color: ${({ theme }) => theme.colors.green_006};
+    background-color: ${({ theme, color }) =>
+      color === 'green' ? theme.colors.green_006 : theme.colors.red_002};
     animation: progress ${({ time }) => time / 1000}s linear forwards;
   }
 `;

@@ -6,10 +6,10 @@ interface childernProps {
   children: React.ReactNode;
 }
 const ModalBackdrop = ({ children }: childernProps) => {
-  const { resetTarget } = ModalStore();
+  const { resetModal } = ModalStore();
   return (
     <ModalBackdropBox>
-      <ModalBackdropCloseBox onClick={resetTarget} />
+      <ModalBackdropCloseBox onClick={resetModal} />
       {children}
     </ModalBackdropBox>
   );
