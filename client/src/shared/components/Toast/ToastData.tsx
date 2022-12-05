@@ -91,6 +91,12 @@ const GALLERY_SETTING: ToastData = {
   color: 'red',
 };
 
+const ARTWORK_MODIFY_SUCCESS: ToastData = {
+  time: 1500,
+  content: ['작품 수정이 완료되었습니다', ''],
+  color: 'green',
+};
+
 export {
   PROFILE_MODIFY_SUCCESS,
   CHECK_FILE_INFO,
@@ -104,4 +110,5 @@ export {
   UPLOAD_SUCCESSE,
   CHECK_NICKNAME,
   GALLERY_SETTING,
+  ARTWORK_MODIFY_SUCCESS,
 };

@@ -37,12 +37,13 @@ export interface UploadState {
   img: File | undefined;
   title: string;
   content: string;
-  [key: string]: File | undefined | string;
+  artworkId: number | undefined;
+  [key: string]: File | undefined | string | number;
 }
 
 export interface Upload {
   UploadData: UploadState;
-  setData: (key: string, data: File | string) => void;
+  setData: (key: string, data: File | string | number) => void;
   removeImg: () => void;
   resetData: () => void;
 }

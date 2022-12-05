@@ -7,8 +7,7 @@ import { FormData } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 
-
-const useUpload = (galleryId: number) => {
+const useModifyartwork = (galleryId: number, artworkId: number | undefined) => {
   const { closeModal } = ModalStore();
   const { setToast } = useToast();
   const { resetData } = UploadStore();
@@ -16,20 +15,20 @@ const useUpload = (galleryId: number) => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation(
-    ['useUpload'],
-    (formData: FormData) => apis.postImageAndContent(formData),
+    ['useModifyartwork'],
+    (formData: FormData) => apis.patchImageAndContent(formData),
     {
       onMutate() {
         closeModal('AlertModal');
       },
       onSuccess() {
-        setToast(TOAST.UPLOAD_SUCCESSE);
+        setToast(TOAST.ARTWORK_MODIFY_SUCCESS);
         resetData();
-        navigate(`/fourPic/${galleryId}`, {});
+        navigate(`/allPic/${galleryId}/${artworkId}`, {});
         queryClient.invalidateQueries(['like']);
       },
       onError(err) {
-        alert('작품 업로드 오류');
+        alert('작품 수정 오류');
         console.log(err);
       },
     },
@@ -38,4 +37,4 @@ const useUpload = (galleryId: number) => {
   return mutate;
 };
 
-export default useUpload;
+export default useModifyartwork;

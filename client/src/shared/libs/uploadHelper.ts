@@ -26,10 +26,8 @@ export const heicTojpeg = async (img: any) => {
     name[name.length - 1] = '.jpg';
     const convertName = name.join('');
 
-    // let resultBolb = await heic2any({ blob: img, toType: 'image/jpeg' })
     let res = heic2any({ blob: img, toType: 'image/jpeg' })
       .then(function (resultBlob) {
-        //file에 새로운 파일 데이터를 씌웁니다.
         // @ts-ignore
         const file = new File([resultBlob], convertName, {
           type: 'image/jpeg',
@@ -42,4 +40,13 @@ export const heicTojpeg = async (img: any) => {
       });
     return res;
   } else return img;
+};
+
+export const urlToFile = async (url: string, fileName: string) => {
+  const response = await fetch(url);
+  const data = await response.blob();
+  fileName += `.${data.type}`;
+  return new File([data], fileName, {
+    type: data.type || 'image/jepg',
+  });
 };

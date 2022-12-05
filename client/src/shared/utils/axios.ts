@@ -1,9 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
 
-let ACCESS_TOKEN = getStoredToken()?.access_token;
 const APPLICATION_JSON = 'application/json';
 const MULTIPART_FORM_DATA = 'multipart/form-data';
+
+let ACCESS_TOKEN = getStoredToken()?.access_token;
 
 let lock = false;
 let requestQueue: ((access_token: string) => void)[] = [];
@@ -78,15 +79,13 @@ const responseInterceptorHandle = async (err: AxiosError, type: string) => {
   if (status === 457) {
     return ErrorHandler457(err);
   } else if (status === 456) {
-
     if (lock) {
       return new Promise((resolve) => {
         handleQueue((token: string) => {
-          resolve(originalRequestReFetch(originalRequest!, token, type)); //의문 2
+          resolve(originalRequestReFetch(originalRequest!, token, type));
         });
       });
     }
-
     lock = true;
     try {
       const { headers } = await axios.get(

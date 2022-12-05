@@ -67,6 +67,7 @@ const initUploadData = {
   img: undefined,
   title: '',
   content: '',
+  artworkId : undefined,
 };
 
 const UploadStore = create<Upload>((set, get) => ({

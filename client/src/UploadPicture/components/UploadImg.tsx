@@ -11,7 +11,7 @@ const UploadUserImg = () => {
   const { setToast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
 
-   const  handleOnchange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnchange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
     else if (event.target.files! && uploadHelper(event.target.files[0])) {
       setData('img', await heicTojpeg(event.target.files[0]));
