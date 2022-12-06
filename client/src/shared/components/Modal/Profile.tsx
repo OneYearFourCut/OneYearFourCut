@@ -7,6 +7,8 @@ import useHandleService from './hooks/useHandleService';
 import useClipboardCopy from './hooks/useClipboardCopy';
 import ModalBackdrop from './components/ModalBackdrop';
 import ProfileModify from './components/ProfileModify';
+import { useLocation } from 'react-router-dom';
+import { historyStore } from 'store/store';
 
 const Profile = () => {
   const { textareaRef, handleCopy, URL } = useClipboardCopy();
@@ -20,6 +22,11 @@ const Profile = () => {
   const { target, openModal } = ModalStore();
   const [isModifing, setIsModifing] = useState(false);
 
+  const { setHistory } = historyStore();
+  const { pathname } = useLocation(); // 지금 위치 기억
+
+  const login_url = process.env.REACT_APP_KAKAO_AUTH_URL;
+  
   return (
     <>
       <B.HambergurBox>
@@ -48,8 +55,11 @@ const Profile = () => {
             className='kakaoLoginImg'
             src={'/images/kakao_login_medium_narrow.png'}
             alt=''
-            onClick={() =>
-              window.location.assign(process.env.REACT_APP_KAKAO_AUTH_URL!)
+            onClick={
+              () => {
+                setHistory(pathname); // 가야 할 경로
+                window.location.replace(login_url!);
+              }
             }
           ></img>
         )}
