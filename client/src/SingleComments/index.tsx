@@ -16,7 +16,7 @@ const Body = styled.div`
 
   display: flex;
   justify-content: end;
-
+  position: relative;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   ::-webkit-scrollbar {

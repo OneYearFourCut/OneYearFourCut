@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import HeartIcon from '../Icons/heartIcon';
 import useLikePictures from 'SinglePicture/hooks/useLikePictures';
-import useGetSinglePicture from 'shared/hooks/useGetSinglePicture';
+import useGetAllPost from 'shared/hooks/useGetAllPost';
 import { useParams } from 'react-router-dom';
+import './like.css';
 
 const LikeCircle = styled.div`
   width: ${rem(49)};
@@ -17,24 +17,44 @@ const LikeCircle = styled.div`
   cursor: pointer;
 `;
 
-const LikeButton = ({ artworkId }: { artworkId: number }) => {
+const Box = styled.div`
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+`;
+
+const LikeButton = ({
+  artworkId,
+  idx,
+}: {
+  artworkId: number;
+  idx?: number;
+}) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
-  const { data } = useGetSinglePicture(galleryId, artworkId);
+  const { data } = useGetAllPost(galleryId);
   const { mutate } = useLikePictures(galleryId, artworkId);
 
   const Like = () => {
     mutate();
-    console.log(data?.data.liked);
+    console.log(idx !== undefined && data?.data[idx].liked);
   };
 
   return (
-    <LikeCircle onClick={Like}>
-      {!data?.data.liked ? (
-        <HeartIcon color={'gray'} />
-      ) : (
-        <HeartIcon color={'red'} />
-      )}
+    <LikeCircle
+      onClick={(e) => {
+        Like();
+        e.stopPropagation();
+        //이벤트 버블링 방지
+      }}
+    >
+      <Box>
+        {idx !== undefined && data?.data[idx].liked === false ? (
+          <div className='heart'></div>
+        ) : (
+          <div className='heart check'></div>
+        )}
+      </Box>
     </LikeCircle>
   );
 };

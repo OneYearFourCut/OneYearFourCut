@@ -1,22 +1,29 @@
 import * as S from '../SingleComments/Single Comments.style';
-import SingleComment from 'SingleComments/SingleComment/SingleComment';
 import XIcon from 'shared/components/Icons/XIcon';
-import CommentStore from 'store/store';
 import useGetAllComments from 'AllComments/hooks/usGetAllComment';
 import { useParams, useNavigate } from 'react-router-dom';
+import React from 'react';
+import useGetSinglePicture from 'shared/hooks/useGetSinglePicture';
+
+const AllSingleComment = React.lazy(() => import('./AllCommentOne'));
 
 const AllCommentsList = () => {
-  const { commentCount } = CommentStore();
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
   let Page = 1;
   const navigate = useNavigate();
   const { data } = useGetAllComments(galleryId, Page);
 
+  const GetPicData = (galleryId: number, artworkId: number) => {
+    const { data } = useGetSinglePicture(galleryId, artworkId);
+    return data?.data.imagePath;
+  };
   return (
     <S.CommentBody>
       <S.PicTitle>
-        <S.CommentCount>댓글 {commentCount}</S.CommentCount>
+        <S.CommentCount onClick={() => console.log(data?.data)}>
+          댓글 {data?.data.commentList.length}
+        </S.CommentCount>
         <div onClick={() => navigate(-1)}>
           <XIcon />
         </div>
@@ -27,12 +34,13 @@ const AllCommentsList = () => {
         data &&
         data.data.commentList.map((el: any) => {
           return (
-            <SingleComment
+            <AllSingleComment
               key={el.commentId}
               commentId={el.commentId}
               nickname={el.nickname}
               time={el.createdAt}
               comment={el.content}
+              picPath={GetPicData(galleryId, el.artworkId)}
             />
           );
         })

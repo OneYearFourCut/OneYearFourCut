@@ -14,6 +14,7 @@ const Info = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const NickName = styled.div`
@@ -31,6 +32,7 @@ const Time = styled.div`
   font-size: ${rem(12)};
   line-height: ${rem(16)};
   color: ${({ theme }) => theme.colors.black_003};
+  margin-left: initial;
 `;
 
 const Comment = styled.div`

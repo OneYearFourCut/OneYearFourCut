@@ -35,8 +35,8 @@ const SinglePicPage = () => {
   const { data } = useGetAllPost(galleryId);
   const { state } = useLocation();
   const { lastOpen } = CommentStore();
-  let num = 0;
 
+  let num = 0;
   if (state !== null && lastOpen === -1) {
     num = state;
   }
@@ -71,6 +71,7 @@ const SinglePicPage = () => {
                   scrpit={el.content}
                   username={el.memberId}
                   artId={el.artworkId}
+                  nickname={el.nickName}
                 ></SinglePicture>
                 <Footer
                   like={el.likeCount}

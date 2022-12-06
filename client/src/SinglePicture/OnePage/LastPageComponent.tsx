@@ -51,7 +51,7 @@ const LastPageComponent = () => {
     navigate(`/allPic/${galleryId}/artworks/comments`);
   };
   const GoUpload = () => {
-    navigate(`/uploadPicture`);
+    navigate(`/uploadPicture/${galleryId}`);
   };
 
   return (

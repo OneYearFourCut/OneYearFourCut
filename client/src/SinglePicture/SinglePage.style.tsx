@@ -13,21 +13,18 @@ const Body = styled.div`
   position: relative;
 `;
 
-const PageCount = styled.div`
-  width: inherit;
-  display: flex;
-  justify-content: right;
-  padding-right: ${rem(50)};
-  margin: 3rem 0 0.5rem;
-`;
+const PageCount = styled.div``;
 
 const Delete = styled.div`
-  width: inherit;
-  display: flex;
-  justify-content: right;
-  padding-right: ${rem(50)};
-  margin: 0.5rem 0 1rem 0;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.black_003};
+`;
+
+const ButtonZone = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: ${rem(80)};
 `;
 
 const PicZone = styled.div`
@@ -57,18 +54,13 @@ const SinglePic = styled.div`
   box-shadow: rgba(0, 0, 0, 0.24) 0px ${rem(3)} ${rem(8)};
 `;
 
-const PrePic = styled.div`
-  width: ${rem(335)};
-  height: ${rem(487)};
-  background-color: ${({ theme }) => theme.colors.black_006};
-  border-radius: ${rem(20)};
-`;
-
-const NextPic = styled.div`
-  width: ${rem(335)};
-  height: ${rem(487)};
-  background-color: ${({ theme }) => theme.colors.black_006};
-  border-radius: ${rem(20)};
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+  padding: 0 ${rem(55)};
+  margin-top: ${rem(10)};
 `;
 
 const PicFooter = styled.div`
@@ -81,7 +73,7 @@ const PicFooter = styled.div`
 const PicIntroduct = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${rem(21)};
+  padding: ${rem(35)};
 `;
 
 const PicTitle = styled.div`
@@ -108,10 +100,10 @@ export {
   PageCount,
   PicZone,
   SinglePic,
-  PrePic,
-  NextPic,
+  Buttons,
   PicIntroduct,
   PicDiscription,
+  ButtonZone,
   Delete,
   PicTitle,
 };

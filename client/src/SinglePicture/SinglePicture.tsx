@@ -4,6 +4,12 @@ import styled from 'styled-components';
 import useDeleteSinglePic from 'shared/hooks/useDeleteSinglePic';
 import { useParams } from 'react-router-dom';
 import LikeButton from 'shared/components/Buttons/likeButton';
+import { loginStore, UploadStore, ModalStore } from 'store/store';
+import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
+import { Alert } from 'shared/components/Modal/Alert';
+import { DeleteAlert } from '../shared/components/Modal/AlertData';
+import { urlToFile } from 'shared/libs/uploadHelper';
+import { useNavigate } from 'react-router-dom';
 
 const Back = styled.div`
   position: fixed;
@@ -15,12 +21,14 @@ const Back = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3;
 `;
 
 const Pic = styled.div`
   width: 80%;
   height: 80%;
 `;
+
 const SinglePicture = ({
   picture,
   title,
@@ -29,6 +37,7 @@ const SinglePicture = ({
   idx,
   array,
   artId,
+  nickname,
 }: {
   picture: string;
   title: string;
@@ -37,28 +46,42 @@ const SinglePicture = ({
   idx?: number;
   array?: number;
   artId: number;
+  nickname?: any;
 }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
   const { mutate } = useDeleteSinglePic(galleryId, artId);
-  const Delete = (): void => {
-    mutate();
+  const { target, openModal, closeModal } = ModalStore();
+  const { resetData, setData } = UploadStore();
+  const [open, setOpen] = useState(false);
+  const { user } = loginStore();
+  const navigate = useNavigate();
+
+  const OpenModal = () => {
+    openModal('AlertModal');
   };
 
-  const [open, setOpen] = useState(false);
+  const handleProgressBtn = () => {
+    mutate();
+    closeModal('AlertModal');
+  };
 
+  const ModifyClick = async () => {
+    console.log(picture, title);
+    let img = await urlToFile(picture, title);
+    setData('img', img!);
+    setData('title', title);
+    setData('content', scrpit);
+    setData('artworkId', artId);
+    navigate(`/uploadPicture/${galleryId}`);
+  };
   return (
     <S.Body>
-      {idx !== undefined ? (
-        <S.PageCount>
-          {idx + 1}/{array}
-        </S.PageCount>
-      ) : null}
       {open ? (
         <Back onClick={() => setOpen(false)}>
           <Pic
             style={{
-              background: `url(${process.env.PUBLIC_URL + picture})`,
+              background: `url(${picture})`,
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
@@ -69,7 +92,7 @@ const SinglePicture = ({
       <S.PicZone>
         <S.SinglePic
           style={{
-            background: `url(${process.env.PUBLIC_URL + picture})`,
+            background: `url(${picture})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
@@ -77,15 +100,34 @@ const SinglePicture = ({
           onClick={() => setOpen(true)}
         >
           <Suspense>
-            <LikeButton artworkId={artId}></LikeButton>
+            <LikeButton artworkId={artId} idx={idx}></LikeButton>
           </Suspense>
         </S.SinglePic>
       </S.PicZone>
-      <S.Delete onClick={() => Delete()}>삭제</S.Delete>
+      <S.Buttons>
+        {idx !== undefined ? (
+          <S.PageCount>
+            {idx + 1}/{array}
+          </S.PageCount>
+        ) : null}
+        {galleryId === user?.galleryId || username === user?.nickname ? (
+          <S.ButtonZone>
+            <S.Delete onClick={() => ModifyClick()}>수정</S.Delete>
+            <S.Delete onClick={OpenModal}>삭제</S.Delete>
+          </S.ButtonZone>
+        ) : null}
+      </S.Buttons>
       <S.PicIntroduct>
-        <S.PicTitle>{title}</S.PicTitle>
+        <S.PicTitle>
+          [{nickname}] {title}
+        </S.PicTitle>
         <S.PicDiscription>{scrpit}</S.PicDiscription>
       </S.PicIntroduct>
+      {target.AlertModal ? (
+        <ModalBackdrop>
+          <Alert data={DeleteAlert(handleProgressBtn)} />
+        </ModalBackdrop>
+      ) : null}
     </S.Body>
   );
 };

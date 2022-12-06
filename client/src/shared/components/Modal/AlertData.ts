@@ -36,7 +36,18 @@ export const DeleteAlert = (onClick: () => void) => {
     title: '작품을 삭제하시겠습니까?',
     content: '삭제하기',
     color: 'red',
-    target: 'DeleteModal',
+    target: 'AlertModal',
+    onClick: onClick,
+  };
+  return data;
+};
+
+export const DeleteComment = (onClick: () => void) => {
+  const data = {
+    title: '덧글을 삭제하시겠습니까?',
+    content: '삭제하기',
+    color: 'red',
+    target: 'AlertModal',
     onClick: onClick,
   };
   return data;

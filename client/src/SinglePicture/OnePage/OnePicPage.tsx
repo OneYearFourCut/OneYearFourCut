@@ -34,7 +34,7 @@ const OnePicPage = () => {
           <SingleComment />
         </ModalBackdrop>
       ) : (
-        <Body className='single'>
+        <div className='single'>
           <SinglePicture
             picture={el.imagePath}
             title={el.title}
@@ -48,7 +48,7 @@ const OnePicPage = () => {
             artworkId={artworkId}
             galleryId={galleryId}
           ></Footer>
-        </Body>
+        </div>
       )}
     </Body>
   );

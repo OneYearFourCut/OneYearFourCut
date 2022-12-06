@@ -1,37 +1,54 @@
-import * as S from './SingleComment.style';
+import * as S from 'SingleComments/SingleComment/SingleComment.style';
 import useDeleteComment from 'SingleComments/hooks/useDeleteComment';
 import 'moment/locale/ko';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import { loginStore, ModalStore, UploadStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/Alert';
-import { DeleteComment } from '../../shared/components/Modal/AlertData';
+import { DeleteComment } from 'shared/components/Modal/AlertData';
 import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import styled from 'styled-components';
-import { getUser } from 'Intro/api';
 
 const Back = styled.div`
   position: absolute;
   left: 0;
 `;
+const CommentZone = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
-const SingleComment = ({
+const Zone = styled.div`
+  width: calc(100% - 5rem);
+`;
+
+const Pic = styled.div`
+  width: 4rem;
+  height: 4rem;
+  margin-top: 1rem;
+`;
+
+const AllSingleComment = ({
   commentId,
   nickname,
   time,
   comment,
+  picPath,
 }: {
   commentId: number;
   nickname: string;
   time: number;
   comment: string;
+  picPath: any;
 }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
   const { mutate } = useDeleteComment(galleryId, commentId);
+
   const { target, openModal, closeModal } = ModalStore();
   const { resetData } = UploadStore();
   const { user } = loginStore();
+
   let nowTime = moment(time).format('YYMMDD HH:mm');
   const OpenModal = () => {
     openModal('AlertModal');
@@ -43,16 +60,30 @@ const SingleComment = ({
   };
   return (
     <S.Body>
-      <S.Info>
-        <S.NickName>{nickname}</S.NickName>
-        <S.Time>{nowTime}</S.Time>
-      </S.Info>
-      <S.Comment>
-        {comment}
-        {nickname === user?.nickname ? (
-          <S.Delete onClick={OpenModal}>삭제</S.Delete>
-        ) : null}
-      </S.Comment>
+      <CommentZone>
+        <Zone>
+          <S.Info>
+            <S.NickName>{nickname}</S.NickName>
+            <S.Time>{nowTime}</S.Time>
+          </S.Info>
+          <S.Comment>
+            {comment}
+            {galleryId === user?.galleryId ? (
+              <S.Delete onClick={OpenModal}>삭제</S.Delete>
+            ) : nickname === user?.nickname ? (
+              <S.Delete onClick={OpenModal}>삭제</S.Delete>
+            ) : null}
+          </S.Comment>
+        </Zone>
+        <Pic
+          style={{
+            background: `url(${process.env.PUBLIC_URL + picPath})`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}
+        ></Pic>
+      </CommentZone>
       <S.ButtonZone>
         <S.Button type='button'>답글</S.Button>
       </S.ButtonZone>
@@ -67,4 +98,4 @@ const SingleComment = ({
   );
 };
 
-export default SingleComment;
+export default AllSingleComment;

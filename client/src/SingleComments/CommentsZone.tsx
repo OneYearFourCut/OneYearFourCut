@@ -9,7 +9,6 @@ const CommentsList = () => {
   const galleryId = parseInt(params.galleryId!);
   const state = parseInt(params.artworkId!);
   let Page = 1;
-
   const navigate = useNavigate();
   const { data } = useGetSingleComments(galleryId, state, Page);
 

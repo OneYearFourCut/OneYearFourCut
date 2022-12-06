@@ -14,6 +14,7 @@ const Body = styled.div`
   max-width: ${rem(428)};
   display: flex;
   justify-content: end;
+  position: relative;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   ::-webkit-scrollbar {
