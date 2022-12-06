@@ -5,14 +5,13 @@ import apis from '../api';
 
 const useReceiveAlarm = (isLoggedin: boolean) => {
   const { alarmIsOpen } = AlarmStore();
-  console.log(isLoggedin);
   const navigate = useNavigate();
   const { data, status, refetch, isStale } = useQuery(
     ['useReceiveAlarm'],
     apis.getCheckAlarm,
     {
       enabled: isLoggedin,
-      refetchInterval: () => (isLoggedin && !alarmIsOpen ? 3000 : false),
+      refetchInterval: () => (isLoggedin && !alarmIsOpen ? 4000 : false),
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchIntervalInBackground: false,

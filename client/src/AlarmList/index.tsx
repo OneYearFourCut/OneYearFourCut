@@ -34,7 +34,7 @@ const AlarmList = () => {
           setAlarmListData={setAlarmListData}
           setIsData={setIsData}
         />
-        {!isData && <h4>현재 알람이 없습니다</h4>}
+        {!alarmListData.length && !isData && <h4>현재 알람이 없습니다</h4>}
         {alarmListData.map((data) => (
           <Alarm key={data.alarmId} data={data}></Alarm>
         ))}

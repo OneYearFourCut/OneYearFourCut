@@ -3,13 +3,11 @@ import * as TOAST from 'shared/components/Toast/ToastData';
 import useToast from 'shared/components/Toast/hooks/useToast';
 import { UploadSvg } from './SvgComponents';
 import { UploadStore } from 'store/store';
-import { useRef } from 'react';
 import { uploadHelper, heicTojpeg } from 'shared/libs/uploadHelper';
 
-const UploadUserImg = () => {
+const UploadUserImg = ({ inputRef } : {inputRef: React.RefObject<HTMLInputElement>}) => {
   const { UploadData, setData } = UploadStore();
   const { setToast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleOnchange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
