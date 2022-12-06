@@ -8,6 +8,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRe
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
@@ -17,8 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType.COMMENT_GALLERY;
 
@@ -34,18 +37,26 @@ public class AlarmService {
 
     @Transactional
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
-        memberService.findMember(memberId);
+        Member member = memberService.findMember(memberId);
         //Alarm List to Pageination logic
         Page<Alarm> alarmPage = null;
         try {
             alarmPage = findAlarmPagesByFilter(filter, memberId, page);
             List<Alarm> alarmList = alarmPage.getContent();
-            return AlarmResponseDto.toAlarmResponseDtoList(alarmList);
+
+            List<AlarmResponseDto> alarmListToResDTO = alarmList.stream()
+                    .map(alarm -> {
+                        return alarm.toAlarmResponseDto(galleryService.findLoginGallery(member.getMemberId()).getGalleryId());
+                    } ).collect(Collectors.toList());
+            return alarmListToResDTO;
         } finally {
             alarmPage.getContent().forEach(Alarm::checkRead);
         }
 
     }
+
+
+
 
     @Transactional
     public AlarmReadCheckResponseDto checkReadAlarm(Long memberId) {

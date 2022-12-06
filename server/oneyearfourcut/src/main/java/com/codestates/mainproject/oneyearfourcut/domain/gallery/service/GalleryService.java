@@ -84,7 +84,7 @@ public class GalleryService {
 
     //로그인 유저의 갤러리를 가져오는 메서드
     @Transactional(readOnly = true)
-    private Gallery findLoginGallery(Long memberId) {
+    public Gallery findLoginGallery(Long memberId) {
         Optional<Gallery> findGallery = galleryRepository.findByMember_MemberIdAndStatus(memberId, OPEN);
 
         return findGallery.orElseThrow(() -> new BusinessLogicException(ExceptionCode.GALLERY_NOT_FOUND));

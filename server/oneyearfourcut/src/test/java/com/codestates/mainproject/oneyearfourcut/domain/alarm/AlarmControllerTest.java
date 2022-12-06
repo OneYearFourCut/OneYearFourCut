@@ -64,7 +64,7 @@ class AlarmControllerTest {
     @MockBean
     private AlarmService alarmService;
 
-    @Test
+    /*@Test
     void getAlarmListFiltered() throws Exception {
         //given
         Member member = memberRepository.save(Member.builder()
@@ -179,7 +179,7 @@ class AlarmControllerTest {
                                 )
                         )
                 );
-    }
+    }*/
 
     @Test
     void checkReadAlarm() throws Exception {
