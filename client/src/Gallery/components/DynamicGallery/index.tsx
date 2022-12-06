@@ -11,14 +11,12 @@ const Index = () => {
   const { data, isLoading } = useGetAllPost(galleryId!);
   const artworkDataByTime = data?.data;
   const navigate = useNavigate();
-
   const odd: any[] = [];
   const even: any[] = [];
 
   const [selectedOption, setSelectedOption] = useState<String>();
   const onChange = (value: string) => {
     setSelectedOption(value);
-    console.log(value);
   };
 
   let order = artworkDataByTime;

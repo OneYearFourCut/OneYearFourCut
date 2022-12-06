@@ -7,6 +7,7 @@ import SingleComment from 'SingleComments/index';
 import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import useGetSinglePicture from 'shared/hooks/useGetSinglePicture';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Body = styled.div`
   width: ${rem(428)};
@@ -20,8 +21,11 @@ const OnePicPage = () => {
   const galleryId = parseInt(params.galleryId!);
   const artworkId = parseInt(params.artworkId!);
   const { open } = CommentStore();
-  const { data } = useGetSinglePicture(galleryId, artworkId);
+  const { data, refetch } = useGetSinglePicture(galleryId, artworkId);
   const el = data?.data;
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <Body>

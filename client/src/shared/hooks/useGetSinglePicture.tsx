@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { jsonInstance } from 'shared/utils/axios';
 
 const useGetSinglePicture = (galleryId: number, artworkId: number) => {
-  const { data, status, isLoading, isSuccess } = useQuery(
+  const { data, status, refetch, isLoading, isSuccess } = useQuery(
     ['singlePicutre'],
     () => {
       return jsonInstance.get(`galleries/${galleryId}/artworks/${artworkId}`);
@@ -14,7 +14,7 @@ const useGetSinglePicture = (galleryId: number, artworkId: number) => {
     },
   );
 
-  return { data, status, isLoading, isSuccess };
+  return { data, status, refetch, isLoading, isSuccess };
 };
 
 export default useGetSinglePicture;

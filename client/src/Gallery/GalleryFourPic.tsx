@@ -4,6 +4,8 @@ import ButtonBox from './components/ButtonBox';
 import BottomButton from './components/BottonButton';
 import { useParams } from 'react-router-dom';
 import FourCut from './components/FourCut';
+import Snowfall from 'react-snowfall';
+
 const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
@@ -12,6 +14,15 @@ const Gallery = () => {
   const galleryId = parseInt(params.galleryId!);
   return (
     <Container>
+      <Snowfall
+        color='aliceblue'
+        snowflakeCount={100}
+        style={{
+          position: 'fixed',
+          width: '100vw',
+          height: '100vh',
+        }}
+      />
       <GalleryInfo galleryId={galleryId} />
       <ButtonBox galleryId={galleryId} />
       <FourCut galleryId={galleryId} />

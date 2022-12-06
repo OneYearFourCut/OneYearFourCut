@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 export default function UseLikeData({ galleryId }: GalleryType) {
   const navigate = useNavigate();
   const handleClick = (e: any) => {
-    navigate(`/allPic/${galleryId}/artworks`, { state: e });
+    navigate(`/allPic/${galleryId}/${e}`);
   };
   const { data, isLoading, isError, isFetching, error, refetch } = useQuery(
     ['like'],
@@ -38,7 +38,7 @@ export default function UseLikeData({ galleryId }: GalleryType) {
               key={like.artworkId}
               className='box'
               src={like.imagePath}
-              onClick={() => handleClick(idx)}
+              onClick={() => handleClick(like.artworkId)}
             />
           ) : (
             <S.Box key={idx} />
