@@ -36,6 +36,7 @@ const OnePicPage = () => {
       ) : (
         <div className='single'>
           <SinglePicture
+            nickname={el.nickName}
             picture={el.imagePath}
             title={el.title}
             scrpit={el.content}

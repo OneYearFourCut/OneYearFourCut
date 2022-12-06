@@ -39,7 +39,7 @@ const AllSingleComment = ({
   nickname: string;
   time: number;
   comment: string;
-  picPath: any;
+  picPath?: any;
 }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
@@ -77,7 +77,7 @@ const AllSingleComment = ({
         </Zone>
         <Pic
           style={{
-            background: `url(${process.env.PUBLIC_URL + picPath})`,
+            backgroundImage: `url(${picPath})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',

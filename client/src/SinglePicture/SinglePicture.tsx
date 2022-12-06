@@ -46,7 +46,7 @@ const SinglePicture = ({
   idx?: number;
   array?: number;
   artId: number;
-  nickname?: any;
+  nickname: string;
 }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
@@ -81,7 +81,7 @@ const SinglePicture = ({
         <Back onClick={() => setOpen(false)}>
           <Pic
             style={{
-              background: `url(${picture})`,
+              backgroundImage: `url(${picture})`,
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
@@ -92,7 +92,7 @@ const SinglePicture = ({
       <S.PicZone>
         <S.SinglePic
           style={{
-            background: `url(${picture})`,
+            backgroundImage: `url(${picture})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
@@ -110,7 +110,12 @@ const SinglePicture = ({
             {idx + 1}/{array}
           </S.PageCount>
         ) : null}
-        {galleryId === user?.galleryId || username === user?.nickname ? (
+        {galleryId === user?.galleryId ? (
+          <S.ButtonZone>
+            <S.Delete onClick={() => ModifyClick()}>수정</S.Delete>
+            <S.Delete onClick={OpenModal}>삭제</S.Delete>
+          </S.ButtonZone>
+        ) : nickname === user?.nickname ? (
           <S.ButtonZone>
             <S.Delete onClick={() => ModifyClick()}>수정</S.Delete>
             <S.Delete onClick={OpenModal}>삭제</S.Delete>

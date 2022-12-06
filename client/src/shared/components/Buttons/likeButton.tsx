@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import useLikePictures from 'SinglePicture/hooks/useLikePictures';
 import useGetAllPost from 'shared/hooks/useGetAllPost';
 import { useParams } from 'react-router-dom';
+import LikeBtn from './LikeBtn';
 import './like.css';
 
 const LikeCircle = styled.div`
@@ -32,12 +33,16 @@ const LikeButton = ({
 }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
-  const { data } = useGetAllPost(galleryId);
+  const { data, refetch } = useGetAllPost(galleryId);
+  const state = LikeBtn(galleryId, artworkId);
+
+  useEffect(() => {
+    refetch();
+  }, []);
   const { mutate } = useLikePictures(galleryId, artworkId);
 
   const Like = () => {
     mutate();
-    console.log(idx !== undefined && data?.data[idx].liked);
   };
 
   return (
@@ -50,6 +55,11 @@ const LikeButton = ({
     >
       <Box>
         {idx !== undefined && data?.data[idx].liked === false ? (
+          <div className='heart'></div>
+        ) : (
+          <div className='heart check'></div>
+        )}
+        {idx === undefined && state === false ? (
           <div className='heart'></div>
         ) : (
           <div className='heart check'></div>

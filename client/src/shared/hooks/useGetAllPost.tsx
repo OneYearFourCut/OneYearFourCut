@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { jsonInstance } from 'shared/utils/axios';
 
 const useGetAllPost = (galleryId: number) => {
-  const { data, status, isLoading, isSuccess } = useQuery(
+  const { data, status, isLoading, refetch, isSuccess } = useQuery(
     ['pictures'],
     () => {
       return jsonInstance.get(`galleries/${galleryId}/artworks`);
@@ -14,7 +14,7 @@ const useGetAllPost = (galleryId: number) => {
     },
   );
 
-  return { data, status, isLoading, isSuccess };
+  return { data, status, isLoading, refetch, isSuccess };
 };
 
 export default useGetAllPost;
