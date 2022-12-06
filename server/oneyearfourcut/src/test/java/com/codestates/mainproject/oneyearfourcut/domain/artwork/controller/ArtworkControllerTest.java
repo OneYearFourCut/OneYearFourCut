@@ -158,6 +158,7 @@ public class ArtworkControllerTest {
 
         ArtworkResponseDto response = ArtworkResponseDto.builder()
                 .artworkId(1L)
+                .nickName("작성자")
                 .title(title)
                 .content(content)
                 .imagePath("/S3_imagePath")
@@ -188,6 +189,7 @@ public class ArtworkControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.artworkId").exists())
                 .andExpect(jsonPath("$.memberId").exists())
+                .andExpect(jsonPath("$.nickName").value(response.getNickName()))
                 .andExpect(jsonPath("$.title").value(response.getTitle()))
                 .andExpect(jsonPath("$.content").value(response.getContent()))
                 .andExpect(jsonPath("$.imagePath").value(response.getImagePath()))
@@ -214,6 +216,7 @@ public class ArtworkControllerTest {
                         responseFields(
                                 fieldWithPath("artworkId").type(JsonFieldType.NUMBER).description("작품 식별자"),
                                 fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                fieldWithPath("nickName").type(JsonFieldType.STRING).description("작성자 별명"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("작품에 대한 제목"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("작품에 대한 설명"),
                                 fieldWithPath("imagePath").type(JsonFieldType.STRING).description("작품 이미지 경로"),
@@ -229,11 +232,11 @@ public class ArtworkControllerTest {
     void getArtworks() throws Exception {
 
         List<ArtworkResponseDto> response = List.of(
-                ArtworkResponseDto.builder().artworkId(1L).title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(32).commentCount(3).build(),
-                ArtworkResponseDto.builder().artworkId(2L).title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(212).commentCount(2).build(),
-                ArtworkResponseDto.builder().artworkId(3L).title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(26).commentCount(5).build(),
-                ArtworkResponseDto.builder().artworkId(4L).title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(62).commentCount(6).build(),
-                ArtworkResponseDto.builder().artworkId(5L).title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(91).commentCount(1).build()
+                ArtworkResponseDto.builder().artworkId(1L).nickName("작성자1").title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(32).commentCount(3).build(),
+                ArtworkResponseDto.builder().artworkId(2L).nickName("작성자2").title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(212).commentCount(2).build(),
+                ArtworkResponseDto.builder().artworkId(3L).nickName("작성자3").title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(26).commentCount(5).build(),
+                ArtworkResponseDto.builder().artworkId(4L).nickName("작성자4").title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(62).commentCount(6).build(),
+                ArtworkResponseDto.builder().artworkId(5L).nickName("작성자5").title("제목입니다.").content("설명입니다.").imagePath("S3 이미지 url").likeCount(91).commentCount(1).build()
         );
 
         given(artworkService.findArtworkList(any(Long.class), eq(1L))).willReturn(response);
@@ -265,6 +268,7 @@ public class ArtworkControllerTest {
                                 responseFields(
                                         fieldWithPath("[].artworkId").type(JsonFieldType.NUMBER).description("작품 식별자"),
                                         fieldWithPath("[].memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("[].nickName").type(JsonFieldType.STRING).description("작성자 별명"),
                                         fieldWithPath("[].title").type(JsonFieldType.STRING).description("작품에 대한 제목"),
                                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("작품에 대한 설명"),
                                         fieldWithPath("[].imagePath").type(JsonFieldType.STRING).description("작품 이미지 경로"),
@@ -280,7 +284,7 @@ public class ArtworkControllerTest {
     @DisplayName("작품 개별 조회")
     void getArtwork() throws Exception {
 
-        ArtworkResponseDto responseDto = ArtworkResponseDto.builder().artworkId(1L).title("제목입니다.").content("설명입니다.")
+        ArtworkResponseDto responseDto = ArtworkResponseDto.builder().artworkId(1L).nickName("작성자").title("제목입니다.").content("설명입니다.")
                 .imagePath("S3 이미지 url").likeCount(22).commentCount(3).build();
 
         given(artworkService.findArtwork(any(Long.class), eq(1L), eq(1L))).willReturn(responseDto);
@@ -294,6 +298,7 @@ public class ArtworkControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.artworkId").value(responseDto.getArtworkId()))
                 .andExpect(jsonPath("$.memberId").value(responseDto.getMemberId()))
+                .andExpect(jsonPath("$.nickName").value(responseDto.getNickName()))
                 .andExpect(jsonPath("$.title").value(responseDto.getTitle()))
                 .andExpect(jsonPath("$.content").value(responseDto.getContent()))
                 .andExpect(jsonPath("$.imagePath").value(responseDto.getImagePath()))
@@ -314,6 +319,7 @@ public class ArtworkControllerTest {
                                 responseFields(
                                         fieldWithPath("artworkId").type(JsonFieldType.NUMBER).description("작품 식별자"),
                                         fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("nickName").type(JsonFieldType.STRING).description("작성자 별명"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("작품에 대한 제목"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("작품에 대한 설명"),
                                         fieldWithPath("imagePath").type(JsonFieldType.STRING).description("작품 이미지 경로"),

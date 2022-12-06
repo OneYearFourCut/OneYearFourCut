@@ -1,4 +1,4 @@
-지INSERT INTO MEMBER (nickname, email, profile, created_at, last_modified_at, status, role) VALUES
+INSERT INTO MEMBER (nickname, email, profile, created_at, last_modified_at, status, role) VALUES
 ('gallery', 'test1@gmail.com', '/porifile.jpg', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 'ACTIVE', 'USER'),
 ('artwork1', 'artworkPerson1@gmail.com', '/porifile.jpg', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 'ACTIVE', 'USER'),
 ('comment', 'test3@gmail.com', '/porifile.jpg', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 'ACTIVE', 'USER'),

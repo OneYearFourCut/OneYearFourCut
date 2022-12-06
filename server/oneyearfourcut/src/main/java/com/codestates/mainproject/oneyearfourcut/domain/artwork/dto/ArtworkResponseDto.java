@@ -11,6 +11,7 @@ public class ArtworkResponseDto {
 
     private long artworkId;
     private long memberId;
+    private String nickName;
     private String title;
     private String content;
     private String imagePath;
@@ -19,9 +20,10 @@ public class ArtworkResponseDto {
     private int commentCount;
 
     @Builder
-    private ArtworkResponseDto(long artworkId, long memberId, String title, String content, String imagePath, int likeCount, boolean liked, int commentCount) {
+    private ArtworkResponseDto(long artworkId, long memberId, String nickName, String title, String content, String imagePath, int likeCount, boolean liked, int commentCount) {
         this.artworkId = artworkId;
         this.memberId = memberId;
+        this.nickName = nickName;
         this.title = title;
         this.content = content;
         this.imagePath = imagePath;
