@@ -1,11 +1,11 @@
 import * as S from './style';
-import Envelope from '../Envelope';
 import Kakao from '../KakaoBtn';
 import Letter from '../Letter';
-import { useEffect, useRef, useState } from 'react';
+import { createRef, useEffect, useRef, useState } from 'react';
 import AIntro from '../AIntro';
 import BIntro from '../BIntro';
 import CIntro from '../CIntro';
+import Demo from '../Demo';
 
 const Index = () => {
   const homeRef = useRef<HTMLInputElement>(null);
@@ -39,27 +39,26 @@ const Index = () => {
   };
 
   return (
-    <S.Container>
+    <S.Container ref={homeRef}>
       <Kakao />
-      <div>
-        <S.EnvelopeWrapper ref={homeRef}>
-          <S.Envelope className={isOpen ? 'open' : 'close'}>
-            <S.Front onClick={onClick} className='flap'></S.Front>
-            <S.Front onClick={onClick} className='pocket'></S.Front>
-            <Letter handleNext={onGoClick} isOpen={isOpen} />
-          </S.Envelope>
-        </S.EnvelopeWrapper>
-        <S.Box ref={goRef}>
-          <AIntro />
-          <S.OpenBtn onClick={onNextClick}>Down</S.OpenBtn>
-        </S.Box>
-        <S.Box ref={nextRef}>
-          <BIntro />
-          <S.OpenBtn className='top' onClick={onHomeClick}>
-            Top
-          </S.OpenBtn>
-        </S.Box>
-      </div>
+      <Demo />
+      <S.EnvelopeWrapper>
+        <S.Envelope className={isOpen ? 'open' : 'close'}>
+          <S.Front onClick={onClick} className='flap'></S.Front>
+          <S.Front onClick={onClick} className='pocket'></S.Front>
+          <Letter handleNext={onGoClick} isOpen={isOpen} />
+        </S.Envelope>
+      </S.EnvelopeWrapper>
+      <S.Box ref={goRef}>
+        <AIntro />
+        <S.OpenBtn onClick={onNextClick}>Down</S.OpenBtn>
+      </S.Box>
+      <S.Box ref={nextRef}>
+        <BIntro />
+        <S.OpenBtn className='top' onClick={onHomeClick}>
+          Top
+        </S.OpenBtn>
+      </S.Box>
     </S.Container>
   );
 };

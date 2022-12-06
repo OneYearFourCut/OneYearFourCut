@@ -13,6 +13,7 @@ export const Thumbnails = styled.section`
 export const Column = styled.div`
   flex-grow: 1;
   margin: 0 0.25rem;
+  min-width: ${rem(190)};
 `;
 
 export const ThumbnailImg = styled.img`

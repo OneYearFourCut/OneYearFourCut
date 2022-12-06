@@ -8,6 +8,7 @@ export const Container = styled.div`
 
   h1 {
     font-size: ${rem(24)};
+    color: ${({ theme }) => theme.colors.black_006};
   }
 `;
 
@@ -17,6 +18,7 @@ export const divContainer = styled.div`
   div {
     margin: ${rem(5)} 0;
     font-size: ${rem(16)};
+    color: ${({ theme }) => theme.colors.black_006};
   }
 `;
 

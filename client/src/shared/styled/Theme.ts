@@ -22,6 +22,7 @@ const colors = {
   gold_002: '#D99441',
   gold_003: '#E3A457',
   gold_004: '#E0B580',
+  gold_005: '#F2A413',
 
   gray_001: '#09090C',
   gray_002: '#282B34',
@@ -46,6 +47,14 @@ const colors = {
 
   kakao_001: '#FEE500',
   kakao_002: '#000000',
+
+  blue_001: '#2E4C89',
+
+  pink_001: '#fff0f0',
+  pink_002: ' #ffe3e2',
+  pink_003: '#b18597',
+  pink_004: '#ffe9e9',
+  pink_005: '#f9c4d2',
 };
 
 const mixins = {

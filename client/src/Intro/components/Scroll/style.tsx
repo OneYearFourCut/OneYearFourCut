@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   margin-top: -5vh;
+  background-color: ${({ theme }) => theme.colors.green_001};
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
 export const Box = styled.div`
@@ -24,7 +25,7 @@ export const Button = styled.button`
 
 export const EnvelopeWrapper = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')};
-  height: 100vh;
+  height: 80vh;
 `;
 
 export const Envelope = styled.div`
@@ -99,9 +100,9 @@ export const OpenBtn = styled.button`
   -webkit-appearance: none;
   background-color: transparent;
   border: solid ${rem(2)};
-  ${({ theme }) => theme.colors.red_001};
+  ${({ theme }) => theme.colors.gold_001};
   border-radius: ${rem(4)};
-  color: ${({ theme }) => theme.colors.red_001};
+  color: ${({ theme }) => theme.colors.gold_001};
   display: inline-block;
   font-size: ${rem(14)};
   text-align: center;
@@ -114,14 +115,14 @@ export const OpenBtn = styled.button`
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.colors.red_001};
+    background-color: ${({ theme }) => theme.colors.gold_001};
     color: #fff;
   }
 
   &.top {
     position: sticky;
     right: 0;
-    border-radius: ${rem(4)} ${({ theme }) => theme.colors.green_001};
-    color: ${({ theme }) => theme.colors.green_001};
+    border-radius: ${rem(4)} ${({ theme }) => theme.colors.gold_001};
+    color: ${({ theme }) => theme.colors.gold_001};
   }
 `;

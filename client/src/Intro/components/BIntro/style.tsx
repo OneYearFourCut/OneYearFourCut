@@ -5,9 +5,11 @@ import styled from 'styled-components';
 export const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
   padding: ${rem(20)};
+  color: ${({ theme }) => theme.colors.black_006};
 
   h2 {
     font-size: ${rem(24)};
+    color: ${({ theme }) => theme.colors.black_006};
   }
 `;
 
@@ -17,6 +19,7 @@ export const divContainer = styled.div`
   div {
     margin: ${rem(5)} 0;
     font-size: ${rem(16)};
+    color: ${({ theme }) => theme.colors.black_006};
   }
 `;
 
