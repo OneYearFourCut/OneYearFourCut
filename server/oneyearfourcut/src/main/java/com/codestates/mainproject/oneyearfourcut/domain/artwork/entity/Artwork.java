@@ -135,6 +135,7 @@ public class Artwork extends Auditable {
         return ArtworkResponseDto.builder()
                 .artworkId(getArtworkId())
                 .memberId(getMemberId())
+                .nickName(member.getNickname())
                 .title(getTitle())
                 .content(getContent())
                 .imagePath(getImagePath())
