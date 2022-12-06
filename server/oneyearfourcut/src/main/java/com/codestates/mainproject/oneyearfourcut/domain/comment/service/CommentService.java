@@ -2,6 +2,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
@@ -25,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.DELETED;
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
@@ -50,7 +52,7 @@ public class CommentService {
                 .build();
         commentRepository.save(comment);
         alarmService.createAlarmBasedOnGallery(galleryId, memberId, AlarmType.COMMENT_GALLERY);
-        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
+        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto(null));
     }
 
     @Transactional
@@ -95,8 +97,19 @@ public class CommentService {
         Page<Comment> commentPage = findCommentByPage(galleryId, null, page, size);
         List<Comment> commentList = commentPage.getContent();
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
-        List<CommentGalleryResDto> response = CommentGalleryResDto.toCommentGalleryResponseDtoList(commentList);
-        return new CommentGalleryPageResponseDto<>(galleryId, response, pageInfo);
+
+        List<CommentGalleryResDto> collect = commentList.stream()
+                .map(comment -> {
+                    Long artworkId = comment.getArtworkId();    // 해당하는 작품 id 를 찾고
+                    String imagePath = null;
+                    if (artworkId != null) {
+                        Artwork verifiedArtwork = artworkService.findVerifiedArtwork(comment.getGallery().getGalleryId(), artworkId);
+                        imagePath = verifiedArtwork.getImagePath(); //id 로 artwork 엔티티에 접근해서 imagePath 받아오고
+                    }
+                    return comment.toCommentGalleryResponseDto(imagePath); //
+                })
+                .collect(Collectors.toList());
+        return new CommentGalleryPageResponseDto<>(galleryId, collect, pageInfo);
     }
 
     @Transactional(readOnly = true)
@@ -135,7 +148,7 @@ public class CommentService {
         Comment requestComment = commentRequestDto.toCommentEntity();
         Optional.ofNullable(requestComment.getContent())
                 .ifPresent(foundComment::changeContent);
-        return new CommentGalleryHeadDto<>(galleryId, foundComment.toCommentGalleryResponseDto());
+        return new CommentGalleryHeadDto<>(galleryId, foundComment.toCommentGalleryResponseDto(null));
     }
 
     @Transactional(readOnly = true)

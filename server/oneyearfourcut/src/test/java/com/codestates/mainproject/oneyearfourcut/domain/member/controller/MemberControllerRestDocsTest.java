@@ -1,33 +1,32 @@
 package com.codestates.mainproject.oneyearfourcut.domain.member.controller;
 
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
+import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
-import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
-import com.codestates.mainproject.oneyearfourcut.global.aws.service.AwsS3Service;
-import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
-import com.google.gson.Gson;
+import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,54 +39,57 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(MemberController.class)
+@MockBean({JpaMetamodelMappingContext.class, ClientRegistrationRepository.class})
 @AutoConfigureRestDocs
 class MemberControllerRestDocsTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private GalleryRepository galleryRepository;
-    @Autowired
-    private Gson gson;
+
     @MockBean
-    private AwsS3Service awsS3Service;
-    @MockBean
-    private RestTemplate restTemplate;
+    private MemberService memberService;
+
     @MockBean
     private GalleryService galleryService;
+
+    @TestConfiguration
+    static class testSecurityConfig {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return http
+                    .csrf().disable()
+                    .build();
+        }
+    }
+    @BeforeAll
+    public static void setup() {
+        //security context holder
+        String username = "test";
+        long id = 1L;
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private String jwt = "Bearer test1234test1234";
+    private Member member = Member.builder()
+            .nickname("홍길동")
+            .profile("http://testprofile")
+            .build();
 
     @Test
     void getMember() throws Exception {
         //given
-        // member 등록
-        Member member = memberRepository.save(Member.builder()
-                .nickname("홍길동")
-                .email("kang1@gmail.com")
-                .role(Role.USER)
-                .profile("/path")
-                .status(MemberStatus.ACTIVE)
-                .build());
-        galleryRepository.save(Gallery.builder()
-                .status(GalleryStatus.OPEN)
-                .member(member)
-                .title("Entity에")
-                .content("컬럼 nullable이 false여서 에러남")
-                .build());
+        given(memberService.findMember(anyLong()))
+                .willReturn(member);
 
-        //해당 member jwt 생성
-        String jwt = jwtTokenizer.testJwtGenerator(member);
 
         ResultActions actions = mockMvc.perform(
                 get("/members/me")
@@ -110,7 +112,7 @@ class MemberControllerRestDocsTest {
                                 List.of(
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("이름"),
                                         fieldWithPath("profile").type(JsonFieldType.STRING).description("프로필 이미지 경로"),
-                                        fieldWithPath("galleryId").type(JsonFieldType.NUMBER).description("오픈 전시관 식별자(없으면 null)")
+                                        fieldWithPath("galleryId").type(JsonFieldType.NULL).description("오픈 전시관 식별자(없으면 null, 있으면 숫자)")
                                 )
                         )
                 ));
@@ -120,23 +122,11 @@ class MemberControllerRestDocsTest {
     void patchMember() throws Exception {
         //given
         // member 등록
-        Member member = memberRepository.save(Member.builder()
-                .nickname("홍길동")
-                .email("kang2@gmail.com")
-                .role(Role.USER)
-                .profile("/path")
-                .status(MemberStatus.ACTIVE)
-                .build());
-
-        //해당 member jwt 생성
-        String jwt = jwtTokenizer.testJwtGenerator(member);
+        given(memberService.modifyMember(anyLong(), any(MemberRequestDto.class)))
+                .willReturn(member.toMemberResponseDto());
 
         MockMultipartFile file = new MockMultipartFile("profile", "profile", "image/jpeg",
                 "file".getBytes());
-
-        //S3 이미지 업로드 given 처리
-        given(awsS3Service.uploadFile(any(MultipartFile.class)))
-                .willReturn("https://test/1234.png");
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -174,25 +164,10 @@ class MemberControllerRestDocsTest {
     @Test
     void deleteMember() throws Exception {
         //given
-        // member 등록
-        Member member = memberRepository.save(Member.builder()
-                .nickname("홍길동")
-                .email("kang3@gmail.com")
-                .profile("/path")
-                .role(Role.USER)
-                .status(MemberStatus.ACTIVE)
-                        .kakaoId(41234L)
-                .build());
-
-        //해당 member jwt 생성
-        String jwt = jwtTokenizer.testJwtGenerator(member);
-
-        //kakao 연결끊기 given 처리
-        ResponseEntity responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        given(restTemplate.exchange(any(RequestEntity.class), any(Class.class)))
-                .willReturn(responseEntity);
-
+        willDoNothing().given(memberService).deleteMember(anyLong());
         willDoNothing().given(galleryService).deleteGallery(anyLong());
+
+
         //when
         ResultActions actions = mockMvc.perform(
                 delete("/members/me")

@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
 import static com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus.ACTIVE;
@@ -75,7 +76,7 @@ class CommentControllerTest {
     private Gson gson;
 
     @Test
-    void testPostCommentOnGallery() throws Exception{
+    void  testPostCommentOnGallery() throws Exception{
         //given
         Member member = memberRepository.save(Member.builder()
                 .nickname("test1")
@@ -154,7 +155,8 @@ class CommentControllerTest {
                                         fieldWithPath("commentList.memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
                                         fieldWithPath("commentList.nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
                                         fieldWithPath("commentList.content").type(JsonFieldType.STRING).description("댓글 내용"),
-                                        fieldWithPath("commentList.artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional()
+                                        fieldWithPath("commentList.artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional(),
+                                        fieldWithPath("commentList.imagePath").type(JsonFieldType.NULL).description("작품 이미지 url")
                                 )
                         )
                 )
@@ -286,14 +288,21 @@ class CommentControllerTest {
 
         Page<Comment> commentPage1 = commentService.findCommentByPage(1L, null, page, size);
         List<Comment> commentList = commentPage1.getContent();
+
+        //임시로 생성, 추후 테스트 코드 고쳐야함
+        List<CommentGalleryResDto> collect = commentList.stream()
+                .map(comment -> {
+                    return comment.toCommentGalleryResponseDto("/test.jpg"); //
+                })
+                .collect(Collectors.toList());
+        //
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage1.getTotalElements(), commentPage1.getTotalPages());
-        List<CommentGalleryResDto> response = CommentGalleryResDto.toCommentGalleryResponseDtoList(commentList);
 
         given(this.commentService.getGalleryCommentPage(
                 Mockito.any( gallery.getGalleryId().getClass() ),
                 eq(page),
                 eq(size)))
-                .willReturn(new CommentGalleryPageResponseDto<>(gallery.getGalleryId(),response,pageInfo));
+                .willReturn(new CommentGalleryPageResponseDto<>(gallery.getGalleryId(),collect,pageInfo));
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -350,6 +359,7 @@ class CommentControllerTest {
                                                 fieldWithPath("commentList[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
                                                 fieldWithPath("commentList[].content").type(JsonFieldType.STRING).description("댓글 내용"),
                                                 fieldWithPath("commentList[].artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional(),
+                                                fieldWithPath("commentList[].imagePath").type(JsonFieldType.STRING).description("작품 이미지 URL (없으면 null)"),
 
                                                 fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현 페이지 위치"),
                                                 fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 내용 크기"),
@@ -559,7 +569,8 @@ class CommentControllerTest {
                                                 fieldWithPath("commentList.memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
                                                 fieldWithPath("commentList.nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
                                                 fieldWithPath("commentList.content").type(JsonFieldType.STRING).description("댓글 내용"),
-                                                fieldWithPath("commentList.artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional()
+                                                fieldWithPath("commentList.artworkId").type(JsonFieldType.NUMBER).description("작품 ID").optional(),
+                                                fieldWithPath("commentList.imagePath").type(JsonFieldType.NULL).description("작품 이미지 url")
                                         )
                                 )
                         )

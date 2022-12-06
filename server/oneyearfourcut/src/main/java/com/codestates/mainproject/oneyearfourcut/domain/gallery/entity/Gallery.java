@@ -10,6 +10,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,11 @@ public class Gallery extends Auditable {
     }
     public void updateStatus(GalleryStatus status) {
         this.status = status;
+    }
+
+    public void generateTestGallery(Long galleryId, LocalDateTime createdAt) {
+        this.galleryId = galleryId;
+        this.createdAt = createdAt;
     }
 
     public GalleryResponseDto toGalleryResponseDto() {

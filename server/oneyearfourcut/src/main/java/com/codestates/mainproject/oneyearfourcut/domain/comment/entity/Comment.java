@@ -61,7 +61,7 @@ public class Comment extends Auditable {
         this.commentStatus = commentStatus;
     }
 
-    public CommentGalleryResDto toCommentGalleryResponseDto(){
+    public CommentGalleryResDto toCommentGalleryResponseDto(String imagePath){
         return CommentGalleryResDto.builder()
                 .commentId(this.getCommentId())
                 .createdAt(this.getCreatedAt())
@@ -70,6 +70,7 @@ public class Comment extends Auditable {
                 .artworkId(this.getArtworkId())
                 .memberId(this.getMember().getMemberId())
                 .nickname(this.getMember().getNickname())
+                .imagePath(imagePath)
                 .build();
     }
 

@@ -1,30 +1,42 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.controller;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
-import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
-import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codestates.mainproject.oneyearfourcut.global.util.ApiDocumentUtils.getResponsePreProcessor;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -35,45 +47,55 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureMockMvc
+@WebMvcTest(GalleryController.class)
+@MockBean({JpaMetamodelMappingContext.class, ClientRegistrationRepository.class})
 @AutoConfigureRestDocs
 class GalleryControllerRestDocsTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private GalleryRepository galleryRepository;
-
-
+    @MockBean
+    private GalleryService galleryService;
     @Autowired
     private Gson gson;
+
+
+    private String jwt = "Bearer test1234test1234";
+    @TestConfiguration
+    static class testSecurityConfig {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return http
+                    .csrf().disable()
+                    .build();
+        }
+    }
+    @BeforeAll
+    public static void setup() {
+        //security context holder
+        String username = "test";
+        long id = 1L;
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
     @Test
     void postGallery() throws Exception {
         //given
-        //test전 member 등록
-        Member member = memberRepository.save(Member.builder()
-                .nickname("test1")
-                .email("kang@gmail.com")
-                .role(Role.USER)
-                .profile("/path")
-                .status(MemberStatus.ACTIVE)
+        String content = gson.toJson(GalleryRequestDto.builder()
+                .title("홍길동의 전시회")
+                .content("안녕하세요")
                 .build());
 
-        //해당 member jwt 생성
-        String jwt = jwtTokenizer.testJwtGenerator(member);
-
-        //test하려는 gallery request
-        GalleryRequestDto requestDto = GalleryRequestDto.builder()
-                .title("나의 전시관")
+        GalleryResponseDto responseDto = GalleryResponseDto.builder()
+                .galleryId(1L)
+                .title("홍길동의 전시회")
                 .content("안녕하세요")
+                .createdAt(LocalDateTime.now())
                 .build();
-        String content = gson.toJson(requestDto);
+
+        given(galleryService.createGallery(any(GalleryRequestDto.class), anyLong()))
+                .willReturn(responseDto);
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -82,14 +104,14 @@ class GalleryControllerRestDocsTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
-//                        .with(csrf())
         );
-
 
         //then
         actions.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value(requestDto.getTitle()))
-                .andExpect(jsonPath("$.content").value(requestDto.getContent()))
+                .andExpect(jsonPath("$.galleryId").value(responseDto.getGalleryId()))
+                .andExpect(jsonPath("$.title").value(responseDto.getTitle()))
+                .andExpect(jsonPath("$.content").value(responseDto.getContent()))
+                .andExpect(jsonPath("$.createdAt").value(String.valueOf(responseDto.getCreatedAt())))
                 .andDo(document(
                         "postGallery",
                         getRequestPreProcessor(),
@@ -114,29 +136,33 @@ class GalleryControllerRestDocsTest {
                                 )
                         )
                 ));
-
     }
 
     @Test
     void getGallery() throws Exception {
         //given
-        //Gallery 저장
-        Gallery gallery = galleryRepository.save(Gallery.builder()
-                .title("나의 전시관")
+        Gallery gallery = Gallery.builder()
+                .title("홍길동의 전시회")
                 .content("안녕하세요")
-                .build());
+                .build();
+        gallery.generateTestGallery(1L, LocalDateTime.now());
+
+        given(galleryService.findGallery(1L))
+                .willReturn(gallery);
 
         //when
         ResultActions actions = mockMvc.perform(
-                get("/galleries/{galleryId}", gallery.getGalleryId())
+                get("/galleries/{galleryId}", 1L)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
         //then
         actions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.galleryId").value(gallery.getGalleryId()))
                 .andExpect(jsonPath("$.title").value(gallery.getTitle()))
                 .andExpect(jsonPath("$.content").value(gallery.getContent()))
+                .andExpect(jsonPath("$.createdAt").value(String.valueOf(gallery.getCreatedAt())))
                 .andDo(document(
                         "getGallery",
                                 getRequestPreProcessor(),
@@ -158,32 +184,19 @@ class GalleryControllerRestDocsTest {
     @Test
     void patchGallery() throws Exception {
         //given
-        // member 등록
-        Member member = memberRepository.save(Member.builder()
-                .nickname("test1")
-                .email("kang@gmail.com")
-                .role(Role.USER)
-                .profile("/path")
-                .status(MemberStatus.ACTIVE)
-                .build());
-
-        //해당 member jwt 생성
-        String jwt = jwtTokenizer.testJwtGenerator(member);
-
-        //member 의 Gallery 저장
-        Gallery gallery = galleryRepository.save(Gallery.builder()
-                .title("나의 전시관")
-                .content("안녕하세요")
-                .member(member)
-                .status(GalleryStatus.OPEN)
-                .build());
-
-        //test하려는 gallery request
-        GalleryRequestDto requestDto = GalleryRequestDto.builder()
+        String content = gson.toJson(GalleryPatchDto.builder()
                 .title("수정된 제목")
                 .content("수정된 내용")
-                .build();
-        String content = gson.toJson(requestDto);
+                .build());
+
+        GalleryResponseDto galleryResponseDto = Gallery.builder()
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .build()
+                .toGalleryResponseDto();
+
+        given(galleryService.modifyGallery(any(GalleryPatchDto.class), anyLong()))
+                .willReturn(galleryResponseDto);
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -217,25 +230,7 @@ class GalleryControllerRestDocsTest {
     @Test
     void deleteGallery() throws Exception {
         //given
-        // member 등록
-        Member member = memberRepository.save(Member.builder()
-                .nickname("test1")
-                .email("kang@gmail.com")
-                .role(Role.USER)
-                .profile("/path")
-                .status(MemberStatus.ACTIVE)
-                .build());
-
-        //해당 member jwt 생성
-        String jwt = jwtTokenizer.testJwtGenerator(member);
-
-        //member 의 Gallery 저장
-        Gallery gallery = galleryRepository.save(Gallery.builder()
-                .title("나의 전시관")
-                .content("안녕하세요")
-                .member(member)
-                .status(GalleryStatus.OPEN)
-                .build());
+        willDoNothing().given(galleryService).deleteGallery(anyLong());
 
         //when
         ResultActions actions = mockMvc.perform(
