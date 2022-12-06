@@ -45,7 +45,6 @@ const AllCommentsList = () => {
               nickname={el.nickname}
               time={el.createdAt}
               comment={el.content}
-              picPath={GetPicData(galleryId, el.artworkId)}
             />
           );
         })

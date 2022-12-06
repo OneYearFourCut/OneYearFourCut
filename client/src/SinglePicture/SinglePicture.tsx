@@ -116,7 +116,7 @@ const SinglePicture = ({
           </S.ButtonZone>
         ) : nickname === user?.nickname ? (
           <S.ButtonZone>
-            <S.Delete onClick={ModifyClick}>수정</S.Delete>
+            <S.Delete onClick={() => ModifyClick()}>수정</S.Delete>
             <S.Delete onClick={OpenModal}>삭제</S.Delete>
           </S.ButtonZone>
         ) : null}

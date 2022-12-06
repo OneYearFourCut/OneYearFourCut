@@ -33,7 +33,6 @@ const AllSingleComment = ({
   nickname,
   time,
   comment,
-  picPath,
 }: {
   commentId: number;
   nickname: string;
@@ -77,7 +76,7 @@ const AllSingleComment = ({
         </Zone>
         <Pic
           style={{
-            backgroundImage: `url(${picPath})`,
+            // backgroundImage: `url(${picPath})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
