@@ -106,6 +106,10 @@ const HambergurBox = styled.div`
   ul li:nth-child(n + 4) {
     color: grey;
   }
+  .kakaoLoginImg {
+    width: ${rem(120)};
+    cursor: pointer;
+  }
 `;
 
 const ProfileBox = styled.form<{ isModifing: boolean }>`
@@ -142,6 +146,7 @@ const ProfileBox = styled.form<{ isModifing: boolean }>`
   #Nickname {
     width: 100%;
     margin-top: ${rem(28)};
+    margin-bottom: ${rem(15)};
     border: none;
     border-bottom: ${({ isModifing }) =>
       isModifing ? 'solid 1px black' : 'none'};

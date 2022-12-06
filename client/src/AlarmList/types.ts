@@ -9,6 +9,7 @@ export interface ALData {
   userNickname: string;
   read: boolean;
   artworkId: number;
+  galleryId: number;
   createdAt: string;
   artworkTitle: string;
 }

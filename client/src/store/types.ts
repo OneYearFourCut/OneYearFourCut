@@ -34,7 +34,8 @@ export interface Components {
 }
 
 export interface UploadState {
-  img: File | undefined;
+  imgFile: File | undefined;
+  imgUrl: string | undefined;
   title: string;
   content: string;
   artworkId: number | undefined;

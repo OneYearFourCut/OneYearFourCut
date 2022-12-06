@@ -43,7 +43,9 @@ export const heicTojpeg = async (img: any) => {
 };
 
 export const urlToFile = async (url: string, fileName: string) => {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    mode: 'no-cors',
+  });
   const data = await response.blob();
   fileName += `.${data.type}`;
   return new File([data], fileName, {

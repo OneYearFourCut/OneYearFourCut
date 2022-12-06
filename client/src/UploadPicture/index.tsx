@@ -6,9 +6,9 @@ import useUpload from './hook/useUpload';
 import useModifyartwork from './hook/useModifyartwork';
 import Upload from './components/Upload';
 import { Input } from './components/Input';
-import { ModalStore, UploadStore, loginStore } from 'store/store';
+import { ModalStore, UploadStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/Alert';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { UploadAlert } from '../shared/components/Modal/AlertData';
 import { useParams } from 'react-router-dom';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
@@ -16,7 +16,7 @@ import type { FormData } from './types';
 
 const UploadPicture = () => {
   const { target, openModal } = ModalStore();
-  const { UploadData } = UploadStore();
+  const { UploadData, resetData } = UploadStore();
   const { setToast } = useToast();
 
   const params = useParams();
@@ -27,6 +27,7 @@ const UploadPicture = () => {
   const modifyMutate = useModifyartwork(galleryId, UploadData.artworkId);
 
 
+
   const handleProgressBtn = () => {
     if (!galleryId) {
       alert('비 정상적인 접근입니다.');
@@ -35,7 +36,7 @@ const UploadPicture = () => {
     }
 
     const upLoadData: FormData = {
-      img: UploadData.img!,
+      imgFile: UploadData.imgFile,
       title: UploadData.title,
       content: UploadData.content,
       artworkId: UploadData.artworkId,
@@ -48,7 +49,7 @@ const UploadPicture = () => {
     event.preventDefault();
 
     if (
-      !UploadData.img ||
+      !UploadData.imgUrl ||
       !UploadData.content ||
       !UploadData.title ||
       UploadData.content.length > 70 ||

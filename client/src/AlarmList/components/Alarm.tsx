@@ -1,9 +1,7 @@
 import * as B from './AlarmContainer';
 import { type ALData, ALDataType } from 'AlarmList/types';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
-import { loginStore } from 'store/store';
 const Alarm = ({ data }: { data: ALData }) => {
-  const { user } = loginStore();
   const navigateSearch = useNavigateSearch();
 
   const handleData = (data: ALData): { content: string; url: string } => {
@@ -12,27 +10,27 @@ const Alarm = ({ data }: { data: ALData }) => {
     switch (ALDataType[data.alarmType]) {
       case ALDataType.LIKE_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 좋아요를 눌렀습니다.`;
-        url += `/${user?.galleryId}/${data.artworkId}`;
+        url += `/${data.galleryId}/${data.artworkId}`;
         break;
       case ALDataType.COMMENT_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 댓글을 남겼습니다.`;
-        url += `/${user?.galleryId}/${data.artworkId}/comments`;
+        url += `/${data.galleryId}/${data.artworkId}/comments`;
         break;
       case ALDataType.COMMENT_GALLERY:
         content += `전시관에 댓글을 남겼습니다.`;
-        url += `/${user?.galleryId}/comments`;
+        url += `/${data.galleryId}/comments`;
         break;
       case ALDataType.REPLY_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 남긴 댓글에 댓글이 등록되었습니다.`;
-        url += `/${user?.galleryId}/${data.artworkId}/comments`;
+        url += `/${data.galleryId}/${data.artworkId}/comments`;
         break;
       case ALDataType.REPLY_GALLERY:
         content += `전시관 에 남긴 댓글에 댓글이 등록되었습니다.`;
-        url += `/${user?.galleryId}/comments`;
+        url += `/${data.galleryId}/comments`;
         break;
       case ALDataType.POST_ARTWORK:
         content += `작품 < ${data.artworkTitle} >을 등록하셨습니다.`;
-        url += `/${user?.galleryId}/${data.artworkId}`;
+        url += `/${data.galleryId}/${data.artworkId}`;
         break;
       default:
         content = '오류';

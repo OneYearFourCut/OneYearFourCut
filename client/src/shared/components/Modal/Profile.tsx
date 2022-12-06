@@ -27,7 +27,7 @@ const Profile = () => {
         <ProfileModify isModifing={isModifing} setIsModifing={setIsModifing} />
 
         {/* 라우팅 */}
-        {isLoggedin && (
+        {isLoggedin ? (
           <>
             <ul>
               <li onClick={() => setIsModifing(!isModifing)}>프로필 수정</li>
@@ -43,6 +43,15 @@ const Profile = () => {
             </ul>
             <B.TextBox readOnly={true} ref={textareaRef} value={URL} />
           </>
+        ) : (
+          <img
+            className='kakaoLoginImg'
+            src={'/images/kakao_login_medium_narrow.png'}
+            alt=''
+            onClick={() =>
+              window.location.assign(process.env.REACT_APP_KAKAO_AUTH_URL!)
+            }
+          ></img>
         )}
       </B.HambergurBox>
 

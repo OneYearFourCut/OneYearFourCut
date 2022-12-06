@@ -9,6 +9,7 @@ import {
   Login,
   History,
   Comment,
+  UploadState
 } from './types';
 
 //모달
@@ -63,11 +64,12 @@ const ToastStore = create<Components>((set, get) => ({
 }));
 
 //upload
-const initUploadData = {
-  img: undefined,
+const initUploadData : UploadState = {
+  imgFile: undefined,
+  imgUrl: undefined,
   title: '',
   content: '',
-  artworkId : undefined,
+  artworkId: undefined,
 };
 
 const UploadStore = create<Upload>((set, get) => ({
@@ -80,7 +82,10 @@ const UploadStore = create<Upload>((set, get) => ({
     set({
       UploadData: Object.assign(
         { ...get().UploadData },
-        { img: initUploadData.content },
+        {
+          imgFile: '',
+          imgUrl: '',
+        },
       ),
     }),
   resetData: () => set({ UploadData: { ...initUploadData } }),

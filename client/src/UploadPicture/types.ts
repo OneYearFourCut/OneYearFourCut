@@ -1,5 +1,5 @@
 interface FormData {
-  img: File;
+  imgFile: File | undefined;
   title: string;
   content: string;
   galleryId: number | undefined;

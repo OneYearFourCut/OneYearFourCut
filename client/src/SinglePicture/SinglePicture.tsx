@@ -52,7 +52,7 @@ const SinglePicture = ({
   const galleryId = parseInt(params.galleryId!);
   const { mutate } = useDeleteSinglePic(galleryId, artId);
   const { target, openModal, closeModal } = ModalStore();
-  const { resetData, setData } = UploadStore();
+  const { setData } = UploadStore();
   const [open, setOpen] = useState(false);
   const { user } = loginStore();
   const navigate = useNavigate();
@@ -68,8 +68,7 @@ const SinglePicture = ({
 
   const ModifyClick = async () => {
     console.log(picture, title);
-    let img = await urlToFile(picture, title);
-    setData('img', img!);
+    setData('imgUrl', picture);
     setData('title', title);
     setData('content', scrpit);
     setData('artworkId', artId);
@@ -117,7 +116,7 @@ const SinglePicture = ({
           </S.ButtonZone>
         ) : nickname === user?.nickname ? (
           <S.ButtonZone>
-            <S.Delete onClick={() => ModifyClick()}>수정</S.Delete>
+            <S.Delete onClick={ModifyClick}>수정</S.Delete>
             <S.Delete onClick={OpenModal}>삭제</S.Delete>
           </S.ButtonZone>
         ) : null}

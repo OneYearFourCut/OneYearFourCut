@@ -87,6 +87,7 @@ const ProfileModify = ({
           setName(e.target.value)
         }
       ></input>
+      
       {isModifing && (
         <div className='modifyBox'>
           <button type='button' className='cancel' onClick={handleCancel}>
