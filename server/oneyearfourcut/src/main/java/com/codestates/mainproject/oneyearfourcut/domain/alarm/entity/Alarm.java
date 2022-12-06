@@ -44,14 +44,17 @@ public class Alarm extends Auditable {
     @Column(name = "READ_CHECK")
     private Boolean readCheck;
 
-    public AlarmResponseDto toAlarmResponseDto(Long galleryId) {
+    @Column
+    private Long galleryId;
+
+    public AlarmResponseDto toAlarmResponseDto() {
         return AlarmResponseDto.builder()
                 .alarmId(this.alarmId)
                 .alarmType(String.valueOf(this.getAlarmType()))
                 .userNickname(this.getUserNickname())
                 .createdAt(this.getCreatedAt())
                 .read(this.getReadCheck())
-                .galleryId(galleryId)
+                .galleryId(this.galleryId)
                 .artworkId(this.artworkId)
                 .artworkTitle(this.artworkTitle)
                 .build();
