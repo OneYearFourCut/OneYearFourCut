@@ -3,12 +3,14 @@ package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
@@ -109,6 +111,7 @@ public class CommentService {
                     return comment.toCommentGalleryResponseDto(imagePath); //
                 })
                 .collect(Collectors.toList());
+
         return new CommentGalleryPageResponseDto<>(galleryId, collect, pageInfo);
     }
 

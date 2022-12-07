@@ -111,7 +111,7 @@ class GalleryControllerRestDocsTest {
                 .andExpect(jsonPath("$.galleryId").value(responseDto.getGalleryId()))
                 .andExpect(jsonPath("$.title").value(responseDto.getTitle()))
                 .andExpect(jsonPath("$.content").value(responseDto.getContent()))
-                .andExpect(jsonPath("$.createdAt").value(String.valueOf(responseDto.getCreatedAt())))
+                .andExpect(jsonPath("$.createdAt").value(responseDto.getCreatedAt().toString()))
                 .andDo(document(
                         "postGallery",
                         getRequestPreProcessor(),
