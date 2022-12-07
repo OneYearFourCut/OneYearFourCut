@@ -31,4 +31,5 @@ public class AlarmController {
     public ResponseEntity<Object> checkReadAlarm(@LoginMember Long memberId){
         return new ResponseEntity<>(alarmService.checkReadAlarm(memberId), HttpStatus.OK);
     }
+
 }

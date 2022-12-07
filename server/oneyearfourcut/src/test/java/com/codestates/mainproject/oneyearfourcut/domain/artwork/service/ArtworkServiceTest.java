@@ -324,36 +324,36 @@ public class ArtworkServiceTest {
             artwork.setMember(loginMember);
         }
 
-        @Test
-        @DisplayName("작성자가 작품 삭제")
-        public void DeleteArtworkByWriterTest() {
-            artwork.setMember(loginMember);
+//        @Test
+//        @DisplayName("작성자가 작품 삭제")
+//        public void DeleteArtworkByWriterTest() {
+//            artwork.setMember(loginMember);
+//
+//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+//
+//            artworkService.deleteArtwork(
+//                    loginMember.getMemberId(),
+//                    gallery.getGalleryId(),
+//                    artwork.getArtworkId());
+//
+//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
+//        }
 
-            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-
-            artworkService.deleteArtwork(
-                    loginMember.getMemberId(),
-                    gallery.getGalleryId(),
-                    artwork.getArtworkId());
-
-            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-        }
-
-        @Test
-        @DisplayName("갤러리 주인이 작품 삭제")
-        public void DeleteArtworkByAdminTest() {
-
-            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-
-            artworkService.deleteArtwork(
-                    adminMember.getMemberId(),
-                    gallery.getGalleryId(),
-                    artwork.getArtworkId());
-
-            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-        }
+//        @Test
+//        @DisplayName("갤러리 주인이 작품 삭제")
+//        public void DeleteArtworkByAdminTest() {
+//
+//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+//
+//            artworkService.deleteArtwork(
+//                    adminMember.getMemberId(),
+//                    gallery.getGalleryId(),
+//                    artwork.getArtworkId());
+//
+//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
+//        }
 
         @Test
         @DisplayName("관계 없는 유저가 작품 삭제")
