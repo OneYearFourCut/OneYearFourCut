@@ -15,14 +15,13 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 0,   //디버깅용도 추후에 삭제
+      retry: 0,  
       suspense: true,
     },
   },
 });
 
 root.render(
-  <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={true} />
       <ThemeProvider theme={theme}>
@@ -30,5 +29,4 @@ root.render(
         <App />
       </ThemeProvider>
     </QueryClientProvider>
-  </React.StrictMode>,
 );
