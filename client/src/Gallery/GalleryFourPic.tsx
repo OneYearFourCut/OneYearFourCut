@@ -5,6 +5,8 @@ import BottomButton from './components/BottonButton';
 import { useParams } from 'react-router-dom';
 import FourCut from './components/FourCut';
 import Snowfall from 'react-snowfall';
+import { setinitUrl } from 'shared/libs/saveSessionStorage';
+import { useEffect } from 'react';
 
 const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
@@ -12,6 +14,11 @@ const Container = styled.div`
 const Gallery = () => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
+
+  useEffect(() => {
+    setinitUrl(window.location.pathname);
+  },[])
+
   return (
     <Container>
       <Snowfall

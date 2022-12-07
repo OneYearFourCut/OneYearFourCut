@@ -4,8 +4,10 @@ import { ModalStore } from 'store/store';
 import { Profile } from '../Modal/Profile';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import ModalBackdrop from '../Modal/components/ModalBackdrop';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { loginStore } from 'store/store';
+import { getinitUrl } from 'shared/libs/saveSessionStorage';
+
 const Header = () => {
   const { target } = ModalStore();
   const { isLoggedin, user } = loginStore();
@@ -18,10 +20,8 @@ const Header = () => {
     return null;
 
   const handleHeaderTitle = () => {
-    let url = user?.galleryId ? `/fourPic/${user.galleryId}` : '/';
-    url === window.location.pathname
-      ? window.location.reload()
-      : navigateSearch(url, {});
+    let initUrl = getinitUrl();
+    navigateSearch(initUrl, {});
   };
 
   return (
