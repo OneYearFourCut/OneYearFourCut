@@ -6,9 +6,11 @@ import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import ModalBackdrop from '../Modal/components/ModalBackdrop';
 import { Suspense } from 'react';
 import { loginStore } from 'store/store';
+import { getinitUrl } from 'shared/libs/saveSessionStorage';
+
 const Header = () => {
   const { target } = ModalStore();
-  const { isLoggedin, user } = loginStore();
+  const { isLoggedin } = loginStore();
   const navigateSearch = useNavigateSearch();
 
   if (
@@ -18,10 +20,7 @@ const Header = () => {
     return null;
 
   const handleHeaderTitle = () => {
-    let url = user?.galleryId ? `/fourPic/${user.galleryId}` : '/';
-    url === window.location.pathname
-      ? window.location.reload()
-      : navigateSearch(url, {});
+    navigateSearch(getinitUrl(), {});
   };
 
   return (

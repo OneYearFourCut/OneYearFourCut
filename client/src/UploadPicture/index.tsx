@@ -10,10 +10,9 @@ import { ModalStore, UploadStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/Alert';
 import { useEffect, useRef } from 'react';
 import { UploadAlert } from '../shared/components/Modal/AlertData';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import type { FormData } from './types';
-
 const UploadPicture = () => {
   const { target, openModal } = ModalStore();
   const { UploadData, resetData } = UploadStore();
@@ -26,7 +25,11 @@ const UploadPicture = () => {
   const uploadMutate = useUpload(galleryId);
   const modifyMutate = useModifyartwork(galleryId, UploadData.artworkId);
 
-
+  useEffect(() => {
+    return () => {
+      resetData();
+    };
+  }, []);
 
   const handleProgressBtn = () => {
     if (!galleryId) {

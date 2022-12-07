@@ -11,7 +11,7 @@ const useReceiveAlarm = (isLoggedin: boolean) => {
     apis.getCheckAlarm,
     {
       enabled: isLoggedin,
-      refetchInterval: () => (isLoggedin && !alarmIsOpen ? 4000 : false),
+      refetchInterval: () => (isLoggedin && !alarmIsOpen ? 3000 : false),
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchIntervalInBackground: false,
