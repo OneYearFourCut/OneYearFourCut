@@ -17,7 +17,7 @@ const Gallery = () => {
 
   useEffect(() => {
     setinitUrl(window.location.pathname);
-  },[])
+  }, []);
 
   return (
     <Container>

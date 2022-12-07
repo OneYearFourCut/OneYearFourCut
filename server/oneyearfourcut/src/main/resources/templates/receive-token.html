@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth2 + JWT My page</title>
+</head>
+<body>
+로그인 성공!
+
+<h1>Access Token</h1>
+<span th:text="${param.access_token}"></span>
+<h1>Refresh Token</h1>
+<span th:text="${param.refresh_token}"></span>
+</body>
+</html>

@@ -4,13 +4,13 @@ import { ModalStore } from 'store/store';
 import { Profile } from '../Modal/Profile';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
 import ModalBackdrop from '../Modal/components/ModalBackdrop';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import { loginStore } from 'store/store';
 import { getinitUrl } from 'shared/libs/saveSessionStorage';
 
 const Header = () => {
   const { target } = ModalStore();
-  const { isLoggedin, user } = loginStore();
+  const { isLoggedin } = loginStore();
   const navigateSearch = useNavigateSearch();
 
   if (
@@ -20,8 +20,7 @@ const Header = () => {
     return null;
 
   const handleHeaderTitle = () => {
-    let initUrl = getinitUrl();
-    navigateSearch(initUrl, {});
+    navigateSearch(getinitUrl(), {});
   };
 
   return (
