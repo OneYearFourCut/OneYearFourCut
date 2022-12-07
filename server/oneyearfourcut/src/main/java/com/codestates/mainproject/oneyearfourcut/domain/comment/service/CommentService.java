@@ -163,8 +163,9 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public void checkCommentMemberVerification(Long commentId, Long memberId) {
-        Long foundCommentMemberId = findComment(commentId).getMember().getMemberId();
-        if (!Objects.equals(memberId, foundCommentMemberId)) {
+        Comment comment = findComment(commentId);
+        Long foundCommentMemberId = comment.getMember().getMemberId();
+        if (memberId != foundCommentMemberId && comment.getGallery().getMember().getMemberId() != memberId) {
             throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
         }
     }
