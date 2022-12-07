@@ -1,0 +1,12 @@
+{
+    "singleQuote": true,
+    "parser": "typescript",
+    "semi": true,
+    "useTabs": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "jsxSingleQuote": true,
+    "bracketSpacing": true
+}

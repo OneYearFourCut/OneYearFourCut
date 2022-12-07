@@ -1,0 +1,25 @@
+.heart {
+    width: 5rem;
+    height: 5rem;
+      position: absolute;
+      left: -15%;
+      top: -5%;
+      transform: translate(-50%, -50%);
+    background: url(https://cssanimation.rocks/images/posts/steps/heart.png) no-repeat;
+    background-position: 0 0;
+    cursor: pointer;
+  }
+
+  @keyframes fave-heart {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: -2800px 0;
+    }
+  }
+  
+  .check {
+    background-position: -2800px 0;
+    transition: background 1s steps(28);
+  }
