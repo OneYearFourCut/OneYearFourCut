@@ -11,7 +11,7 @@ const Body = styled.div`
   justify-content: center;
   align-items: flex-end;
   z-index: 2;
-  position: absolute;
+  position: fixed;
   top: 100vh;
   transform: translateY(-100%);
   width: ${rem(428)};
@@ -27,11 +27,17 @@ const InputZone = styled.div`
   padding: ${rem(12)};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.black_007};
+  /* background-color: ${({ theme }) => theme.colors.black_007}; */
   pointer-events: auto;
 
   display: flex;
   flex-direction: row;
+
+  background-color: ${({ theme }) => theme.colors.black_008};
+
+  &:focus-within {
+    border: solid ${rem(1.5)} ${({ theme }) => theme.colors.green_002};
+  }
 `;
 
 const Input = styled.input`
@@ -81,7 +87,7 @@ const CommentInput = () => {
 
   return (
     <Body>
-      <InputZone>
+      <InputZone className='comment'>
         <Input
           ref={text}
           value={value}
