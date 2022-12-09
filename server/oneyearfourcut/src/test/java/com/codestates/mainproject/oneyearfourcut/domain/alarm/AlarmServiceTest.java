@@ -38,6 +38,7 @@ class AlarmServiceTest {
     private AlarmService alarmService;
 
 
+    //test
     /*@Test
     @DisplayName("create  alarm ")
     void testCreateAlarm(Long locationId, Long memberId, AlarmType type) {
