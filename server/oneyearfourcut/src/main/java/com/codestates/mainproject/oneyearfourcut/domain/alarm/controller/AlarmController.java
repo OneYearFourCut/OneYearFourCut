@@ -21,6 +21,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class AlarmController {
+    //test
     private final AlarmService alarmService;
     @GetMapping
     public ResponseEntity<Object> getAlarmListFiltered(@RequestParam String filter, @RequestParam int page,
