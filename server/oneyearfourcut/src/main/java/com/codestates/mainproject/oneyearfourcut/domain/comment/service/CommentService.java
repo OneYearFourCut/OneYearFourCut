@@ -36,7 +36,7 @@ import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Co
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberService memberService;
@@ -46,15 +46,16 @@ public class CommentService {
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
-        Comment comment = Comment.builder()
-                .gallery(galleryService.findGallery(galleryId))
-                .member(memberService.findMember(memberId))
-                .content(commentRequestDto.getContent())
-                .commentStatus(VALID)
-                .build();
+        Comment comment = commentRequestDto.toCommentEntity();
+        Member member = memberService.findMember(memberId);
+        Gallery gallery = galleryService.findGallery(galleryId);
+
+        comment.setMember(member);
+        comment.setGallery(gallery);
+
         commentRepository.save(comment);
         alarmService.createAlarmBasedOnGallery(galleryId, memberId, AlarmType.COMMENT_GALLERY);
-        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto(null));
+        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
 
     @Transactional
