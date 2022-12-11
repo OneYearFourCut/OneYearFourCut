@@ -60,15 +60,17 @@ public class CommentService {
 
     @Transactional
     public CommentArtworkHeadDto<Object> createCommentOnArtwork(CommentRequestDto commentRequestDto, Long galleryId, Long artworkId, Long memberId) {
-        artworkService.checkGalleryArtworkVerification(galleryId, artworkId);
-        Comment comment = Comment.builder()
-                .gallery(galleryService.findGallery(galleryId))
-                .member(memberService.findMember(memberId))
-                .artworkId(artworkId)
-                .content(commentRequestDto.getContent())
-                .commentStatus(VALID)
-                .build();
+        Member member = memberService.findMember(memberId);
+        Gallery gallery = galleryService.findGallery(galleryId);
+        Artwork artwork = artworkService.findVerifiedArtwork(galleryId, artworkId);
+
+        Comment comment = commentRequestDto.toCommentEntity();
+        comment.setMember(member);
+        comment.setGallery(gallery);
+        comment.setArtwork(artwork);
+
         commentRepository.save(comment);
+
         alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, galleryId, memberId, AlarmType.COMMENT_ARTWORK);
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }

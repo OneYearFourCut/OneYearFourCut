@@ -91,6 +91,7 @@ public class Comment extends Auditable {
     // 원강 - 수정
     public CommentGalleryResDto toCommentGalleryResponseDto() {
         return CommentGalleryResDto.builder()
+                .commentId(this.commentId)
                 .createdAt(this.createdAt)
                 .modifiedAt(this.modifiedAt)
                 .content(this.content)
