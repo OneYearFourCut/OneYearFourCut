@@ -26,23 +26,18 @@ public class Alarm extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @Column
-    private Long memberIdProducer;
+    @Column(name = "READ_CHECK")
+    private Boolean readCheck;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 16)
     private AlarmType alarmType;
 
     @Column
+    private Long senderId;
+
+    @Column
     private Long artworkId;
-    @Column
-    private String artworkTitle;
-
-    @Column
-    private String userNickname;
-
-    @Column(name = "READ_CHECK")
-    private Boolean readCheck;
 
     @Column
     private Long galleryId;
@@ -51,12 +46,10 @@ public class Alarm extends Auditable {
         return AlarmResponseDto.builder()
                 .alarmId(this.alarmId)
                 .alarmType(String.valueOf(this.getAlarmType()))
-                .userNickname(this.getUserNickname())
                 .createdAt(this.getCreatedAt())
                 .read(this.getReadCheck())
                 .galleryId(this.galleryId)
                 .artworkId(this.artworkId)
-                .artworkTitle(this.artworkTitle)
                 .build();
     }
     public void checkRead() {

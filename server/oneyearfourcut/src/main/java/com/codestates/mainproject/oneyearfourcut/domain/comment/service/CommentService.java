@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
@@ -42,33 +43,50 @@ public class CommentService {
     private final MemberService memberService;
     private final GalleryService galleryService;
     private final ArtworkService artworkService;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
+        Gallery findGallery = galleryService.findGallery(galleryId);
+
         Comment comment = Comment.builder()
-                .gallery(galleryService.findGallery(galleryId))
-                .member(memberService.findMember(memberId))
+                .gallery(findGallery)
+                .member(new Member(memberId))
                 .content(commentRequestDto.getContent())
                 .commentStatus(VALID)
                 .build();
         commentRepository.save(comment);
-        alarmService.createAlarmBasedOnGallery(galleryId, memberId, AlarmType.COMMENT_GALLERY);
+
+        //알림 생성
+        Long receiverId = findGallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(receiverId, memberId, AlarmType.COMMENT_GALLERY, galleryId, null);
+
         return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto(null));
     }
 
     @Transactional
     public CommentArtworkHeadDto<Object> createCommentOnArtwork(CommentRequestDto commentRequestDto, Long galleryId, Long artworkId, Long memberId) {
-        artworkService.checkGalleryArtworkVerification(galleryId, artworkId);
+        Artwork verifiedArtwork = artworkService.findVerifiedArtwork(galleryId, artworkId);
+        Gallery findGallery = galleryService.findGallery(galleryId);
+
         Comment comment = Comment.builder()
-                .gallery(galleryService.findGallery(galleryId))
-                .member(memberService.findMember(memberId))
+                .gallery(findGallery)
+                .member(new Member(memberId))
                 .artworkId(artworkId)
                 .content(commentRequestDto.getContent())
                 .commentStatus(VALID)
                 .build();
         commentRepository.save(comment);
-        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, galleryId, memberId, AlarmType.COMMENT_ARTWORK);
+
+        //전시관 주인에게 알림 생성
+        Long galleryReceiverId = findGallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(galleryReceiverId, memberId, AlarmType.COMMENT_ARTWORK, galleryId, artworkId);
+        //작품 주인에게 알림 생성
+        Long artworkReceiverId = verifiedArtwork.getMember().getMemberId();
+        if (artworkReceiverId != galleryReceiverId) {   //두 알림의 주인이 같지 않으면 보내기
+            alarmEventPublisher.publishAlarmEvent(artworkReceiverId, memberId, AlarmType.COMMENT_ARTWORK, galleryId, artworkId);
+        }
+
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 

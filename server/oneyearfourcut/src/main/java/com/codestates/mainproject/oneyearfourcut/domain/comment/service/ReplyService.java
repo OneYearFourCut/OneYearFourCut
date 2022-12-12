@@ -1,11 +1,13 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.ReplyRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
@@ -30,28 +32,34 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final CommentService commentService;
     private final MemberService memberService;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
 
     //Create
     @Transactional
     public ReplyListResponseDto<Object> createReply(CommentRequestDto commentRequestDto, Long commentId, Long memberId) {
+        Comment findComment = commentService.findComment(commentId);
         Reply reply = Reply.builder()
                 .content(commentRequestDto.getContent())
-                .comment(commentService.findComment(commentId))
-                .member(memberService.findMember(memberId))
+                .comment(findComment)
+                .member(new Member(memberId))
                 .replyStatus(VALID)
                 .build();
         replyRepository.save(reply);
-        if(commentService.findComment(commentId).getArtworkId() == null ){
-            alarmService.createAlarmBasedOnCommentGallery(commentId, memberId, AlarmType.REPLY_GALLERY);
-        }
-        else alarmService.createAlarmBasedOnCommentArtwork(commentId, memberId, AlarmType.REPLY_ARTWORK);
+
+        //알람 생성
+        //댓글 주인 한테만 보내나? 전시관 주인은?
+        Long receiverId = findComment.getMember().getMemberId();
+        Long galleryId = findComment.getGallery().getGalleryId();
+        Long artworkId = findComment.getArtworkId();    // 작품 댓글이 아닌 경우라면 null이 됨
+        AlarmType alarmType = artworkId == null ? AlarmType.REPLY_GALLERY : AlarmType.REPLY_ARTWORK; //null 여부에 따라 타입 결정
+        alarmEventPublisher.publishAlarmEvent(receiverId, memberId, alarmType, galleryId, artworkId);
+
         return new ReplyListResponseDto<>(commentId, reply.toReplyResponseDto());
     }
 
     //Read
     @Transactional(readOnly = true)
-    public ReplyListResponseDto<Object> getReplyList(Long commentId)  {
+    public ReplyListResponseDto<Object> getReplyList(Long commentId) {
         List<Reply> replyList = findReplyList(commentId); //findReplyList에서 검증진행
         List<ReplyResDto> result = ReplyResDto.toReplyResponseDtoList(replyList);
         return new ReplyListResponseDto<>(commentId, result);
@@ -59,14 +67,14 @@ public class ReplyService {
 
     //Update
     @Transactional
-    public ReplyListResponseDto<Object> modifyReply(Long commentId, Long replyId, CommentRequestDto commentRequestDto,Long memberId){
+    public ReplyListResponseDto<Object> modifyReply(Long commentId, Long replyId, CommentRequestDto commentRequestDto, Long memberId) {
         Reply foundReply = findReply(replyId);
         checkCommentReplyVerification(commentId, replyId, memberId);
         //--검증완료
-        Reply requestReply =  commentRequestDto.toReplyEntity();
+        Reply requestReply = commentRequestDto.toReplyEntity();
         Optional.ofNullable(requestReply.getContent())
                 .ifPresent(foundReply::changeContent);
-        return new ReplyListResponseDto<>(commentId,foundReply.toReplyResponseDto());
+        return new ReplyListResponseDto<>(commentId, foundReply.toReplyResponseDto());
     }
 
     //Delete
@@ -89,10 +97,10 @@ public class ReplyService {
     }
 
     @Transactional(readOnly = true)
-    public Reply findReply(Long replyId){
+    public Reply findReply(Long replyId) {
         Optional<Reply> reply = replyRepository.findById(replyId);
-        Reply foundReply = reply.orElseThrow(()->new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-        if(foundReply.getReplyStatus() == DELETED) throw new BusinessLogicException(ExceptionCode.COMMENT_DELETED);
+        Reply foundReply = reply.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        if (foundReply.getReplyStatus() == DELETED) throw new BusinessLogicException(ExceptionCode.COMMENT_DELETED);
         return foundReply;
     }
 
@@ -104,8 +112,7 @@ public class ReplyService {
         if (commentId != null) {
             replyList =
                     replyRepository.findAllByReplyStatusAndComment_CommentIdOrderByReplyIdDesc(VALID, commentId);
-        }
-        else {
+        } else {
             throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
         }
         if (replyList.isEmpty()) {
