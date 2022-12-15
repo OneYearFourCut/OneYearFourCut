@@ -13,5 +13,6 @@ public class AlarmEventPublisher {
     public void publishAlarmEvent(Long receiverId, Long senderId, AlarmType alarmType, Long galleryId, Long artworkId) {
         AlarmEvent alarmEvent = new AlarmEvent(receiverId, senderId, alarmType, galleryId, artworkId);
         applicationEventPublisher.publishEvent(alarmEvent);
+
     }
 }
