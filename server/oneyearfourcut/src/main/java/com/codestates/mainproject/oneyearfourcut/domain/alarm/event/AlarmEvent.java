@@ -4,7 +4,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import lombok.Getter;
 
 @Getter
-public class AlarmEvent{
+public class AlarmEvent{//test
     private final Long receiverId;
     private final Long senderId;
     private final AlarmType alarmType;
