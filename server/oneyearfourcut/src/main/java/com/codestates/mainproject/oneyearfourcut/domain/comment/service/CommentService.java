@@ -28,7 +28,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.DELETED;
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
@@ -75,55 +74,37 @@ public class CommentService {
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 
-
-    @Transactional(readOnly = true)
-    public Page<Comment> findCommentByPage(Long galleryId, Long artworkId, int page, int size) {
+    public CommentGalleryPageResponseDto<Object> getGalleryCommentPage(Long galleryId, int page, int size){
         PageRequest pr = PageRequest.of(page - 1, size);
-        Page<Comment> commentPage;
-        galleryService.findGallery(galleryId);
-        if (artworkId == null) {
-            commentPage =
-                    commentRepository.findAllByCommentStatusAndGallery_GalleryIdOrderByCommentIdDesc(VALID,galleryId, pr);
-        }
-        else {
-            artworkService.checkGalleryArtworkVerification(galleryId, artworkId);
-            commentPage = commentRepository.findAllByCommentStatusAndArtworkIdOrderByCommentIdDesc(VALID, artworkId, pr);
-        }
+        // 갤러리 안에 있는 등록중인 작품에 대한 댓글 조회
+        Page<Comment> commentPage = commentRepository
+                .findAllByCommentStatusAndGallery_GalleryIdAndArtwork_StatusOrderByCommentIdDesc(VALID, galleryId, ArtworkStatus.REGISTRATION, pr);
+
+        /* 댓글 리스트가 없을 경우 빈 배열로 응답하는 게 아니었나요?? */
         if (commentPage.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글이 아직 없습니다.");
         }
-        return commentPage;
-    }
-
-
-    @Transactional(readOnly = true)
-    public CommentGalleryPageResponseDto<Object> getGalleryCommentPage(Long galleryId, int page, int size){
-        /*memberService.findMember(memberId);*/
-        Page<Comment> commentPage = findCommentByPage(galleryId, null, page, size);
-        List<Comment> commentList = commentPage.getContent();
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
+        List<Comment> commentList = commentPage.getContent();
 
-        List<CommentGalleryResDto> collect = commentList.stream()
-                .map(comment -> {
-                    Long artworkId = comment.getArtworkId();    // 해당하는 작품 id 를 찾고
-                    String imagePath = null;
-                    if (artworkId != null) {
-                        Artwork verifiedArtwork = artworkService.findVerifiedArtwork(comment.getGallery().getGalleryId(), artworkId);
-                        imagePath = verifiedArtwork.getImagePath(); //id 로 artwork 엔티티에 접근해서 imagePath 받아오고
-                    }
-                    return comment.toCommentGalleryResponseDto(imagePath); //
-                })
-                .collect(Collectors.toList());
-
+        List<CommentGalleryResDto> collect = CommentGalleryResDto.toCommentGalleryResponseDtoList(commentList);
         return new CommentGalleryPageResponseDto<>(galleryId, collect, pageInfo);
     }
 
-    @Transactional(readOnly = true)
     public CommentArtworkPageResponseDto<Object> getArtworkCommentPage(Long galleryId, Long artworkId, int page, int size) {
-        /*memberService.findMember(memberId);*/
-        Page<Comment> commentPage = findCommentByPage(galleryId, artworkId, page, size);
-        List<Comment> commentList = commentPage.getContent();
+        artworkService.checkGalleryArtworkVerification(galleryId, artworkId);
+        PageRequest pr = PageRequest.of(page - 1, size);
+        // artworkId만 검증하면 굳이 '등록중'이라는 조건을 추가할 필요는 없음.
+        Page<Comment> commentPage =
+                commentRepository.findAllByCommentStatusAndArtwork_ArtworkIdOrderByCommentIdDesc(VALID, artworkId, pr);
+
+        /* 댓글 리스트가 없을 경우 빈 배열로 응답하는 게 아니었나요?? */
+        if (commentPage.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글이 아직 없습니다.");
+        }
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
+        List<Comment> commentList = commentPage.getContent();
+
         List<CommentArtworkResDto> response = CommentArtworkResDto.toCommentArtworkResponseDtoList(commentList);
         return new CommentArtworkPageResponseDto<>(galleryId, artworkId, response, pageInfo);
     }
@@ -154,7 +135,7 @@ public class CommentService {
         Comment requestComment = commentRequestDto.toCommentEntity();
         Optional.ofNullable(requestComment.getContent())
                 .ifPresent(foundComment::changeContent);
-        return new CommentGalleryHeadDto<>(galleryId, foundComment.toCommentGalleryResponseDto(null));
+        return new CommentGalleryHeadDto<>(galleryId, foundComment.toCommentGalleryResponseDto());
     }
 
     @Transactional(readOnly = true)
