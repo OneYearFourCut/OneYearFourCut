@@ -195,11 +195,9 @@ class AlarmControllerTest {
 
         Alarm alarm4 = alarmRepository.save(Alarm.builder()
                 .member(member2)
-                .memberIdProducer(3L)
+                .senderId(3L)
                 .alarmType(AlarmType.POST_ARTWORK)
                 .artworkId(1L)
-                .artworkTitle("Test 작품 입니다.")
-                .userNickname("행위유저 1")
                 .readCheck(false)
                 .build());
 
