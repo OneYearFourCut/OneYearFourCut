@@ -42,7 +42,7 @@ public class Alarm extends Auditable {
     @Column
     private Long galleryId;
 
-    public AlarmResponseDto toAlarmResponseDto() {
+    public AlarmResponseDto toAlarmResponseDto(String nickname, String title) {
         return AlarmResponseDto.builder()
                 .alarmId(this.alarmId)
                 .alarmType(String.valueOf(this.getAlarmType()))
@@ -50,6 +50,8 @@ public class Alarm extends Auditable {
                 .read(this.getReadCheck())
                 .galleryId(this.galleryId)
                 .artworkId(this.artworkId)
+                .userNickname(nickname)
+                .artworkTitle(title)
                 .build();
     }
     public void checkRead() {
