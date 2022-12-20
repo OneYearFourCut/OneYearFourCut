@@ -2,7 +2,6 @@ package com.codestates.mainproject.oneyearfourcut.global.config.auth;
 
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.filter.JwtVerificationFilter;
-import com.codestates.mainproject.oneyearfourcut.global.config.auth.filter.OAuth2LoginHandlingFilter;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.MemberAuthenticationEntryPoint;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.OAuth2MemberSuccessHandler;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
@@ -95,10 +94,6 @@ public class SecurityConfig {
         public void configure(HttpSecurity builder) throws Exception {
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer);
             builder.addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
-
-            //카카오 로그인 필터 진입 전에 요청한 host 가 어딘지 확인하는 필터 추가
-            OAuth2LoginHandlingFilter oAuth2LoginHandlingFilter = new OAuth2LoginHandlingFilter();
-            builder.addFilterBefore(oAuth2LoginHandlingFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }
 
