@@ -71,7 +71,6 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         //localhost 에서 온 것인지 확인해서 맞으면 다른 곳으로 redirect
         String referer = request.getHeader("Referer");
-        System.out.println("############Referer : " + referer);
         if (referer.contains("localhost")) {
             uri = createDEVURI(accessToken, refreshToken, referer).toString();
         }

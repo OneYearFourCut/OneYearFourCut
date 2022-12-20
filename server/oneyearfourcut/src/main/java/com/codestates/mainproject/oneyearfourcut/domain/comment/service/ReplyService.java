@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
@@ -52,7 +53,13 @@ public class ReplyService {
         Long galleryId = findComment.getGallery().getGalleryId();
         Long artworkId = findComment.getArtworkId();    // 작품 댓글이 아닌 경우라면 null이 됨
         AlarmType alarmType = artworkId == null ? AlarmType.REPLY_GALLERY : AlarmType.REPLY_ARTWORK; //null 여부에 따라 타입 결정
-        alarmEventPublisher.publishAlarmEvent(receiverId, memberId, alarmType, galleryId, artworkId);
+        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
+                .receiverId(receiverId)
+                .senderId(memberId)
+                .alarmType(alarmType)
+                .galleryId(galleryId)
+                .artworkId(artworkId)
+                .build());
 
         return new ReplyListResponseDto<>(commentId, reply.toReplyResponseDto());
     }

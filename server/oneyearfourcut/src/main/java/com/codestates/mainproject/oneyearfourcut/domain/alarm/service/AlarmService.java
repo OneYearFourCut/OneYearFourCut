@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class AlarmService {
     private final MemberService memberService;
-    private final GalleryService galleryService;
-    private final CommentRepository commentRepository;
     private final ArtworkRepository artworkRepository;
     private final AlarmRepository alarmRepository;
 
@@ -80,9 +78,7 @@ public class AlarmService {
             alarmPage = alarmRepository.findAllByAlarmTypeAndMember_MemberIdOrderByAlarmIdDesc(
                     AlarmType.valueOf(filter), memberId, pr);
         }
-        if (alarmPage.isEmpty()) {
-            Page.empty();
-        }
+
         return alarmPage;
     }
 

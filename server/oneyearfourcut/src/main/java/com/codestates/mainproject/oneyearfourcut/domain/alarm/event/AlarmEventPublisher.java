@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 public class AlarmEventPublisher {
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishAlarmEvent(Long receiverId, Long senderId, AlarmType alarmType, Long galleryId, Long artworkId) {
-        AlarmEvent alarmEvent = new AlarmEvent(receiverId, senderId, alarmType, galleryId, artworkId);
+    public void publishAlarmEvent(AlarmEvent alarmEvent) {
         applicationEventPublisher.publishEvent(alarmEvent);
-
     }
 }

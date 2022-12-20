@@ -4,6 +4,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
@@ -112,7 +113,7 @@ public class ArtworkServiceTest {
                 gallery.setMember(loginMember);
 
                 given(galleryService.findGallery(anyLong())).willReturn(gallery);
-                willDoNothing().given(alarmEventPublisher).publishAlarmEvent(anyLong(),anyLong(), any(AlarmType.class), anyLong(), anyLong());
+                willDoNothing().given(alarmEventPublisher).publishAlarmEvent(any(AlarmEvent.class));
                 given(awsS3Service.uploadFile(any())).willReturn(imagePath);
                 given(artworkRepository.save(any(Artwork.class))).willReturn(artwork);
 

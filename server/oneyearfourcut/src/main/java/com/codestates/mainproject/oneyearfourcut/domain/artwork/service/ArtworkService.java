@@ -5,8 +5,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
@@ -14,11 +14,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourC
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.controller.CommentController;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.service.CommentService;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -72,7 +70,13 @@ public class ArtworkService {
 
         //알람 생성
         Long receiverId = findGallery.getMember().getMemberId();
-        alarmEventPublisher.publishAlarmEvent(receiverId, memberId, AlarmType.POST_ARTWORK, galleryId, savedArtwork.getArtworkId());
+        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
+                .receiverId(receiverId)
+                .senderId(memberId)
+                .alarmType(AlarmType.POST_ARTWORK)
+                .galleryId(galleryId)
+                .artworkId(savedArtwork.getArtworkId())
+                .build());
 
         return savedArtwork.toArtworkResponseDto();
     }

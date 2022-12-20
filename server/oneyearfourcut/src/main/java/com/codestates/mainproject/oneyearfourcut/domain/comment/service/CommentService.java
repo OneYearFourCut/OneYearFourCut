@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
@@ -59,7 +60,13 @@ public class CommentService {
 
         //알림 생성
         Long receiverId = findGallery.getMember().getMemberId();
-        alarmEventPublisher.publishAlarmEvent(receiverId, memberId, AlarmType.COMMENT_GALLERY, galleryId, null);
+        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
+                .receiverId(receiverId)
+                .senderId(memberId)
+                .alarmType(AlarmType.COMMENT_GALLERY)
+                .galleryId(galleryId)
+                .artworkId(null)
+                .build());
 
         return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto(null));
     }
@@ -80,11 +87,24 @@ public class CommentService {
 
         //전시관 주인에게 알림 생성
         Long galleryReceiverId = findGallery.getMember().getMemberId();
-        alarmEventPublisher.publishAlarmEvent(galleryReceiverId, memberId, AlarmType.COMMENT_ARTWORK, galleryId, artworkId);
+        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
+                .receiverId(galleryReceiverId)
+                .senderId(memberId)
+                .alarmType(AlarmType.COMMENT_ARTWORK)
+                .galleryId(galleryId)
+                .artworkId(artworkId)
+                .build());
+
         //작품 주인에게 알림 생성
         Long artworkReceiverId = verifiedArtwork.getMember().getMemberId();
-        if (artworkReceiverId != galleryReceiverId) {   //두 알림의 주인이 같지 않으면 보내기
-            alarmEventPublisher.publishAlarmEvent(artworkReceiverId, memberId, AlarmType.COMMENT_ARTWORK, galleryId, artworkId);
+        if (artworkReceiverId != galleryReceiverId) {   //자기 전시관에 단 작품이면 알람이 한 번만 오도록 처리
+            alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
+                    .receiverId(artworkReceiverId)
+                    .senderId(memberId)
+                    .alarmType(AlarmType.COMMENT_ARTWORK)
+                    .galleryId(galleryId)
+                    .artworkId(artworkId)
+                    .build());
         }
 
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
