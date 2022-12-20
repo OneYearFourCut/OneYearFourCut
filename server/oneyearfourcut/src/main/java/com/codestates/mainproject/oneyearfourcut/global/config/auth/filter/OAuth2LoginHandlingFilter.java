@@ -14,7 +14,6 @@ public class OAuth2LoginHandlingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String host = request.getHeader("Host");
-        System.out.println("##############################Host : " + host);
         if (host != null) { //테스트 코드에서 nullPointerException생겨서 한번 더 감싸줌
             if (host.equals("localhost:8080") || host.equals("localhost:3000")) {
                 response.setHeader("OriginHost", host);

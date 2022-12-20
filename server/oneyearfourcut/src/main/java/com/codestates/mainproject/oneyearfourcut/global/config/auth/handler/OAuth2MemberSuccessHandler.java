@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -71,11 +70,10 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String uri = createURI(accessToken, refreshToken).toString();
 
         //localhost 에서 온 것인지 확인해서 맞으면 다른 곳으로 redirect
-        Optional<String> originHost = Optional.ofNullable(response.getHeader("OriginHost"));
-
-        if (originHost.isPresent()) {
-            System.out.println("###################OriginHost : " + originHost.get());
-            uri = createDEVURI(accessToken, refreshToken, originHost.get()).toString();
+//        Optional<String> originHost = Optional.ofNullable(response.getHeader("OriginHost"));
+        System.out.println("############Referer : " + request.getHeader("Referer") );
+        if (!request.getHeader("Referer").equals("http://oneyearfourcut-front.s3-website.ap-northeast-2.amazonaws.com/")) {
+            uri = createDEVURI(accessToken, refreshToken).toString();
         }
 
         getRedirectStrategy().sendRedirect(request, response, uri);
@@ -125,29 +123,17 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .toUri();
     }
 
-    private URI createDEVURI(String accessToken, String refreshToken, String host) {
+    private URI createDEVURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
-
-        if (host.equals("localhost:3000")) {
-            return UriComponentsBuilder
-                    .newInstance()
-                    .scheme("http")
-                    .host("localhost")
-                    .port(3000)
-                    .path("localStorage")
-                    .queryParams(queryParams)
-                    .build()
-                    .toUri();
-        }
 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
                 .host("localhost")
-                .port(8080)
-                .path("receive-token")
+                .port(3000)
+                .path("localStorage")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
