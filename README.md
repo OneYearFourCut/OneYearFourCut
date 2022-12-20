@@ -3,7 +3,7 @@
 <br/>
 프론트엔드(3명)와 백엔드(3명)로 구성된 D25입니다!
 <br/>
-친구들이 꾸며주는 나만의 전시회, "올해 네 컷"이라는 프로젝트입니다.
+친구들이 꾸며주는 나만의 전시회, "올해 네 컷"이라는 프로젝트입니다.   
 배포 주소 : http://oneyearfourcut-front.s3-website.ap-northeast-2.amazonaws.com/
 <br/>
 ## 🙌 Team members
