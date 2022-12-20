@@ -73,6 +73,8 @@ dependencies {
 
 	// 파일 위조, 변조 체크 Tika
 	implementation 'org.apache.tika:tika-core:2.6.0'
+
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 }
 
 //------------REST Docs ------------//

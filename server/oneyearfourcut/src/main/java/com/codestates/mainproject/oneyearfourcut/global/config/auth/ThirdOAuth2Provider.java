@@ -21,7 +21,27 @@ public enum ThirdOAuth2Provider {
             builder.clientName("Kakao");
             return builder;
         }
-    };
+    }/*,
+    NAVER {
+        @Override
+        public ClientRegistration.Builder getBuilder(String registrationId) {
+            ClientRegistration.Builder builder = getBuilder(
+                    registrationId,
+                    ClientAuthenticationMethod.CLIENT_SECRET_POST,
+                    DEFAULT_LOGIN_REDIRECT_URL
+            );
+
+            builder.scope("profile");
+            builder.authorizationUri("https://nid.naver.com/oauth2.0/authorize");
+            builder.tokenUri("https://nid.naver.com/oauth2.0/token");
+            builder.userInfoUri("https://openapi.naver.com/v1/nid/me");
+            builder.userNameAttributeName("id");
+            builder.clientName("Naver");
+            return builder;
+        }
+    }*/
+
+    ;
 
     private static final String DEFAULT_LOGIN_REDIRECT_URL = "{baseUrl}/{action}/oauth2/code/{registrationId}";
 

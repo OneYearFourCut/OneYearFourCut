@@ -4,6 +4,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberSer
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.filter.JwtVerificationFilter;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.MemberAuthenticationEntryPoint;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.OAuth2MemberSuccessHandler;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.handler.OAuth2MemberSuccessHandlerNaver;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
 import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,18 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
     private String clientSecret;
 
+    @Value("${custom.oauth2.registration.naver.client-id}")
+    private String naverClientId;
+    @Value("${custom.oauth2.registration.naver.client-secret}}")
+    private String naverClientSecret;
+
+    @Value("${custom.oauth2.provider.naver.tokenUri}")
+    private String naverAccessTokenUri;
+    @Value("${custom.oauth2.provider.naver.authorizationUri}")
+    private String naverUserAuthorizationUri;
+    private String naverGrantType = "authorization_code";
+
+
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
@@ -62,6 +75,7 @@ public class SecurityConfig {
                                 .antMatchers(HttpMethod.GET, "/receive-token").permitAll()
                                 .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
                                 .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
+                                .antMatchers("/login/oauth2/*").permitAll()
                                 .antMatchers("/h2/**").permitAll()
 //                        .antMatchers("/members/**").hasRole("USER")
 //                        .antMatchers("/galleries/**").hasRole("USER")
@@ -69,7 +83,10 @@ public class SecurityConfig {
                                 .anyRequest().hasRole("USER")
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, memberService, refreshTokenService)));
+                        .successHandler(new OAuth2MemberSuccessHandlerNaver(jwtTokenizer, memberService, refreshTokenService)));
+        //수정필요
+
+
         return http.build();
     }
 
@@ -98,14 +115,14 @@ public class SecurityConfig {
         }
     }
 
-    @Bean
+    /*@Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        var clientRegistration = clientRegistration();
+        var clientRegistration = clientRegistrationNaver();
 
         return new InMemoryClientRegistrationRepository(clientRegistration);
     }
 
-    private ClientRegistration clientRegistration() {
+    private ClientRegistration clientRegistrationKakao() {
         return ThirdOAuth2Provider
                 .KAKAO
                 .getBuilder("kakao")
@@ -113,4 +130,14 @@ public class SecurityConfig {
                 .clientSecret(clientSecret)
                 .build();
     }
+
+    private ClientRegistration clientRegistrationNaver() {
+        return ThirdOAuth2Provider
+                .NAVER
+                .getBuilder("naver")
+                .clientId(naverClientId)
+                .clientSecret(naverClientSecret)
+                .jwkSetUri("temp")
+                .build();
+    }*/
 }
