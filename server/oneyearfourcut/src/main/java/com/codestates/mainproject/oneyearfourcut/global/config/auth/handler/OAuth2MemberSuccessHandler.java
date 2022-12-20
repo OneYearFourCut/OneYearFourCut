@@ -72,8 +72,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         //localhost 에서 온 것인지 확인해서 맞으면 다른 곳으로 redirect
         Optional<String> originHost = Optional.ofNullable(response.getHeader("OriginHost"));
-        System.out.println("###################OriginHost : " + originHost.get());
+
         if (originHost.isPresent()) {
+            System.out.println("###################OriginHost : " + originHost.get());
             uri = createDEVURI(accessToken, refreshToken, originHost.get()).toString();
         }
 
