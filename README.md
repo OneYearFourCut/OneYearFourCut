@@ -76,7 +76,10 @@ inside-eun</b></sub></a><br /></td>
 </br>
 
 ## 🛠 Tech Stacks
+![image](https://user-images.githubusercontent.com/86215246/208829845-b56ea20a-d9c9-42d2-bb8e-95b9ede3075a.png)
+
 
 ## 🛠 Project Architecture
+![image](https://user-images.githubusercontent.com/86215246/208829860-198cfeca-bcb3-4b73-b11a-1403efbd6148.png)
 
 </br>
