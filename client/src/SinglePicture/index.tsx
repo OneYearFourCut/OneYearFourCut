@@ -34,15 +34,17 @@ const SinglePicPage = () => {
   const galleryId = parseInt(params.galleryId!);
   const { data } = useGetAllPost(galleryId);
   const { state } = useLocation();
-  const { lastOpen } = CommentStore();
+  const { lastOpen, setLastOpen } = CommentStore();
 
   let num = 0;
   if (state !== null && lastOpen === -1) {
     num = state;
-  }
-  if (lastOpen !== -1) {
+  } else if (lastOpen !== -1) {
     num = lastOpen;
+    setLastOpen(-1);
   }
+  /*state를 한번 저장하면 비워주는 로직 필요*/
+
 
   const setting = {
     slidesPerView: 1,
