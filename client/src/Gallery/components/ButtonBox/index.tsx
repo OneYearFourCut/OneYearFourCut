@@ -3,11 +3,8 @@ import Camera from 'assets/Icon/camera';
 import { IconBtn } from 'shared/components/Buttons';
 import { useNavigate } from 'react-router-dom';
 import GalleryType from 'GallerySetting/galleryType';
-import { useGalleryData } from 'GallerySetting/hooks/useGalleryData';
-import 'moment/locale/ko';
 
 const Index = ({ galleryId }: GalleryType) => {
-  const { data } = useGalleryData(galleryId!);
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/uploadPicture/${galleryId}`);
