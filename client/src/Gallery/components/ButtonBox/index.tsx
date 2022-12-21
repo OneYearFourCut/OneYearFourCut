@@ -14,18 +14,11 @@ const Index = ({ galleryId }: GalleryType) => {
     navigate(`/uploadPicture/${galleryId}`);
   };
 
-  const disabledClick = () => {
-    alert('서비스를 준비 중입니다');
-  };
-
   const createdAt = data?.createdAt;
 
   return (
     <div>
       <S.BtnContainer>
-        <Btn className='mr disabled' onClick={disabledClick}>
-          3D 전시관 보러가기
-        </Btn>
         <IconBtn onClick={handleClick} className='white' icon={<Camera />}>
           <p>사진 올려주기</p>
         </IconBtn>
