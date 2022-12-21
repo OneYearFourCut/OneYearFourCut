@@ -68,7 +68,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: `/fourPic/:galleryId`,
+        path: `/fourPic/*`,
         element: (
           <Suspense fallback={<TriggerBox />}>
             <GalleryFourPic />

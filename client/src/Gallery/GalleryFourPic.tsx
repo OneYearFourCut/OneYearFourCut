@@ -7,13 +7,15 @@ import FourCut from './components/FourCut';
 import Snowfall from 'react-snowfall';
 import { setinitUrl } from 'shared/libs/saveSessionStorage';
 import { useEffect } from 'react';
+import { deCryption } from 'shared/libs/cryption';
 
 const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
 const Gallery = () => {
+
   const params = useParams();
-  const galleryId = parseInt(params.galleryId!);
+  const galleryId = deCryption(params['*']!)
 
   useEffect(() => {
     setinitUrl(window.location.pathname);

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { historyStore } from 'store/store';
+import { enCryption } from 'shared/libs/cryption';
 
 const AutoRedirect = (galleryId: number) => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const AutoRedirect = (galleryId: number) => {
       setReset('');
     } else {
       if (galleryId) {
-        navigate(`/fourPic/${galleryId}`);
+        navigate(`/fourPic/${enCryption(galleryId)}`);
       } else {
         navigate(`/gallerySetting`);
       }

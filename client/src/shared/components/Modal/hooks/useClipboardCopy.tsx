@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { loginStore } from 'store/store';
+import { enCryption } from 'shared/libs/cryption';
 import * as TOAST from 'shared/components/Toast/ToastData';
 import useToast from 'shared/components/Toast/hooks/useToast';
 
@@ -7,7 +8,7 @@ const ClipboardCopy = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setToast } = useToast();
   const { user } = loginStore();
-  let URL = window.location.origin + '/fourPic/' + user?.galleryId;
+  let URL = window.location.origin + '/fourPic/' + enCryption(user?.galleryId!);
 
   const handleCopy = () => {
     if (user?.galleryId) {
