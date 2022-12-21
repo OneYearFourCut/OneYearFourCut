@@ -25,10 +25,10 @@ public class CommentGalleryResDto{
     private Long artworkId; //NULL possible
     private String imagePath;
 
-//    public static List<CommentGalleryResDto>toCommentGalleryResponseDtoList(List<Comment> commentList){
-//        return commentList == null ? Collections.emptyList() : commentList
-//                                                .stream()
-//                                                .map(Comment::toCommentGalleryResponseDto)
-//                                                .collect(Collectors.toList());
-//    }
+    public static List<CommentGalleryResDto>toCommentGalleryResponseDtoList(List<Comment> commentList){
+        return commentList == null ? Collections.emptyList() : commentList
+                                                .stream()
+                                                .map(Comment::toCommentGalleryResponseDto)
+                                                .collect(Collectors.toList());
+    }
 }
