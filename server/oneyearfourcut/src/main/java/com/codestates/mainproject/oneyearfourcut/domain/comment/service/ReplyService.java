@@ -39,7 +39,6 @@ public class ReplyService {
                 .content(commentRequestDto.getContent())
                 .comment(commentService.findComment(commentId))
                 .member(memberService.findMember(memberId))
-                .replyStatus(VALID)
                 .build();
         replyRepository.save(reply);
         if(commentService.findComment(commentId).getArtworkId() == null ){

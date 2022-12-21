@@ -31,12 +31,12 @@ public class Reply extends Auditable {
     private CommentStatus replyStatus; //삭제 여부
 
     @Builder
-    public Reply(Long replyId, String content, Comment comment, Member member, CommentStatus replyStatus) {
+    public Reply(Long replyId, String content, Comment comment, Member member) {
         this.replyId = replyId;
         this.content = content;
         this.comment = comment;
         this.member = member;
-        this.replyStatus = replyStatus;
+        this.replyStatus = CommentStatus.VALID;
     }
 
     public void changeReplyStatus(CommentStatus replyStatus) {
