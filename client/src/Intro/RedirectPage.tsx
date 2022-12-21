@@ -1,8 +1,9 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { setStoredToken} from './hooks/tokenStorage';
 import { historyStore, loginStore } from 'store/store';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { enCryption } from 'shared/libs/cryption';
+import axios from 'axios';
 
 const RedirectPage = (): ReactElement => {
   const { setIsLoggedIn, user, setUser } = loginStore();
@@ -37,7 +38,7 @@ const RedirectPage = (): ReactElement => {
           setReset('');
         } else {
           if (res.data.galleryId) {
-            navigate(`/fourPic/${res.data.galleryId}`);
+            navigate(`/fourPic/${enCryption(res.data.galleryId)}`);
           } else {
             navigate(`/gallerySetting`);
           }

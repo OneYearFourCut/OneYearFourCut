@@ -3,6 +3,7 @@ import { patchGallery, postGallery, deleteGalleryById } from './api';
 import { loginStore } from 'store/store';
 import { useNavigate, useParams } from 'react-router-dom';
 import { saveUser } from 'Intro/api';
+import { enCryption } from 'shared/libs/cryption';
 
 const GallerySetting = () => {
   const { user, setUser } = loginStore();
@@ -11,13 +12,13 @@ const GallerySetting = () => {
   const onSubmit = (form: { title: string; content: string }) => {
     galleryId
       ? patchGallery(form).then(() => {
-          navigate(`/fourPic/${galleryId}`);
+          navigate(`/fourPic/${enCryption(galleryId!)}`);
         })
       : postGallery(form).then((res) => {
           const change = Object.assign(user!);
           change.galleryId = res.data.galleryId;
           setUser(change);
-          navigate(`/fourPic/${res.data.galleryId}`);
+          navigate(`/fourPic/${enCryption(res.data.galleryId)}`);
         });
   };
 

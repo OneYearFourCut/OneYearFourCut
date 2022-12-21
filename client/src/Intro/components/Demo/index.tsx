@@ -3,7 +3,7 @@ import * as S from './style';
 
 const index = () => {
   const demo_url =
-    'http://oneyearfourcut-front.s3-website.ap-northeast-2.amazonaws.com/fourPic/9';
+    'http://oneyearfourcut-front.s3-website.ap-northeast-2.amazonaws.com/fourPic/U2FsdGVkX1/cbdBY+bKTIn7uNgL5TS4/6cH15Mgs5NQ=';
   const handleClick = () => {
     window.location.replace(demo_url!);
   };

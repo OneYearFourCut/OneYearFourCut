@@ -6,7 +6,7 @@ import { ModalStore, UploadStore } from 'store/store';
 import { FormData } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigateSearch } from 'shared/hooks/useNavigateSearch';
-
+import { enCryption } from 'shared/libs/cryption';
 
 const useUpload = (galleryId: number) => {
   const { closeModal } = ModalStore();
@@ -25,7 +25,7 @@ const useUpload = (galleryId: number) => {
       onSuccess() {
         setToast(TOAST.UPLOAD_SUCCESSE);
         resetData();
-        navigate(`/fourPic/${galleryId}`, {});
+        navigate(`/fourPic/${enCryption(galleryId)}`, {});
         queryClient.invalidateQueries(['like']);
       },
       onError(err) {
