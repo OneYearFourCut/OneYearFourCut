@@ -1,10 +1,9 @@
 import * as S from './style';
 import Camera from 'assets/Icon/camera';
-import { Btn, IconBtn } from 'shared/components/Buttons';
+import { IconBtn } from 'shared/components/Buttons';
 import { useNavigate } from 'react-router-dom';
 import GalleryType from 'GallerySetting/galleryType';
 import { useGalleryData } from 'GallerySetting/hooks/useGalleryData';
-import Moment from 'react-moment';
 import 'moment/locale/ko';
 
 const Index = ({ galleryId }: GalleryType) => {
@@ -14,8 +13,6 @@ const Index = ({ galleryId }: GalleryType) => {
     navigate(`/uploadPicture/${galleryId}`);
   };
 
-  const createdAt = data?.createdAt;
-
   return (
     <div>
       <S.BtnContainer>
@@ -23,13 +20,6 @@ const Index = ({ galleryId }: GalleryType) => {
           <p>사진 올려주기</p>
         </IconBtn>
       </S.BtnContainer>
-      <S.Time>
-        전시기간은
-        <Moment add={{ days: 14 }} format=' MM월 DD일'>
-          {createdAt}
-        </Moment>
-        까지 입니다
-      </S.Time>
     </div>
   );
 };
