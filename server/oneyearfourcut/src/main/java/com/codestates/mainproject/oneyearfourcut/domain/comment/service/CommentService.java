@@ -30,7 +30,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.DELETED;
 import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus.VALID;
@@ -38,7 +37,7 @@ import static com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Co
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberService memberService;
@@ -48,18 +47,17 @@ public class CommentService {
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
-        Gallery findGallery = galleryService.findGallery(galleryId);
+        Comment comment = commentRequestDto.toCommentEntity();
+        Member member = memberService.findMember(memberId);
+        Gallery gallery = galleryService.findGallery(galleryId);
 
-        Comment comment = Comment.builder()
-                .gallery(findGallery)
-                .member(new Member(memberId))
-                .content(commentRequestDto.getContent())
-                .commentStatus(VALID)
-                .build();
+        comment.setMember(member);
+        comment.setGallery(gallery);
+
         commentRepository.save(comment);
 
         //알림 생성
-        Long receiverId = findGallery.getMember().getMemberId();
+        Long receiverId = gallery.getMember().getMemberId();
         alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
                 .receiverId(receiverId)
                 .senderId(memberId)
@@ -68,25 +66,24 @@ public class CommentService {
                 .artworkId(null)
                 .build());
 
-        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto(null));
+        return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
 
     @Transactional
     public CommentArtworkHeadDto<Object> createCommentOnArtwork(CommentRequestDto commentRequestDto, Long galleryId, Long artworkId, Long memberId) {
-        Artwork verifiedArtwork = artworkService.findVerifiedArtwork(galleryId, artworkId);
-        Gallery findGallery = galleryService.findGallery(galleryId);
+        Member member = memberService.findMember(memberId);
+        Gallery gallery = galleryService.findGallery(galleryId);
+        Artwork artwork = artworkService.findVerifiedArtwork(galleryId, artworkId);
 
-        Comment comment = Comment.builder()
-                .gallery(findGallery)
-                .member(new Member(memberId))
-                .artworkId(artworkId)
-                .content(commentRequestDto.getContent())
-                .commentStatus(VALID)
-                .build();
+        Comment comment = commentRequestDto.toCommentEntity();
+        comment.setMember(member);
+        comment.setGallery(gallery);
+        comment.setArtwork(artwork);
+
         commentRepository.save(comment);
 
         //전시관 주인에게 알림 생성
-        Long galleryReceiverId = findGallery.getMember().getMemberId();
+        Long galleryReceiverId = gallery.getMember().getMemberId();
         alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
                 .receiverId(galleryReceiverId)
                 .senderId(memberId)
@@ -96,7 +93,7 @@ public class CommentService {
                 .build());
 
         //작품 주인에게 알림 생성
-        Long artworkReceiverId = verifiedArtwork.getMember().getMemberId();
+        Long artworkReceiverId = artwork.getMember().getMemberId();
         if (artworkReceiverId != galleryReceiverId) {   //자기 전시관에 단 작품이면 알람이 한 번만 오도록 처리
             alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
                     .receiverId(artworkReceiverId)
@@ -110,55 +107,37 @@ public class CommentService {
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 
-
-    @Transactional(readOnly = true)
-    public Page<Comment> findCommentByPage(Long galleryId, Long artworkId, int page, int size) {
+    public CommentGalleryPageResponseDto<Object> getGalleryCommentPage(Long galleryId, int page, int size){
         PageRequest pr = PageRequest.of(page - 1, size);
-        Page<Comment> commentPage;
-        galleryService.findGallery(galleryId);
-        if (artworkId == null) {
-            commentPage =
-                    commentRepository.findAllByCommentStatusAndGallery_GalleryIdOrderByCommentIdDesc(VALID,galleryId, pr);
-        }
-        else {
-            artworkService.checkGalleryArtworkVerification(galleryId, artworkId);
-            commentPage = commentRepository.findAllByCommentStatusAndArtworkIdOrderByCommentIdDesc(VALID, artworkId, pr);
-        }
+        // 갤러리 안에 있는 등록중인 작품에 대한 댓글 조회
+        Page<Comment> commentPage = commentRepository
+                .findAllByCommentStatusAndGallery_GalleryIdAndArtwork_StatusOrderByCommentIdDesc(VALID, galleryId, ArtworkStatus.REGISTRATION, pr);
+
+        /* 댓글 리스트가 없을 경우 빈 배열로 응답하는 게 아니었나요?? */
         if (commentPage.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글이 아직 없습니다.");
         }
-        return commentPage;
-    }
-
-
-    @Transactional(readOnly = true)
-    public CommentGalleryPageResponseDto<Object> getGalleryCommentPage(Long galleryId, int page, int size){
-        /*memberService.findMember(memberId);*/
-        Page<Comment> commentPage = findCommentByPage(galleryId, null, page, size);
-        List<Comment> commentList = commentPage.getContent();
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
+        List<Comment> commentList = commentPage.getContent();
 
-        List<CommentGalleryResDto> collect = commentList.stream()
-                .map(comment -> {
-                    Long artworkId = comment.getArtworkId();    // 해당하는 작품 id 를 찾고
-                    String imagePath = null;
-                    if (artworkId != null) {
-                        Artwork verifiedArtwork = artworkService.findVerifiedArtwork(comment.getGallery().getGalleryId(), artworkId);
-                        imagePath = verifiedArtwork.getImagePath(); //id 로 artwork 엔티티에 접근해서 imagePath 받아오고
-                    }
-                    return comment.toCommentGalleryResponseDto(imagePath); //
-                })
-                .collect(Collectors.toList());
-
+        List<CommentGalleryResDto> collect = CommentGalleryResDto.toCommentGalleryResponseDtoList(commentList);
         return new CommentGalleryPageResponseDto<>(galleryId, collect, pageInfo);
     }
 
-    @Transactional(readOnly = true)
     public CommentArtworkPageResponseDto<Object> getArtworkCommentPage(Long galleryId, Long artworkId, int page, int size) {
-        /*memberService.findMember(memberId);*/
-        Page<Comment> commentPage = findCommentByPage(galleryId, artworkId, page, size);
-        List<Comment> commentList = commentPage.getContent();
+        artworkService.checkGalleryArtworkVerification(galleryId, artworkId);
+        PageRequest pr = PageRequest.of(page - 1, size);
+        // artworkId만 검증하면 굳이 '등록중'이라는 조건을 추가할 필요는 없음.
+        Page<Comment> commentPage =
+                commentRepository.findAllByCommentStatusAndArtwork_ArtworkIdOrderByCommentIdDesc(VALID, artworkId, pr);
+
+        /* 댓글 리스트가 없을 경우 빈 배열로 응답하는 게 아니었나요?? */
+        if (commentPage.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글이 아직 없습니다.");
+        }
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
+        List<Comment> commentList = commentPage.getContent();
+
         List<CommentArtworkResDto> response = CommentArtworkResDto.toCommentArtworkResponseDtoList(commentList);
         return new CommentArtworkPageResponseDto<>(galleryId, artworkId, response, pageInfo);
     }
@@ -189,7 +168,7 @@ public class CommentService {
         Comment requestComment = commentRequestDto.toCommentEntity();
         Optional.ofNullable(requestComment.getContent())
                 .ifPresent(foundComment::changeContent);
-        return new CommentGalleryHeadDto<>(galleryId, foundComment.toCommentGalleryResponseDto(null));
+        return new CommentGalleryHeadDto<>(galleryId, foundComment.toCommentGalleryResponseDto());
     }
 
     @Transactional(readOnly = true)

@@ -148,14 +148,6 @@ public class ArtworkControllerTest {
         String title = "수정된 제목";
         String content = "수정된 설명";
 
-        Member writer = new Member(1L);
-        Member reader = new Member(2L);
-        Gallery gallery = new Gallery(1L);
-
-        Artwork existingArtwork = new Artwork(1L);
-        existingArtwork.setMember(writer);
-        existingArtwork.setGallery(gallery);
-
         ArtworkResponseDto response = ArtworkResponseDto.builder()
                 .artworkId(1L)
                 .nickName("작성자")

@@ -12,15 +12,18 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class CommentRequestDto {
 
     @NotBlank(message = "댓글은 필수 입력 값입니다.")
     @Size(min = 1, max = 30)
     @SerializedName("content")
     private String content;
+
+    @Builder
+    public CommentRequestDto(String content) {
+        this.content = content;
+    }
 
     public Comment toCommentEntity(){
         return Comment.builder()

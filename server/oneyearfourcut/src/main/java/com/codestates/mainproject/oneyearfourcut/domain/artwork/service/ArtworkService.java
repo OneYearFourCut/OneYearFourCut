@@ -42,10 +42,8 @@ import static org.springframework.data.domain.Sort.Order.desc;
 @Transactional(readOnly = true)
 @Slf4j
 public class ArtworkService {
-
     private final ArtworkRepository artworkRepository;
     private final GalleryService galleryService;
-
     private final MemberService memberService;
     private final ArtworkLikeRepository artworkLikeRepository;
     private final AwsS3Service awsS3Service;
@@ -147,7 +145,7 @@ public class ArtworkService {
         Artwork findArtwork = findVerifiedArtwork(galleryId, artworkId);
         verifyAuthority(memberId, findArtwork);
         // 댓글 삭제 (상태 변경)
-        List<Comment> comments = commentRepository.findAllByArtworkId(artworkId);
+        List<Comment> comments = commentRepository.findAllByArtwork_ArtworkId(artworkId);
         comments.forEach(comment -> comment.changeCommentStatus(CommentStatus.DELETED));
 
         findArtwork.setStatus(ArtworkStatus.DELETED);
