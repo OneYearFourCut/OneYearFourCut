@@ -10,6 +10,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalle
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.ReplyRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -42,6 +43,7 @@ public class CommentService {
     private final GalleryService galleryService;
     private final ArtworkService artworkService;
     private final AlarmService alarmService;
+    private final ReplyRepository replyRepository;
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
@@ -119,11 +121,15 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long galleryId, Long commentId, Long memberId) {
-        Comment foundComment= findComment(commentId);
         checkGalleryCommentVerification(galleryId, commentId, memberId);
         checkCommentMemberVerification(commentId,memberId);
-        //--검증완료--
+
+        replyRepository.deleteByCommentId(commentId);
+        Comment foundComment= findComment(commentId);
         foundComment.changeCommentStatus(DELETED);
+        // 하위 대댓글 삭제 상태 변경
+
+        System.out.println("foundComment.getCommentStatus() = " + foundComment.getCommentStatus());
     }
 
     @Transactional

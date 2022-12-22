@@ -4,7 +4,8 @@ import lombok.Getter;
 
 public enum LikeStatus {
     LIKE("등록"),
-    CANCEL("취소");
+    CANCEL("취소"),
+    DELETED("삭제");
 
     @Getter
     private String status;

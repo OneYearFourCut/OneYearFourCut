@@ -11,6 +11,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourC
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.ReplyRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -29,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +64,10 @@ public class ArtworkServiceTest {
 
     @Mock
     private AlarmService alarmService;
+    @Mock
+    private CommentRepository commentRepository;
+    @Mock
+    private ReplyRepository replyRepository;
 
     @Nested
     @DisplayName("파일 업로드 관련 - 작품 등록 및 수정")
@@ -324,36 +332,51 @@ public class ArtworkServiceTest {
             artwork.setMember(loginMember);
         }
 
-//        @Test
-//        @DisplayName("작성자가 작품 삭제")
-//        public void DeleteArtworkByWriterTest() {
-//            artwork.setMember(loginMember);
-//
-//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-//
-//            artworkService.deleteArtwork(
-//                    loginMember.getMemberId(),
-//                    gallery.getGalleryId(),
-//                    artwork.getArtworkId());
-//
-//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-//        }
+        @Test
+        @DisplayName("작성자가 작품 삭제")
+        public void DeleteArtworkByWriterTest() {
+            artwork.setMember(loginMember);
 
-//        @Test
-//        @DisplayName("갤러리 주인이 작품 삭제")
-//        public void DeleteArtworkByAdminTest() {
-//
-//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-//
-//            artworkService.deleteArtwork(
-//                    adminMember.getMemberId(),
-//                    gallery.getGalleryId(),
-//                    artwork.getArtworkId());
-//
-//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-//        }
+            List<Comment> comments = List.of(
+                    Comment.builder().commentId(1L).content("테스트").artwork(artwork).build()
+            );
+            given(commentRepository.findAllByArtwork_ArtworkId(any())).willReturn(comments);
+            willDoNothing().given(commentRepository).deleteByArtworkId(any());
+            willDoNothing().given(artworkLikeRepository).deleteByArtworkId(any());
+            willDoNothing().given(replyRepository).deleteByCommentId(any());
+            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+
+            artworkService.deleteArtwork(
+                    loginMember.getMemberId(),
+                    gallery.getGalleryId(),
+                    artwork.getArtworkId());
+
+            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
+        }
+
+        @Test
+        @DisplayName("갤러리 주인이 작품 삭제")
+        public void DeleteArtworkByAdminTest() {
+
+
+            List<Comment> comments = List.of(
+                    Comment.builder().commentId(1L).content("테스트").artwork(artwork).build()
+            );
+            given(commentRepository.findAllByArtwork_ArtworkId(any())).willReturn(comments);
+            willDoNothing().given(commentRepository).deleteByArtworkId(any());
+            willDoNothing().given(artworkLikeRepository).deleteByArtworkId(any());
+            willDoNothing().given(replyRepository).deleteByCommentId(any());
+            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+
+            artworkService.deleteArtwork(
+                    adminMember.getMemberId(),
+                    gallery.getGalleryId(),
+                    artwork.getArtworkId());
+
+            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
+        }
 
         @Test
         @DisplayName("관계 없는 유저가 작품 삭제")

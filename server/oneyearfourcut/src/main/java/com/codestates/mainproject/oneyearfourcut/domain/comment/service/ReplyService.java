@@ -77,6 +77,11 @@ public class ReplyService {
         foundReply.changeReplyStatus(DELETED);
     }
 
+    @Transactional
+    public void deleteReplies(Long commentId) {
+        replyRepository.deleteByCommentId(commentId);
+    }
+
     @Transactional(readOnly = true)
     private void checkCommentReplyVerification(Long commentId, Long replyId, Long memberId) {
         Reply foundReply = findReply(replyId);

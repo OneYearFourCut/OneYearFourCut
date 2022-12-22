@@ -4,6 +4,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,6 +23,8 @@ public class ArtworkLikeRepositoryTest {
 
     @Autowired
     private ArtworkLikeRepository artworkLikeRepository;
+    @Autowired
+    private ArtworkRepository artworkRepository;
 
     @DisplayName("쿼리 메서드 관련")
     @Nested
@@ -84,6 +89,41 @@ public class ArtworkLikeRepositoryTest {
             assertThat(actual2).isEqualTo(false);
             assertThat(actual3).isEqualTo(false);
         }
+    }
+
+    @Test
+    @DisplayName("FK artworkId를 가진 데이터 삭제 상태 변경 테스트")
+    public void deleteByArtworkId() {
+        Artwork artwork1 = Artwork.builder().title("작품1").content("설명1").build();
+        artwork1.setImagePath("/test1.jpg");
+        artworkRepository.save(artwork1);
+        Artwork artwork2 = Artwork.builder().title("작품2").content("설명2").build();
+        artwork2.setImagePath("/test2.jpg");
+        artworkRepository.save(artwork2);
+
+        ArtworkLike like1 = new ArtworkLike();
+        like1.setArtwork(artwork1);
+        artworkLikeRepository.save(like1);
+        ArtworkLike like2 = new ArtworkLike();
+        like2.setArtwork(artwork2);
+        artworkLikeRepository.save(like2);
+        ArtworkLike like3 = new ArtworkLike();
+        like3.setArtwork(artwork2);
+        artworkLikeRepository.save(like3);
+        ArtworkLike like4 = new ArtworkLike();
+        like4.setArtwork(artwork2);
+        artworkLikeRepository.save(like4);
+
+        artworkLikeRepository.deleteByArtworkId(artwork2.getArtworkId());
+        ArtworkLike findLike1 = artworkLikeRepository.findById(like1.getArtworkLikeId()).get();
+        ArtworkLike findLike2 = artworkLikeRepository.findById(like2.getArtworkLikeId()).get();
+        ArtworkLike findLike3 = artworkLikeRepository.findById(like3.getArtworkLikeId()).get();
+        ArtworkLike findLike4 = artworkLikeRepository.findById(like4.getArtworkLikeId()).get();
+
+        assertThat(findLike1.getStatus()).isEqualTo(LikeStatus.LIKE);
+        assertThat(findLike2.getStatus()).isEqualTo(LikeStatus.DELETED);
+        assertThat(findLike3.getStatus()).isEqualTo(LikeStatus.DELETED);
+        assertThat(findLike4.getStatus()).isEqualTo(LikeStatus.DELETED);
     }
 }
 

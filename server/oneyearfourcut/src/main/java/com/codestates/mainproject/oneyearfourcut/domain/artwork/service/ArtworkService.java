@@ -16,6 +16,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.Artwo
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.ReplyRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -50,6 +51,7 @@ public class ArtworkService {
     private final AwsS3Service awsS3Service;
     private final AlarmService alarmService;
     private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
 
 
     @Transactional
@@ -137,12 +139,17 @@ public class ArtworkService {
     @Transactional
     public void deleteArtwork(long memberId, long galleryId, long artworkId) {
         galleryService.verifiedGalleryExist(galleryId);
+
+        // 관련 댓글, 대댓글, 좋아요 삭제 처리
+        // 추후에 등록중인 상태의 데이터만 삭제처리(CLOSED)를 해야 해서 일일이 조건비교하고 대댓글까지 삭제하며 2중 for문은 너무 복잡할 것 같아
+        // stream()대신 JPQL로 구현했습니다.
+        artworkLikeRepository.deleteByArtworkId(artworkId);
+        commentRepository.deleteByArtworkId(artworkId);
+        List<Comment> comments = commentRepository.findAllByArtwork_ArtworkId(artworkId);
+
+        comments.forEach(comment -> replyRepository.deleteByCommentId(comment.getCommentId()));
         Artwork findArtwork = findVerifiedArtwork(galleryId, artworkId);
         verifyAuthority(memberId, findArtwork);
-        // 댓글 삭제 (상태 변경)
-        List<Comment> comments = commentRepository.findAllByArtwork_ArtworkId(artworkId);
-        comments.forEach(comment -> comment.changeCommentStatus(CommentStatus.DELETED));
-
         findArtwork.setStatus(ArtworkStatus.DELETED);
     }
 
