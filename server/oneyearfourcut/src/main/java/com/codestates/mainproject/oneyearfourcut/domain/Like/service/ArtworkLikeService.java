@@ -4,6 +4,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -23,7 +27,7 @@ public class ArtworkLikeService {
     private final ArtworkLikeRepository artworkLikeRepository;
     private final ArtworkService artworkService;
     private final MemberService memberService;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
 
     public void updateArtworkLike(long memberId, long galleryId, long artworkId) {
         Member findMember = memberService.findMember(memberId);
@@ -36,14 +40,36 @@ public class ArtworkLikeService {
                         like.setStatus(LikeStatus.CANCEL);
                     } else {
                         like.setStatus(LikeStatus.LIKE);
+
+                        //취소하고 30초안에 좋아요 누르면 알림이 또 안 가도록 구현
+                        LocalDateTime modifiedAt = like.getModifiedAt();
+                        Duration duration = Duration.between(modifiedAt, LocalDateTime.now());
+                        if (duration.getSeconds() >= 30) {
+                            //전시관 주인 알람 생성
+                            Long galleryReceiverId = findArtwork.getGallery().getMember().getMemberId();
+                            alarmEventPublisher.publishAlarmEvent(like.toAlarmEvent(galleryReceiverId));
+                            //작품 주인 알람 생성
+                            Long artworkReceiverId = findArtwork.getMember().getMemberId();
+                            if (artworkReceiverId != galleryReceiverId) {   //두 알람의 주인이 같으면 중복으로 보내지 않음
+                                alarmEventPublisher.publishAlarmEvent(like.toAlarmEvent(artworkReceiverId));
+                            }
+                        }
                     }
                 },
-                () -> {
+                () -> { //좋아요가 처음 눌릴 때
                     ArtworkLike artworkLike = new ArtworkLike();
                     artworkLike.setMember(findMember);
                     artworkLike.setArtwork(findArtwork);
-                    artworkLikeRepository.save(artworkLike);
+                    ArtworkLike savedArtworkLike = artworkLikeRepository.save(artworkLike);
+
+                    //전시관 주인 알람 생성
+                    Long galleryReceiverId = findArtwork.getGallery().getMember().getMemberId();
+                    alarmEventPublisher.publishAlarmEvent(savedArtworkLike.toAlarmEvent(galleryReceiverId));
+                    //작품 주인 알람 생성
+                    Long artworkReceiverId = findArtwork.getMember().getMemberId();
+                    if (artworkReceiverId != galleryReceiverId) {   //두 알람의 주인이 같으면 중복으로 보내지 않음
+                        alarmEventPublisher.publishAlarmEvent(savedArtworkLike.toAlarmEvent(artworkReceiverId));
+                    }
                 });
-        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId,galleryId, memberId, AlarmType.LIKE_ARTWORK);
     }
 }

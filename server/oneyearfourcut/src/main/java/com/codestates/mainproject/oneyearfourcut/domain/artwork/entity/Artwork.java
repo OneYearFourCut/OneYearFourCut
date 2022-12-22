@@ -2,6 +2,8 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.entity;
 
 
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -156,5 +158,13 @@ public class Artwork extends Auditable {
                 .likeCount(getLikeCount())
                 .build();
     }
-
+    public AlarmEvent toAlarmEvent(Long receiverId) {
+        return AlarmEvent.builder()
+                .receiverId(receiverId)
+                .senderId(this.getMember().getMemberId())
+                .alarmType(AlarmType.POST_ARTWORK)
+                .galleryId(this.getGallery().getGalleryId())
+                .artworkId(this.getArtworkId())
+                .build();
+    }
 }

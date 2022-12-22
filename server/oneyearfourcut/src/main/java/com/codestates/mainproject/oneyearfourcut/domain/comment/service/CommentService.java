@@ -1,6 +1,8 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
@@ -41,7 +43,7 @@ public class CommentService {
     private final MemberService memberService;
     private final GalleryService galleryService;
     private final ArtworkService artworkService;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
@@ -52,8 +54,12 @@ public class CommentService {
         comment.setMember(member);
         comment.setGallery(gallery);
 
-        commentRepository.save(comment);
-        alarmService.createAlarmBasedOnGallery(galleryId, memberId, AlarmType.COMMENT_GALLERY);
+        Comment savedComment = commentRepository.save(comment);
+
+        //알림 생성
+        Long receiverId = gallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(receiverId));
+
         return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
 
@@ -68,9 +74,18 @@ public class CommentService {
         comment.setGallery(gallery);
         comment.setArtwork(artwork);
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
-        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, galleryId, memberId, AlarmType.COMMENT_ARTWORK);
+        //전시관 주인에게 알림 생성
+        Long galleryReceiverId = gallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(galleryReceiverId));
+
+        //작품 주인에게 알림 생성
+        Long artworkReceiverId = artwork.getMember().getMemberId();
+        if (artworkReceiverId != galleryReceiverId) {   //자기 전시관에 단 작품이면 알람이 한 번만 오도록 처리
+            alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(artworkReceiverId));
+        }
+
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 

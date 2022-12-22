@@ -3,6 +3,9 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.service;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
@@ -33,8 +36,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
@@ -59,7 +62,7 @@ public class ArtworkServiceTest {
     private ArtworkLikeRepository artworkLikeRepository;
 
     @Mock
-    private AlarmService alarmService;
+    private AlarmEventPublisher alarmEventPublisher;
 
     @Nested
     @DisplayName("파일 업로드 관련 - 작품 등록 및 수정")
@@ -107,8 +110,10 @@ public class ArtworkServiceTest {
                 artwork.setGallery(gallery);
                 artwork.setImagePath(imagePath);
 
-                willDoNothing().given(alarmService).createAlarmBasedOnArtwork(any(), any(), any(), any());
-                willDoNothing().given(galleryService).verifiedGalleryExist(any(Long.class));
+                gallery.setMember(loginMember);
+
+                given(galleryService.findGallery(anyLong())).willReturn(gallery);
+                willDoNothing().given(alarmEventPublisher).publishAlarmEvent(any(AlarmEvent.class));
                 given(awsS3Service.uploadFile(any())).willReturn(imagePath);
                 given(artworkRepository.save(any(Artwork.class))).willReturn(artwork);
 
@@ -245,7 +250,8 @@ public class ArtworkServiceTest {
             @Test
             @DisplayName("특정 작품에 좋아요를 누른 유저 일괄 조회 테스트")
             public void findArtworkListByLoginUser() {
-                ArtworkLike like = new ArtworkLike(1L);
+                ArtworkLike like = new
+                        ArtworkLike(1L);
                 like.setMember(loginMember);
                 like.setArtwork(artwork1);
 

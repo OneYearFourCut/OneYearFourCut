@@ -5,7 +5,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
@@ -41,20 +42,18 @@ import static org.springframework.data.domain.Sort.Order.desc;
 @Transactional(readOnly = true)
 @Slf4j
 public class ArtworkService {
-
     private final ArtworkRepository artworkRepository;
     private final GalleryService galleryService;
-
     private final MemberService memberService;
     private final ArtworkLikeRepository artworkLikeRepository;
     private final AwsS3Service awsS3Service;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
     private final CommentRepository commentRepository;
 
 
     @Transactional
     public ArtworkResponseDto createArtwork(long memberId, long galleryId, ArtworkPostDto requestDto) {
-        galleryService.verifiedGalleryExist(galleryId);
+        Gallery findGallery = galleryService.findGallery(galleryId);
         Artwork artwork = requestDto.toEntity();
         // 이미지 유효성(null) 검증
         if (artwork.getImage() == null) {
@@ -68,8 +67,8 @@ public class ArtworkService {
         Artwork savedArtwork = artworkRepository.save(artwork);
 
         //알람 생성
-        Long artworkId = savedArtwork.getArtworkId();
-        alarmService.createAlarmBasedOnArtwork(artworkId, galleryId, memberId, AlarmType.POST_ARTWORK);
+        Long receiverId = findGallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(savedArtwork.toAlarmEvent(receiverId));
 
         return savedArtwork.toArtworkResponseDto();
     }
