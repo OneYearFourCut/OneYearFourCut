@@ -1,30 +1,23 @@
 import Input from './components/Input';
-import { patchGallery, postGallery, deleteGalleryById } from './api';
-import { loginStore } from 'store/store';
-import { useNavigate, useParams } from 'react-router-dom';
-import { saveUser } from 'Intro/api';
-import { enCryption } from 'shared/libs/cryption';
+import { useState } from 'react';
+import CustomModal from './components/CustomModal';
 
 const GallerySetting = () => {
-  const { user, setUser } = loginStore();
-  let galleryId = user?.galleryId;
-  const navigate = useNavigate();
-  const onSubmit = (form: { title: string; content: string }) => {
-    galleryId
-      ? patchGallery(form).then(() => {
-          navigate(`/fourPic/${enCryption(galleryId!)}`);
-        })
-      : postGallery(form).then((res) => {
-          const change = Object.assign(user!);
-          change.galleryId = res.data.galleryId;
-          setUser(change);
-          navigate(`/fourPic/${enCryption(res.data.galleryId)}`);
-        });
-  };
+  interface formType {
+    title: string | undefined;
+    content: string | undefined;
+  }
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [form, setForm] = useState<formType>();
+  const onSubmit = (form: { title: string; content: string }) => {
+    setIsOpen(true);
+    setForm(form!);
+  };
   return (
     <div>
       <Input onSubmit={onSubmit} />
+      {isOpen && <CustomModal title={form?.title} content={form?.content} />}
     </div>
   );
 };
