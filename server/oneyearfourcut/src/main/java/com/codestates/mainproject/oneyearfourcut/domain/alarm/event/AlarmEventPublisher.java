@@ -11,6 +11,8 @@ public class AlarmEventPublisher {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public void publishAlarmEvent(AlarmEvent alarmEvent) {
-        applicationEventPublisher.publishEvent(alarmEvent);
+        if (alarmEvent.getSenderId() != alarmEvent.getReceiverId()) {   //보내는 이와 받는이가 같은사람이면 보내지 않음
+            applicationEventPublisher.publishEvent(alarmEvent);
+        }
     }
 }
