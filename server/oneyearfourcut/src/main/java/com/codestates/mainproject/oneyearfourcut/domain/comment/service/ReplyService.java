@@ -45,21 +45,12 @@ public class ReplyService {
                 .member(new Member(memberId))
                 .replyStatus(VALID)
                 .build();
-        replyRepository.save(reply);
+        Reply savedReply = replyRepository.save(reply);
 
         //알람 생성
         //댓글 주인 한테만 보내나? 전시관 주인은?
-        Long receiverId = findComment.getMember().getMemberId();
-        Long galleryId = findComment.getGallery().getGalleryId();
-        Long artworkId = findComment.getArtworkId();    // 작품 댓글이 아닌 경우라면 null이 됨
-        AlarmType alarmType = artworkId == null ? AlarmType.REPLY_GALLERY : AlarmType.REPLY_ARTWORK; //null 여부에 따라 타입 결정
-        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                .receiverId(receiverId)
-                .senderId(memberId)
-                .alarmType(alarmType)
-                .galleryId(galleryId)
-                .artworkId(artworkId)
-                .build());
+        Long receiverId = savedReply.getComment().getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(savedReply.toAlarmEvent(receiverId));
 
         return new ReplyListResponseDto<>(commentId, reply.toReplyResponseDto());
     }

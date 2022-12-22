@@ -68,13 +68,7 @@ public class ArtworkService {
 
         //알람 생성
         Long receiverId = findGallery.getMember().getMemberId();
-        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                .receiverId(receiverId)
-                .senderId(memberId)
-                .alarmType(AlarmType.POST_ARTWORK)
-                .galleryId(galleryId)
-                .artworkId(savedArtwork.getArtworkId())
-                .build());
+        alarmEventPublisher.publishAlarmEvent(savedArtwork.toAlarmEvent(receiverId));
 
         return savedArtwork.toArtworkResponseDto();
     }

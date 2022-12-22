@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.entity;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.ReplyResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
@@ -58,4 +60,16 @@ public class Reply extends Auditable {
                 .build();
     }
 
+    public AlarmEvent toAlarmEvent(Long receiverId) {
+        Long artworkId = this.getComment().getArtworkId();    // 작품 댓글이 아닌 경우라면 null이 됨
+        AlarmType alarmType = artworkId == null ? AlarmType.REPLY_GALLERY : AlarmType.REPLY_ARTWORK; //null 여부에 따라 타입 결정
+
+        return AlarmEvent.builder()
+                .receiverId(receiverId)
+                .senderId(this.getMember().getMemberId())
+                .alarmType(alarmType)
+                .galleryId(this.getComment().getGallery().getGalleryId())
+                .artworkId(artworkId)
+                .build();
+    }
 }

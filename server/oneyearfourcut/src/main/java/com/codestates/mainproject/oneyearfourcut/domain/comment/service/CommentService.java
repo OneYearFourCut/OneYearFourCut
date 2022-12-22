@@ -54,17 +54,11 @@ public class CommentService {
         comment.setMember(member);
         comment.setGallery(gallery);
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
         //알림 생성
         Long receiverId = gallery.getMember().getMemberId();
-        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                .receiverId(receiverId)
-                .senderId(memberId)
-                .alarmType(AlarmType.COMMENT_GALLERY)
-                .galleryId(galleryId)
-                .artworkId(null)
-                .build());
+        alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(receiverId));
 
         return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
@@ -80,28 +74,16 @@ public class CommentService {
         comment.setGallery(gallery);
         comment.setArtwork(artwork);
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
         //전시관 주인에게 알림 생성
         Long galleryReceiverId = gallery.getMember().getMemberId();
-        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                .receiverId(galleryReceiverId)
-                .senderId(memberId)
-                .alarmType(AlarmType.COMMENT_ARTWORK)
-                .galleryId(galleryId)
-                .artworkId(artworkId)
-                .build());
+        alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(galleryReceiverId));
 
         //작품 주인에게 알림 생성
         Long artworkReceiverId = artwork.getMember().getMemberId();
         if (artworkReceiverId != galleryReceiverId) {   //자기 전시관에 단 작품이면 알람이 한 번만 오도록 처리
-            alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                    .receiverId(artworkReceiverId)
-                    .senderId(memberId)
-                    .alarmType(AlarmType.COMMENT_ARTWORK)
-                    .galleryId(galleryId)
-                    .artworkId(artworkId)
-                    .build());
+            alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(artworkReceiverId));
         }
 
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());

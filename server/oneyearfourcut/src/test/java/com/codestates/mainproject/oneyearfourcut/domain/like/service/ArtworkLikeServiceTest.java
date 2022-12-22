@@ -22,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +49,6 @@ public class ArtworkLikeServiceTest {
 
     @Test
     @DisplayName("like가 존재하지만 cancel상태였을 때")
-    @Disabled//테스트 문제 있어서 일단 비활성화
     void updateArtworkLikeTest_Like() {
         Gallery gallery = new Gallery(1L);
         Member loginMember = new Member(1L);

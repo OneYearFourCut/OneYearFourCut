@@ -47,23 +47,11 @@ public class ArtworkLikeService {
                         if (duration.getSeconds() >= 30) {
                             //전시관 주인 알람 생성
                             Long galleryReceiverId = findArtwork.getGallery().getMember().getMemberId();
-                            alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                                    .receiverId(galleryReceiverId)
-                                    .senderId(memberId)
-                                    .alarmType(AlarmType.LIKE_ARTWORK)
-                                    .galleryId(galleryId)
-                                    .artworkId(artworkId)
-                                    .build());
+                            alarmEventPublisher.publishAlarmEvent(like.toAlarmEvent(galleryReceiverId));
                             //작품 주인 알람 생성
                             Long artworkReceiverId = findArtwork.getMember().getMemberId();
                             if (artworkReceiverId != galleryReceiverId) {   //두 알람의 주인이 같으면 중복으로 보내지 않음
-                                alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                                        .receiverId(artworkReceiverId)
-                                        .senderId(memberId)
-                                        .alarmType(AlarmType.LIKE_ARTWORK)
-                                        .galleryId(galleryId)
-                                        .artworkId(artworkId)
-                                        .build());
+                                alarmEventPublisher.publishAlarmEvent(like.toAlarmEvent(artworkReceiverId));
                             }
                         }
                     }
@@ -72,27 +60,15 @@ public class ArtworkLikeService {
                     ArtworkLike artworkLike = new ArtworkLike();
                     artworkLike.setMember(findMember);
                     artworkLike.setArtwork(findArtwork);
-                    artworkLikeRepository.save(artworkLike);
+                    ArtworkLike savedArtworkLike = artworkLikeRepository.save(artworkLike);
 
                     //전시관 주인 알람 생성
                     Long galleryReceiverId = findArtwork.getGallery().getMember().getMemberId();
-                    alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                            .receiverId(galleryReceiverId)
-                            .senderId(memberId)
-                            .alarmType(AlarmType.LIKE_ARTWORK)
-                            .galleryId(galleryId)
-                            .artworkId(artworkId)
-                            .build());
+                    alarmEventPublisher.publishAlarmEvent(savedArtworkLike.toAlarmEvent(galleryReceiverId));
                     //작품 주인 알람 생성
                     Long artworkReceiverId = findArtwork.getMember().getMemberId();
                     if (artworkReceiverId != galleryReceiverId) {   //두 알람의 주인이 같으면 중복으로 보내지 않음
-                        alarmEventPublisher.publishAlarmEvent(AlarmEvent.builder()
-                                .receiverId(artworkReceiverId)
-                                .senderId(memberId)
-                                .alarmType(AlarmType.LIKE_ARTWORK)
-                                .galleryId(galleryId)
-                                .artworkId(artworkId)
-                                .build());
+                        alarmEventPublisher.publishAlarmEvent(savedArtworkLike.toAlarmEvent(artworkReceiverId));
                     }
                 });
     }

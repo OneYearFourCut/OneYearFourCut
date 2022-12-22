@@ -250,7 +250,8 @@ public class ArtworkServiceTest {
             @Test
             @DisplayName("특정 작품에 좋아요를 누른 유저 일괄 조회 테스트")
             public void findArtworkListByLoginUser() {
-                ArtworkLike like = new ArtworkLike(1L);
+                ArtworkLike like = new
+                        ArtworkLike(1L);
                 like.setMember(loginMember);
                 like.setArtwork(artwork1);
 
