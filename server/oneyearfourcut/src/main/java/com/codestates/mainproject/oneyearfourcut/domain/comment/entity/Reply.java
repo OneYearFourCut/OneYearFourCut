@@ -27,20 +27,12 @@ public class Reply extends Auditable {
     @JoinColumn(name = "member_id")
     private Member member; // 작성자 회원 id
 
-    @Enumerated(EnumType.STRING)
-    private CommentStatus replyStatus; //삭제 여부
-
     @Builder
     public Reply(Long replyId, String content, Comment comment, Member member) {
         this.replyId = replyId;
         this.content = content;
         this.comment = comment;
         this.member = member;
-        this.replyStatus = CommentStatus.VALID;
-    }
-
-    public void changeReplyStatus(CommentStatus replyStatus) {
-        this.replyStatus = replyStatus;
     }
 
     public void changeContent(String content) {
