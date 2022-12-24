@@ -2,6 +2,8 @@
 
 package com.codestates.mainproject.oneyearfourcut.domain.comment.entity;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
@@ -41,7 +43,7 @@ public class Comment extends Auditable {
     @JoinColumn(name = "artwork_id")
     private Artwork artwork;
 
-    @OneToMany(mappedBy = "comment", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Reply> replyList = new ArrayList<>(); // 대댓글, targetEntity
 
 
@@ -109,6 +111,24 @@ public class Comment extends Auditable {
                 .content(this.getContent())
                 .memberId(this.getMember().getMemberId())
                 .nickname(this.getMember().getNickname())
+                .build();
+    }
+    public AlarmEvent toAlarmEvent(Long receiverId) {
+        if (this.getArtworkId() == null) {  //전시회 댓글인 경우
+            return AlarmEvent.builder()
+                    .receiverId(receiverId)
+                    .senderId(this.getMember().getMemberId())
+                    .alarmType(AlarmType.COMMENT_GALLERY)
+                    .galleryId(this.getGallery().getGalleryId())
+                    .artworkId(null)
+                    .build();
+        }
+        return AlarmEvent.builder() //작품 댓글인 경우
+                .receiverId(receiverId)
+                .senderId(this.getMember().getMemberId())
+                .alarmType(AlarmType.COMMENT_ARTWORK)
+                .galleryId(this.getGallery().getGalleryId())
+                .artworkId(this.getArtwork().getArtworkId())
                 .build();
     }
 

@@ -4,8 +4,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Role;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
-import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
 import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.service.RefreshTokenService;
+import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -32,14 +32,14 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        var oAuth2User = (OAuth2User)authentication.getPrincipal();
+        var oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
         Long kakaoId = (Long) attributes.get("id");
 
         // kakao는 kakao_account에 유저정보가 있다. (email)
-        Map<String, Object> kakaoAccount = (Map<String, Object>)attributes.get("kakao_account");
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         // kakao_account안에 또 profile이라는 JSON객체가 있다. (nickname, profile_image)
-        Map<String, Object> kakaoProfile = (Map<String, Object>)kakaoAccount.get("profile");
+        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) kakaoProfile.get("nickname");
@@ -68,6 +68,13 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String refreshToken = delegateRefreshToken(member);
 
         String uri = createURI(accessToken, refreshToken).toString();
+
+        //localhost 에서 온 것인지 확인해서 맞으면 다른 곳으로 redirect
+        String referer = request.getHeader("Referer");
+        if (referer.contains("localhost")) {
+            uri = createDEVURI(accessToken, refreshToken, referer).toString();
+        }
+
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
@@ -107,6 +114,34 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
+                .host("oneyearfourcut-front.s3-website.ap-northeast-2.amazonaws.com")
+                .port(80)
+                .path("localStorage")
+                .queryParams(queryParams)
+                .build()
+                .toUri();
+    }
+
+    private URI createDEVURI(String accessToken, String refreshToken, String referer) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("access_token", accessToken);
+        queryParams.add("refresh_token", refreshToken);
+
+        if (referer.contains("8080")) {
+            return UriComponentsBuilder
+                    .newInstance()
+                    .scheme("http")
+                    .host("localhost")
+                    .port(8080)
+                    .path("receive-token")
+                    .queryParams(queryParams)
+                    .build()
+                    .toUri();
+        }
+
+        return UriComponentsBuilder
+                .newInstance()
+                .scheme("http")
                 .host("localhost")
                 .port(3000)
                 .path("localStorage")
@@ -114,5 +149,4 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .build()
                 .toUri();
     }
-
 }

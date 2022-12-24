@@ -16,8 +16,4 @@ public interface ArtworkLikeRepository extends JpaRepository<ArtworkLike, Long> 
 
     Boolean existsByMember_MemberIdAndArtwork_ArtworkIdAndStatus(Long memberId, Long artworkId, LikeStatus status);
 
-    @Modifying(clearAutomatically = true)
-    @Query("update ArtworkLike l set l.status = 'DELETED' where l.artwork.artworkId = :artworkId and l.status = 'LIKE'")
-    void deleteByArtworkId(Long artworkId);
-
 }

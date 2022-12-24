@@ -1,9 +1,10 @@
 package com.codestates.mainproject.oneyearfourcut.domain.comment.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentArtworkResDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalleryResDto;
@@ -38,7 +39,7 @@ public class CommentService {
     private final MemberService memberService;
     private final GalleryService galleryService;
     private final ArtworkService artworkService;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
 
     @Transactional
     public CommentGalleryHeadDto<Object> createCommentOnGallery(CommentRequestDto commentRequestDto, Long galleryId, Long memberId) {
@@ -49,8 +50,12 @@ public class CommentService {
         comment.setMember(member);
         comment.setGallery(gallery);
 
-        commentRepository.save(comment);
-        alarmService.createAlarmBasedOnGallery(galleryId, memberId, AlarmType.COMMENT_GALLERY);
+        Comment savedComment = commentRepository.save(comment);
+
+        //알림 생성
+        Long receiverId = gallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(receiverId));
+
         return new CommentGalleryHeadDto<>(galleryId, comment.toCommentGalleryResponseDto());
     }
 
@@ -65,9 +70,18 @@ public class CommentService {
         comment.setGallery(gallery);
         comment.setArtwork(artwork);
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
-        alarmService.createAlarmBasedOnArtworkAndGallery(artworkId, galleryId, memberId, AlarmType.COMMENT_ARTWORK);
+        //전시관 주인에게 알림 생성
+        Long galleryReceiverId = gallery.getMember().getMemberId();
+        alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(galleryReceiverId));
+
+        //작품 주인에게 알림 생성
+        Long artworkReceiverId = artwork.getMember().getMemberId();
+        if (!Objects.equals(artworkReceiverId, galleryReceiverId)) {   //자기 전시관에 단 작품이면 알람이 한 번만 오도록 처리
+            alarmEventPublisher.publishAlarmEvent(savedComment.toAlarmEvent(artworkReceiverId));
+        }
+
         return new CommentArtworkHeadDto<>(galleryId, artworkId, comment.toCommentArtworkResponseDto());
     }
 
@@ -75,12 +89,13 @@ public class CommentService {
         PageRequest pr = PageRequest.of(page - 1, size);
         // 갤러리 안에 있는 등록중인 작품에 대한 댓글 조회
         Page<Comment> commentPage = commentRepository
-                .findAllByGallery_GalleryIdAndArtwork_StatusOrderByCommentIdDesc(galleryId, ArtworkStatus.REGISTRATION, pr);
+                .findAllByGallery_GalleryIdOrderByCommentIdDesc(galleryId, pr);
 
         /* 댓글 리스트가 없을 경우 빈 배열로 응답하는 게 아니었나요?? */
         if (commentPage.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글이 아직 없습니다.");
         }
+
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
         List<Comment> commentList = commentPage.getContent();
 
@@ -99,6 +114,7 @@ public class CommentService {
         if (commentPage.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "댓글이 아직 없습니다.");
         }
+
         PageInfo<Object> pageInfo = new PageInfo<>(page, size, (int) commentPage.getTotalElements(), commentPage.getTotalPages());
         List<Comment> commentList = commentPage.getContent();
 
@@ -110,6 +126,7 @@ public class CommentService {
     public CommentGalleryHeadDto<Object> modifyComment(Long galleryId, Long commentId, CommentRequestDto commentRequestDto, Long memberId) {
         Comment foundComment = findComment(commentId);
         checkGalleryCommentVerification(galleryId, foundComment);
+
         // 댓글 작성자와 요청한 user가 일치하지 않으면 Exception 발생
         if (!Objects.equals(foundComment.getMember().getMemberId(), memberId)) {
             throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
@@ -125,6 +142,7 @@ public class CommentService {
     public void deleteComment(Long galleryId, Long commentId, Long memberId) {
         Comment foundComment = findComment(commentId);
         checkGalleryCommentVerification(galleryId, foundComment);
+
         // 요청한 user와 작성자가 일치하지 않으면서 전시관 주인이 아닐 경우 Exception 발생
         if (!Objects.equals(foundComment.getMember().getMemberId(), memberId)
                 && !Objects.equals(foundComment.getGallery().getMember().getMemberId(), memberId)) {
@@ -135,7 +153,6 @@ public class CommentService {
 
     }
 
-    @Transactional(readOnly = true)
     public Comment findComment(Long commentId) {
         Optional<Comment> comment = commentRepository.findById(commentId);
         Comment foundComment = comment.orElseThrow(
@@ -143,7 +160,6 @@ public class CommentService {
         return foundComment;
     }
 
-    @Transactional(readOnly = true)
     public void checkGalleryCommentVerification(Long galleryId, Comment foundComment) {
         galleryService.findGallery(galleryId);
         if (!Objects.equals(galleryId, foundComment.getGallery().getGalleryId())) {
