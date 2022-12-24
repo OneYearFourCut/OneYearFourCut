@@ -113,31 +113,33 @@ public class ArtworkService {
     }
 
     @Transactional
-    public ArtworkResponseDto updateArtwork(long memberId, long galleryId, long artworkId, ArtworkPatchDto request) {
+    public ArtworkResponseDto updateArtwork(long memberId, long galleryId, long artworkId, ArtworkPatchDto requestDto) {
         galleryService.verifiedGalleryExist(galleryId);
-
         Artwork findArtwork = findVerifiedArtwork(galleryId, artworkId);
-        verifyAuthority(memberId, findArtwork);
-
-        Artwork artwork = request.toEntity();
-
-        Optional<MultipartFile> image = Optional.ofNullable(artwork.getImage());
-
+        if (memberId != findArtwork.getMemberId()) {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+        Artwork request = requestDto.toEntity();
+        Optional<MultipartFile> image = Optional.ofNullable(request.getImage());
         if (image.isPresent()) {
             String s3Path = awsS3Service.uploadFile(image.get());
             awsS3Service.deleteImage(findArtwork.getImagePath());
-            artwork.setImagePath(s3Path);
+            request.setImagePath(s3Path);
         }
-
-        findArtwork.modify(artwork);
-
+        findArtwork.modify(request);
         return findArtwork.toArtworkResponseDto();
     }
     @Transactional
     public void deleteArtwork(long memberId, long galleryId, long artworkId) {
         galleryService.verifiedGalleryExist(galleryId);
         Artwork findArtwork = findVerifiedArtwork(galleryId, artworkId);
-        verifyAuthority(memberId, findArtwork);
+
+        boolean isWriter = findArtwork.getMemberId() == memberId;
+        boolean isAdmin = findArtwork.getGallery().getMember().getMemberId() == memberId;
+        if (!(isWriter || isAdmin)) { // 둘 다 false일 경우 권한 없음
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+
         // 댓글 삭제 (상태 변경)
         List<Comment> comments = commentRepository.findAllByArtwork_ArtworkId(artworkId);
         comments.forEach(comment -> comment.changeCommentStatus(CommentStatus.DELETED));
@@ -176,15 +178,6 @@ public class ArtworkService {
             throw new BusinessLogicException(ExceptionCode.ARTWORK_DELETED);
         }
     }
-
-    private void verifyAuthority(long memberId, Artwork artwork) {
-        boolean isWriter = artwork.getMemberId() == memberId;
-        boolean isAdmin = artwork.getGallery().getMember().getMemberId() == memberId;
-        if (!(isWriter || isAdmin)) { // 둘 다 false일 경우 권한 없음
-            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-        }
-    }
-
 }
 
 
