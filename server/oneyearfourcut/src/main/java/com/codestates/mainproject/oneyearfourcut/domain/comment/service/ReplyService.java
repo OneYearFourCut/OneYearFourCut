@@ -80,7 +80,7 @@ public class ReplyService {
         Reply foundReply = findReply(replyId);
         checkCommentReplyVerification(commentId, replyId, memberId);
         //--검증완료
-        replyRepository.deleteById(replyId);
+        replyRepository.delete(foundReply);
     }
 
     @Transactional(readOnly = true)
