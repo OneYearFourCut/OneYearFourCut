@@ -2,7 +2,6 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import * as S from './style';
 import { SmallBtn } from 'shared/components/Buttons';
 import { loginStore } from 'store/store';
-import useToast from 'shared/components/Toast/hooks/useToast';
 
 type MyFormProps = {
   onSubmit: (form: { title: string; content: string }) => void;
@@ -10,8 +9,6 @@ type MyFormProps = {
 
 const Index = ({ onSubmit }: MyFormProps) => {
   const { user } = loginStore();
-  const { setToast } = useToast();
-
   const [form, setForm] = useState({
     title: '',
     content: '',
@@ -32,10 +29,6 @@ const Index = ({ onSubmit }: MyFormProps) => {
       alert('전시관 이름과 소개를 입력해주세요');
     } else {
       onSubmit(form);
-      setForm({
-        title: '',
-        content: '',
-      });
     }
   };
 
