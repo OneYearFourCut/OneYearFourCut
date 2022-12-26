@@ -73,6 +73,10 @@ dependencies {
 
 	// 파일 위조, 변조 체크 Tika
 	implementation 'org.apache.tika:tika-core:2.6.0'
+	// Web Socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// stomp
+	implementation 'org.webjars:stomp-websocket:2.3.4'
 }
 
 //------------REST Docs ------------//
