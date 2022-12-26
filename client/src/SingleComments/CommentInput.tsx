@@ -3,6 +3,8 @@ import { rem } from 'polished';
 import useCreateComment from './hooks/useCreateComment';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useGetSingleComments from './hooks/useGetSingleComments';
+import useCommentFetch from './hooks/useCommentFetch';
 
 const Body = styled.div`
   height: 40%;
@@ -27,24 +29,11 @@ const InputZone = styled.div`
   padding: ${rem(12)};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   justify-content: space-between;
-<<<<<<< HEAD
-  /* background-color: ${({ theme }) => theme.colors.black_007}; */
-=======
   background-color: ${({ theme }) => theme.colors.black_007};
->>>>>>> 91b10dcc24e91068bac836680aa2990640c360c4
   pointer-events: auto;
 
   display: flex;
   flex-direction: row;
-<<<<<<< HEAD
-
-  background-color: ${({ theme }) => theme.colors.black_008};
-
-  &:focus-within {
-    border: solid ${rem(1.5)} ${({ theme }) => theme.colors.green_002};
-  }
-=======
->>>>>>> 91b10dcc24e91068bac836680aa2990640c360c4
 `;
 
 const Input = styled.input`
@@ -81,12 +70,14 @@ const CommentInput = () => {
   const text = useRef<HTMLInputElement>(null);
 
   const { mutate } = useCreateComment(galleryId, artworkId);
+  const { setIsData } = useCommentFetch();
 
   const [value, setValue] = useState('');
 
   const SendComment = () => {
     if (text.current) {
       mutate(text.current.value);
+      setIsData(true);
       text.current.focus();
       setValue('');
     }

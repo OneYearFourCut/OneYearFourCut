@@ -6,7 +6,7 @@ const useGetSingleComments = (
   artworks: number,
   page: number,
 ) => {
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ['singleComment'],
     () => {
       return jsonInstance.get(
@@ -20,7 +20,7 @@ const useGetSingleComments = (
     },
   );
 
-  return { data, isLoading };
+  return { data, isLoading, refetch };
 };
 
 export default useGetSingleComments;
