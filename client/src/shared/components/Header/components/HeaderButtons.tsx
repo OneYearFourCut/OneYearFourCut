@@ -2,7 +2,7 @@ import { rem } from 'polished';
 import { useNavigate } from 'react-router-dom';
 import { ModalStore, AlarmStore } from 'store/store';
 import { AlarmCheckBox } from './HeaderBox';
-import useReceiveAlarm from '../hook/useReceiveAlarm';
+import { useNewAlarms } from '../hook/useNewAlarms';
 
 const HeaderBackbtn = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const HeaderBackbtn = () => {
 };
 
 const HeaderBellbtn = ({ isLoggedin }: { isLoggedin: boolean }) => {
-  const { alarmIsOpen, onClick, data, status } = useReceiveAlarm(isLoggedin);
+  const { newAlarms, alarmIsOpen, onClick } = useNewAlarms(isLoggedin);
 
   return (
     <>
@@ -45,7 +45,7 @@ const HeaderBellbtn = ({ isLoggedin }: { isLoggedin: boolean }) => {
               fill='#D99441'
             />
           </svg>
-          {data?.data.readAlarmExist && <AlarmCheckBox />}
+          {newAlarms && <AlarmCheckBox />}
         </div>
       )}
     </>
