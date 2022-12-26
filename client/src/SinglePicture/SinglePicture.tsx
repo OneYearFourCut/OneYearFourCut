@@ -9,6 +9,7 @@ import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import { Alert } from 'shared/components/Modal/Alert';
 import { DeleteAlert } from '../shared/components/Modal/AlertData';
 import { useNavigate } from 'react-router-dom';
+import { enCryption } from 'shared/libs/cryption';
 
 const Back = styled.div`
   position: fixed;
@@ -63,7 +64,7 @@ const SinglePicture = ({
   const handleProgressBtn = () => {
     mutate();
     closeModal('AlertModal');
-    navigate(`/fourPic/${galleryId}`);
+    navigate(`/fourPic/${enCryption(galleryId)}`);
   };
 
   const ModifyClick = async () => {

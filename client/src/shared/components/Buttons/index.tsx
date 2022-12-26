@@ -52,6 +52,27 @@ const SmallBtn = styled.button`
   color: white;
   font-size: ${rem(16)};
   margin-left: ${rem(294)};
+
+  &.square {
+    border-radius: ${rem(5)};
+  }
+
+  &.white {
+    background-color: ${({ theme }) => theme.colors.black_007};
+    color: ${({ theme }) => theme.colors.green_002};
+  }
+
+  &.red {
+    background-color: ${({ theme }) => theme.colors.red_002};
+    color: ${({ theme }) => theme.colors.black_007};
+    border: 0px;
+  }
+
+  &.disabled {
+    background-color: ${({ theme }) => theme.colors.black_006};
+    color: ${({ theme }) => theme.colors.black_003};
+    border: 0px;
+  }
 `;
 
 const IconBtn = ({ className, onClick, children, icon }: IconBtnInterface) => {
