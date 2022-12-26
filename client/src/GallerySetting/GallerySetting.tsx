@@ -1,32 +1,45 @@
 import Input from './components/Input';
-import { patchGallery, postGallery, deleteGalleryById } from './api';
-import { loginStore } from 'store/store';
-import { useNavigate, useParams } from 'react-router-dom';
-import { saveUser } from 'Intro/api';
-import { enCryption } from 'shared/libs/cryption';
+import { useState } from 'react';
+import CustomModal from './components/CustomModal';
+import styled from 'styled-components';
+import { rem } from 'polished';
 
 const GallerySetting = () => {
-  const { user, setUser } = loginStore();
-  let galleryId = user?.galleryId;
-  const navigate = useNavigate();
+  interface formType {
+    title: string | undefined;
+    content: string | undefined;
+  }
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [form, setForm] = useState<formType>();
   const onSubmit = (form: { title: string; content: string }) => {
-    galleryId
-      ? patchGallery(form).then(() => {
-          navigate(`/fourPic/${enCryption(galleryId!)}`);
-        })
-      : postGallery(form).then((res) => {
-          const change = Object.assign(user!);
-          change.galleryId = res.data.galleryId;
-          setUser(change);
-          navigate(`/fourPic/${enCryption(res.data.galleryId)}`);
-        });
+    setIsOpen(true);
+    setForm(form!);
+  };
+  const onClose = () => {
+    setIsOpen(false);
   };
 
   return (
     <div>
       <Input onSubmit={onSubmit} />
+      {isOpen && (
+        <ModalBackdropBox onClick={onClose}>
+          <CustomModal title={form?.title} content={form?.content} />
+        </ModalBackdropBox>
+      )}
     </div>
   );
 };
 
 export default GallerySetting;
+
+const ModalBackdropBox = styled.div`
+  width: ${rem(428)};
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 51;
+  ${({ theme }) => theme.flex.center}
+`;

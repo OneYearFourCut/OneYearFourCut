@@ -13,9 +13,8 @@ const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
 const Gallery = () => {
-
   const params = useParams();
-  const galleryId = deCryption(params['*']!)
+  const galleryId = deCryption(params['*']!);
 
   useEffect(() => {
     setinitUrl(window.location.pathname);
@@ -25,7 +24,7 @@ const Gallery = () => {
     <Container>
       <Snowfall
         color='aliceblue'
-        snowflakeCount={100}
+        snowflakeCount={50}
         style={{
           position: 'fixed',
           width: '100vw',

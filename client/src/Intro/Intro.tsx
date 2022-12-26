@@ -6,7 +6,7 @@ const Intro = () => {
     <>
       <Snowfall
         color='aliceblue'
-        snowflakeCount={100}
+        snowflakeCount={50}
         style={{
           position: 'fixed',
           width: '100vw',
