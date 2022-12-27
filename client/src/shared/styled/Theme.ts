@@ -44,6 +44,7 @@ const colors = {
   green_005: '#B1EEB2',
   green_006: '#278F59',
   green_007: '#96CB97',
+  green_008: '#A8CAA9',
 
   kakao_001: '#FEE500',
   kakao_002: '#000000',
