@@ -3,7 +3,8 @@ import { rem } from 'polished';
 import CommentInput from './CommentInput';
 import { Suspense } from 'react';
 import React from 'react';
-const CommentsList = React.lazy(() => import('./CommentsZone'));
+// const CommentsList = React.lazy(() => import('./CommentsZone'));
+import CommentsList from './CommentsZone';
 
 const Body = styled.div`
   width: 100%;
@@ -35,9 +36,9 @@ const SingleComment = () => {
   return (
     <Body>
       <RoundBody>
-        <Suspense fallback={<div>Loading...</div>}>
-          <CommentsList />
-        </Suspense>
+        {/* <Suspense fallback={<div>Loading...</div>}> */}
+        <CommentsList />
+        {/* </Suspense> */}
         <CommentInput />
       </RoundBody>
     </Body>

@@ -17,6 +17,8 @@ const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
 const SingleComment = React.lazy(() => import('./SingleComments/index'));
 const AllComment = React.lazy(() => import('./AllComments/AllComments'));
 
+console.log('CD test');
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -68,7 +70,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: `/fourPic/:galleryId`,
+        path: `/fourPic/*`,
         element: (
           <Suspense fallback={<TriggerBox />}>
             <GalleryFourPic />
