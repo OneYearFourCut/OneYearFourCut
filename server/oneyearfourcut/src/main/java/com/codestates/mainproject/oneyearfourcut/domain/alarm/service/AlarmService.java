@@ -17,12 +17,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -99,24 +101,29 @@ public class AlarmService {
 
     public SseEmitter subscribe(Long memberId) {
         Boolean readAlarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
-        String emitterId = memberId + "_" + System.currentTimeMillis();
-        SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
+//        String emitterId = memberId + "_" + System.currentTimeMillis();
+//        Optional<SseEmitter> optionalSseEmitter = Optional.ofNullable(sseEmitterRepository.findById(memberId));
 
+
+        SseEmitter emitter = sseEmitterRepository.save(String.valueOf(memberId), new SseEmitter(DEFAULT_TIMEOUT));
         //만료시 삭제
-        emitter.onCompletion(() -> sseEmitterRepository.deleteById(emitterId));
-        emitter.onTimeout(() -> sseEmitterRepository.deleteById(emitterId));
+//        emitter.onCompletion(() -> sseEmitterRepository.deleteById(String.valueOf(memberId)));
+        emitter.onTimeout(() -> sseEmitterRepository.deleteById(String.valueOf(memberId)));
 
-        sendAlarm(emitter, memberId, emitterId, readAlarmExist);
+
+        sendAlarm(emitter, memberId, String.valueOf(memberId), readAlarmExist);
 
         return emitter;
     }
 
     public void send(Long memberId) { //해당 회원의 emitter에 모두 알림 보내기
-        Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
-
-        map.forEach(
-                (key, emitter) -> sendAlarm(emitter, memberId, key, true)
-        );
+//        Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
+//
+//        map.forEach(
+//                (key, emitter) -> sendAlarm(emitter, memberId, key, true)
+//        );
+        SseEmitter emitter = sseEmitterRepository.findById(memberId);
+        sendAlarm(emitter, memberId, String.valueOf(memberId), true);
     }
 
     private void sendAlarm(SseEmitter emitter, Long memberId, String emitterId, Boolean readExist) {

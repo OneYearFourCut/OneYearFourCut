@@ -14,7 +14,13 @@ public class SseEmitterRepository {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
+        SseEmitter saved = emitters.get(emitterId);
+        if (saved != null) {
+            saved.complete();
+            log.info("emitter completed!!");
+        }
         emitters.put(emitterId, sseEmitter);
+
         log.info("new emitter added: {}", emitters);
         log.info("emitter list size: {}", emitters.size());
 
@@ -24,6 +30,10 @@ public class SseEmitterRepository {
     public void deleteById(String emitterId) {
         emitters.remove(emitterId);
         log.info("emitter deleted: {}", emitterId);
+    }
+
+    public SseEmitter findById(Long memberId) {
+        return emitters.get(String.valueOf(memberId));
     }
 
     public Map<String, SseEmitter> findAllById(Long memberId) {
