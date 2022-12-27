@@ -63,7 +63,7 @@ public class AlarmService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public AlarmReadCheckResponseDto checkReadAlarm(Long memberId) {
         Boolean alarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
         if (alarmExist) {
@@ -71,7 +71,6 @@ public class AlarmService {
         } else return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build();
     }
 
-    @Transactional
     private Page<Alarm> findAlarmPagesByFilter(String filter, Long memberId, int page) {
         PageRequest pr = PageRequest.of(page - 1, 7);
         Page<Alarm> alarmPage;
@@ -116,7 +115,7 @@ public class AlarmService {
         Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
 
         map.forEach(
-                (key, emitter) -> sendAlarm(emitter, memberId, key, false)
+                (key, emitter) -> sendAlarm(emitter, memberId, key, true)
         );
     }
 
