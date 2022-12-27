@@ -123,7 +123,9 @@ public class AlarmService {
 //                (key, emitter) -> sendAlarm(emitter, memberId, key, true)
 //        );
         SseEmitter emitter = sseEmitterRepository.findById(memberId);
-        sendAlarm(emitter, memberId, String.valueOf(memberId), true);
+        if (emitter != null) {
+            sendAlarm(emitter, memberId, String.valueOf(memberId), true);
+        }
     }
 
     private void sendAlarm(SseEmitter emitter, Long memberId, String emitterId, Boolean readExist) {

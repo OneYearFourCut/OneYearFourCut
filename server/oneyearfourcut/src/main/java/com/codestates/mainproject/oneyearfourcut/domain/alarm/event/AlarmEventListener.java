@@ -11,7 +11,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class AlarmEventListener {
     private final AlarmService alarmService;
 
-    @TransactionalEventListener
+    @EventListener
     public void handleAlarmEvent(AlarmEvent event) {
         alarmService.createAlarm(event.getReceiverId(), event.getSenderId(), event.getAlarmType(), event.getGalleryId(), event.getArtworkId());
         alarmService.send(event.getReceiverId());
