@@ -27,7 +27,6 @@ const HeaderBackbtn = () => {
 
 const HeaderBellbtn = ({ isLoggedin }: { isLoggedin: boolean }) => {
   const { newAlarms, alarmIsOpen, onClick } = useNewAlarms(isLoggedin);
-
   return (
     <>
       {!alarmIsOpen && (

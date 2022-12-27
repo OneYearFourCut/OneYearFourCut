@@ -11,10 +11,10 @@ export const useNewAlarms = (isLoggedin: boolean) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedin) {
+    if (isLoggedin && alarmIsOpen === false) {
       const EventSource = EventSourcePolyfill || NativeEventSource;
       const eventSource = new EventSource(
-        `${process.env.REACT_APP_SERVER_URL}/members/me/alarms/read`,
+        `${process.env.REACT_APP_SERVER_URL}/members/me/alarms/connect`,
         {
           headers: {
             Authorization: getStoredToken()?.access_token!,
@@ -23,12 +23,11 @@ export const useNewAlarms = (isLoggedin: boolean) => {
       );
 
       eventSource.addEventListener('newAlarms', (e: any) => {
-        setNewAlarms(e.data);
+        setNewAlarms(JSON.parse(e.data));
       });
 
       eventSource.addEventListener('error', (e: any) => {
         if (e.status === 456) {
-          //재발급 로직 -> 테스트 해봐야함.
           apis
             .getCheckAlarm()
             .then((res) => setNewAlarms(res.data.readAlarmExist));
@@ -38,7 +37,7 @@ export const useNewAlarms = (isLoggedin: boolean) => {
       eventSource.addEventListener('close', () => eventSource.close());
       return () => eventSource.close();
     }
-  }, [isLoggedin]);
+  }, [isLoggedin, alarmIsOpen]);
 
   const onClick = () => {
     navigate('/alarmList');
