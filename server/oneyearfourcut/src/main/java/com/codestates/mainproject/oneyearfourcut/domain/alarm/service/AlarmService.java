@@ -5,11 +5,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.dto.AlarmResponseD
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alarm;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.SseEmitterRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
@@ -19,8 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,10 @@ public class AlarmService {
     private final MemberService memberService;
     private final ArtworkRepository artworkRepository;
     private final AlarmRepository alarmRepository;
+    private final SseEmitterRepository sseEmitterRepository;
 
-    @Transactional
+    private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
+
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         Member member = memberService.findMember(memberId);
 
@@ -82,9 +85,8 @@ public class AlarmService {
         return alarmPage;
     }
 
-    @Transactional
     public void createAlarm(Long receiverId, Long senderId, AlarmType alarmType, Long galleryId, Long artworkId) {
-        Alarm alarmOnGalleryOwner = Alarm.builder()
+        Alarm alarm = Alarm.builder()
                 .member(new Member(receiverId))
                 .senderId(senderId)
                 .alarmType(alarmType)
@@ -93,6 +95,39 @@ public class AlarmService {
                 .readCheck(false)
                 .build();
 
-        alarmRepository.save(alarmOnGalleryOwner);
+        alarmRepository.save(alarm);
+    }
+
+    public SseEmitter subscribe(Long memberId) {
+        Boolean readAlarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
+        String emitterId = memberId + "_" + System.currentTimeMillis();
+        SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
+
+        //만료시 삭제
+        emitter.onCompletion(() -> sseEmitterRepository.deleteById(emitterId));
+        emitter.onTimeout(() -> sseEmitterRepository.deleteById(emitterId));
+
+        sendAlarm(emitter, memberId, emitterId, readAlarmExist);
+
+        return emitter;
+    }
+
+    public void send(Long memberId) { //해당 회원의 emitter에 모두 알림 보내기
+        Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
+
+        map.forEach(
+                (key, emitter) -> sendAlarm(emitter, memberId, key, false)
+        );
+    }
+
+    private void sendAlarm(SseEmitter emitter, Long memberId, String emitterId, Boolean readExist) {
+        try {
+            emitter.send(SseEmitter.event()
+                    .id(String.valueOf(memberId))
+                    .name("newAlarms")
+                    .data(readExist));
+        }catch (IOException e) {
+            sseEmitterRepository.deleteById(emitterId);
+        }
     }
 }

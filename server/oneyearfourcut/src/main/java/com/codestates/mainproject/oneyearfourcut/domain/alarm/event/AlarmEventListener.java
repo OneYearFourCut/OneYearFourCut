@@ -4,14 +4,16 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmServi
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
 public class AlarmEventListener {
     private final AlarmService alarmService;
 
-    @EventListener
+    @TransactionalEventListener
     public void handleAlarmEvent(AlarmEvent event) {
         alarmService.createAlarm(event.getReceiverId(), event.getSenderId(), event.getAlarmType(), event.getGalleryId(), event.getArtworkId());
+        alarmService.send(event.getReceiverId());
     }
 }
