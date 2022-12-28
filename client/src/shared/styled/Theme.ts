@@ -11,7 +11,8 @@ const colors = {
   black_007: '#FCFCFC',
   black_008: '#F4F4F4',
   black_009: '#AFAFAF',
-
+  black_010: '#D9D9D9',
+  
   beige_001: '#FFF6CA',
   beige_002: '#FDFAEB',
   beige_003: '#FFFDF5',

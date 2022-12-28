@@ -14,9 +14,11 @@ const ChatRoomHeaderContainer = styled.div`
   height: 7vh;
   display: flex;
   align-items: center;
+  padding: ${rem(10)};
+  margin-top: ${rem(10)};
 `;
 
-const ChatRoomContentsContainer = styled.div`
+const ChatRoomBodyContainer = styled.div`
   width: ${rem(428)};
   height: 76vh;
   display: flex;
@@ -36,14 +38,16 @@ const ChatRoomContentsContainer = styled.div`
 const ChatRoomInputContainer = styled.div`
   width: ${rem(428)};
   height: 12vh;
+  display: flex;
+  align-items: center;
+  border-top: solid 1px ${({ theme }) => theme.colors.green_008};
   textarea {
-    width: ${rem(428)};
+    width: 85%;
     height: 7vh;
     padding: ${rem(10)};
     resize: none;
     outline: none;
     border: none;
-    background-color: ${({ theme }) => theme.colors.green_008};
   }
   & textarea::-webkit-scrollbar {
     width: ${rem(6)};
@@ -55,9 +59,9 @@ const ChatRoomInputContainer = styled.div`
   }
 
   button {
-    width: ${rem(60)};
-    height: 3vh;
-    margin: ${rem(5)} ${rem(5)} ${rem(5)} ${rem(360)};
+    width: 15%;
+    height: 7vh;
+    margin: ${rem(5)};
     border: none;
     border-radius: ${rem(7)};
     background-color: ${({ theme }) => theme.colors.green_008};
@@ -65,34 +69,77 @@ const ChatRoomInputContainer = styled.div`
 `;
 
 //채팅 컴포넌트
-const ChatContainer = styled.div`
+const ChatContainer = styled.div<{ type: string }>`
   width: ${rem(428)};
   height: auto;
   display: flex;
-  padding: ${rem(5)};
-  border: solid 1px red;
+  justify-content: ${({ type }) => type};
+  padding: 0 ${rem(15)} 0 ${rem(15)};
+  margin: ${rem(5)} 0 ${rem(5)} 0;
 `;
 
 //채팅 내용 리스트 박스
 const ChatContentListBox = styled.div`
-  width: ${rem(280)};
+  width: ${rem(340)};
   height: auto;
   display: flex;
   flex-direction: column;
+  .useName {
+    font-weight: 400;
+    font-size: ${rem(13)};
+    margin-top: ${rem(7)};
+  }
 `;
 
 //실제 채팅 내용
-const ChatContentBox = styled.div`
-  margin: ${rem(8)} 0 ${rem(8)} 0;
-
-  div {
+const ChatContentBox = styled.div<{ type: string }>`
+  display: flex;
+  align-items: end;
+  justify-content: ${({ type }) => type};
+  margin: ${rem(5)} 0 ${rem(5)} 0;
+  .leftContent,
+  .rightContent {
     display: inline-block;
+    position: relative;
+    max-width: 85%;
     height: auto;
-    padding: ${rem(5)};
+    padding: ${rem(5)} ${rem(10)} ${rem(5)} ${rem(10)};
     white-space: pre-wrap;
     border-radius: ${rem(5)};
     font-size: ${rem(12)};
-    background-color: ${({ theme }) => theme.colors.green_008};
+    background-color: ${({ theme, type }) =>
+      type === 'left' ? theme.colors.black_008 : theme.colors.green_008};
+  }
+
+  .leftContent::before {
+    content: '';
+    position: absolute;
+    top: ${rem(5)};
+    left: ${rem(-8)};
+    width: 0;
+    height: 0;
+    border: ${rem(5)} solid transparent;
+    border-top: ${rem(5)} solid ${({ theme }) => theme.colors.black_008};
+    border-right: ${rem(5)} solid ${({ theme }) => theme.colors.black_008};
+    border-radius: ${rem(2)};
+  }
+
+  .rightContent::after {
+    content: '';
+    position: absolute;
+    top: ${rem(5)};
+    right: ${rem(-8)};
+    width: 0;
+    height: 0;
+    border: ${rem(5)} solid transparent;
+    border-top: ${rem(5)} solid ${({ theme }) => theme.colors.green_008};
+    border-left: ${rem(5)} solid ${({ theme }) => theme.colors.green_008};
+    border-radius: ${rem(2)};
+  }
+  .sendTime {
+    display: inline-block;
+    font-size: ${rem(11)};
+    margin: 0 ${rem(5)} ${rem(2)} ${rem(5)};
   }
 `;
 
@@ -100,7 +147,7 @@ const ChatRoomProfileImg = styled.img`
   width: ${rem(46)};
   height: ${rem(46)};
   border-radius: ${rem(10)};
-  margin: ${rem(10)};
+  margin-right: ${rem(7)};
 `;
 
 const DayDateBox = styled.div`
@@ -110,14 +157,14 @@ const DayDateBox = styled.div`
   text-align: center;
   line-height: ${rem(25)};
   font-size: ${rem(13)};
-  background-color: ${({ theme }) => theme.colors.black_008};
+  background-color: ${({ theme }) => theme.colors.black_010};
   margin: ${rem(10)};
 `;
 
 export {
   DefualtContainer,
   ChatRoomHeaderContainer,
-  ChatRoomContentsContainer,
+  ChatRoomBodyContainer,
   ChatRoomInputContainer,
   ChatRoomProfileImg,
   DayDateBox,
