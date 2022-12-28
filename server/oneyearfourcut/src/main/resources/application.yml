@@ -38,3 +38,7 @@ server:
   servlet:
     encoding:
       charset: UTF-8
+# 커넥션 풀 로그
+#logging:
+#  level:
+#    com.zaxxer.hikari.pool.HikariPool: debug
