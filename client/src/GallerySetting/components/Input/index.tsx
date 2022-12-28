@@ -58,7 +58,7 @@ const Index = ({ onSubmit }: MyFormProps) => {
             maxLength={30}
           />
         </S.DescArea>
-        <SmallBtn className='square' type='submit'>
+        <SmallBtn type='submit'>
           {user?.galleryId ? '수정하기' : '등록하기'}
         </SmallBtn>
       </S.Container>
