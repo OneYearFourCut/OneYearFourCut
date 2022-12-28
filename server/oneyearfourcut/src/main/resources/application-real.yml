@@ -9,6 +9,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true # 쿼리를 가독성있게 바꿔줌
   session:
     store-type: jdbc
   # 이미지 파일 용량 제한 수정
@@ -20,3 +21,8 @@ spring:
 logging:
   level:
     com.zaxxer.hikari.pool.HikariPool: debug
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
