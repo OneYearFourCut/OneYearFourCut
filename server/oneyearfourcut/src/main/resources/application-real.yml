@@ -16,3 +16,7 @@ spring:
     multipart:
       maxFileSize: 10MB
       maxRequestSize: 10MB
+
+logging:
+  level:
+    com.zaxxer.hikari.pool.HikariPool: debug
