@@ -36,7 +36,7 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final SseEmitterRepository sseEmitterRepository;
 
-    private static final Long DEFAULT_TIMEOUT = 1000L * 60 * 10;
+    private static final Long DEFAULT_TIMEOUT = 1000L * 45;
 
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         Member member = memberService.findMember(memberId);
