@@ -15,7 +15,7 @@ spring:
     url: jdbc:h2:mem:test #;MODE=MySQL #- mysql문법으로 변경하는 설버
     driver-class-name: org.h2.Driver
   jpa:
-    open-in-view: false
+#    open-in-view: false
     hibernate:
       ddl-auto: create  # 스키마 자동 생성
     properties:
