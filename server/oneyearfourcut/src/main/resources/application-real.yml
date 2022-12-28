@@ -5,7 +5,7 @@ spring:
   profiles:
     include: oauth
   jpa:
-    open-in-view: false
+#    open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
