@@ -3,8 +3,16 @@ export interface roominfo {
   img: string;
 }
 
-export interface chatcontent{
+export interface IchatContent{
   content: string;
-  type: string;
   time: string | undefined;
+  type: string;
+}
+
+export interface IChat{
+  content: string;
+  time: string | undefined;
+  img: string | undefined;
+  nickName: string | undefined;
+  type: string;
 }

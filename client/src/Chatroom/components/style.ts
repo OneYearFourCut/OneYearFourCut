@@ -87,7 +87,7 @@ const ChatContentListBox = styled.div`
   .useName {
     font-weight: 400;
     font-size: ${rem(13)};
-    margin-top: ${rem(7)};
+    margin: ${rem(7)} 0 0 ${rem(7)};
   }
 `;
 
@@ -104,6 +104,7 @@ const ChatContentBox = styled.div<{ type: string }>`
     max-width: 85%;
     height: auto;
     padding: ${rem(5)} ${rem(10)} ${rem(5)} ${rem(10)};
+    margin: 0 ${rem(5)} 0 ${rem(5)};
     white-space: pre-wrap;
     border-radius: ${rem(5)};
     font-size: ${rem(12)};
@@ -139,7 +140,7 @@ const ChatContentBox = styled.div<{ type: string }>`
   .sendTime {
     display: inline-block;
     font-size: ${rem(11)};
-    margin: 0 ${rem(5)} ${rem(2)} ${rem(5)};
+    margin: 0 0 ${rem(2)} 0;
   }
 `;
 
