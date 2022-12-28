@@ -16,7 +16,8 @@ export const FourCut = styled.div`
   display: grid;
   grid-template-columns: ${rem(170)} ${rem(170)};
   grid-template-rows: ${rem(150)} ${rem(150)};
-  gap: ${rem(10)};
+  gap: ${rem(5)};
+
 `;
 
 export const Box = styled.div`

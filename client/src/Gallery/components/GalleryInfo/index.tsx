@@ -8,8 +8,16 @@ const Index = ({ galleryId }: GalleryType) => {
   return (
     <div>
       <S.Info>
-        <S.Title>{data.title}</S.Title>
-        <S.Content>{data.content}</S.Content>
+        <S.InfoBox>
+          <S.Title>{data.title}</S.Title>
+          <S.Content>{data.content}</S.Content>
+        </S.InfoBox>
+        <S.ProfileBox>
+          <S.ProfileCircle>
+            <S.Profile src='/images/1.jpg' />
+          </S.ProfileCircle>
+          <div>프로필 보기</div>
+        </S.ProfileBox>
       </S.Info>
     </div>
   );
