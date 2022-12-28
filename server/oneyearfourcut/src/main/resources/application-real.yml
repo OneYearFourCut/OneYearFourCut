@@ -1,7 +1,7 @@
 spring:
   datasource:
     hikari:
-      maximum-pool-size: 50 #커넥션 풀 갯수 설정
+#      maximum-pool-size: 50 #커넥션 풀 갯수 설정
   profiles:
     include: oauth
   jpa:

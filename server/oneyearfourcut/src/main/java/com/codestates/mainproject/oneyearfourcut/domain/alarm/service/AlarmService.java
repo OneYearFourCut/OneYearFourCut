@@ -106,11 +106,11 @@ public class AlarmService {
         SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
         //만료시 삭제
         emitter.onCompletion(() -> {
-            log.info("=============종료로 인한 삭제=============");
+            log.info("=============onCompletion Delete=============");
             sseEmitterRepository.deleteById(emitterId);
         });
         emitter.onTimeout(() -> {
-            log.info("=============타임아웃으로 인한 삭제=============");
+            log.info("=============onTimeout Delete=============");
             sseEmitterRepository.deleteById(emitterId);
         });
 
@@ -137,9 +137,9 @@ public class AlarmService {
                     .id(String.valueOf(memberId))
                     .name("newAlarms")
                     .data(readExist));
-            log.info("========{} 에게 알림 발송========", emitterId);
+            log.info("========{} Alarm Success!========", emitterId);
         }catch (IOException e) {
-            log.info("========{} 에게 전송실패=========", emitterId);
+            log.info("========{} Alarm Error=========", emitterId);
             sseEmitterRepository.deleteById(emitterId);
         }
     }

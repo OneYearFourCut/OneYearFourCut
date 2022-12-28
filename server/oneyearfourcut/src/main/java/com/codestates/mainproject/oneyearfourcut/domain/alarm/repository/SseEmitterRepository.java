@@ -14,9 +14,8 @@ public class SseEmitterRepository {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
-        log.info("=============emitter 생성=============");
+        log.info("=============emitter create : {}=============", sseEmitter);
         emitters.put(emitterId, sseEmitter);
-        log.info("new emitter added: {}", sseEmitter);
         log.info("emitter list size: {}", emitters.size());
 
         return sseEmitter;
