@@ -6,7 +6,7 @@
       const eventSource = new EventSource("/members/me/alarms/connect")
       eventSource.onmessage = event => {
         const p = document.createElement("p")
-        p.innerText = event.Data
+        p.innerText = event.data
 
         document.getElementById("messages").appendChild(p)
       }

@@ -1,7 +1,11 @@
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 50 #커넥션 풀 갯수 설정
   profiles:
     include: oauth
   jpa:
+    open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect

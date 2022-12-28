@@ -8,20 +8,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-@Component
 @Slf4j
+@Component
 public class SseEmitterRepository {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
-        SseEmitter saved = emitters.get(emitterId);
-        if (saved != null) {
-            saved.complete();
-            log.info("emitter completed!!");
-        }
+        log.info("=============emitter 생성=============");
         emitters.put(emitterId, sseEmitter);
-
-        log.info("new emitter added: {}", emitters);
+        log.info("new emitter added: {}", sseEmitter);
         log.info("emitter list size: {}", emitters.size());
 
         return sseEmitter;

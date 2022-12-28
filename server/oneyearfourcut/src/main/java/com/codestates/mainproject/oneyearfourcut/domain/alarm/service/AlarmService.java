@@ -13,20 +13,20 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberSer
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,7 +36,7 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final SseEmitterRepository sseEmitterRepository;
 
-    private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
+    private static final Long DEFAULT_TIMEOUT = 1000L * 60 * 10;
 
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         Member member = memberService.findMember(memberId);
@@ -100,32 +100,35 @@ public class AlarmService {
     }
 
     public SseEmitter subscribe(Long memberId) {
-        Boolean readAlarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
-//        String emitterId = memberId + "_" + System.currentTimeMillis();
-//        Optional<SseEmitter> optionalSseEmitter = Optional.ofNullable(sseEmitterRepository.findById(memberId));
+        String emitterId = memberId + "_" + System.currentTimeMillis();
 
 
-        SseEmitter emitter = sseEmitterRepository.save(String.valueOf(memberId), new SseEmitter(DEFAULT_TIMEOUT));
+        SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
         //만료시 삭제
-//        emitter.onCompletion(() -> sseEmitterRepository.deleteById(String.valueOf(memberId)));
-        emitter.onTimeout(() -> sseEmitterRepository.deleteById(String.valueOf(memberId)));
+        emitter.onCompletion(() -> {
+            log.info("=============종료로 인한 삭제=============");
+            sseEmitterRepository.deleteById(emitterId);
+        });
+        emitter.onTimeout(() -> {
+            log.info("=============타임아웃으로 인한 삭제=============");
+            sseEmitterRepository.deleteById(emitterId);
+        });
 
 
-        sendAlarm(emitter, memberId, String.valueOf(memberId), readAlarmExist);
+        Boolean readAlarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
+        sendAlarm(emitter, memberId, emitterId, readAlarmExist);
 
         return emitter;
     }
 
     public void send(Long memberId) { //해당 회원의 emitter에 모두 알림 보내기
-//        Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
-//
-//        map.forEach(
-//                (key, emitter) -> sendAlarm(emitter, memberId, key, true)
-//        );
-        SseEmitter emitter = sseEmitterRepository.findById(memberId);
-        if (emitter != null) {
-            sendAlarm(emitter, memberId, String.valueOf(memberId), true);
-        }
+        Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
+
+        map.forEach(
+                (key, emitter) -> {
+                    sendAlarm(emitter, memberId, key, true);
+                }
+        );
     }
 
     private void sendAlarm(SseEmitter emitter, Long memberId, String emitterId, Boolean readExist) {
@@ -134,7 +137,9 @@ public class AlarmService {
                     .id(String.valueOf(memberId))
                     .name("newAlarms")
                     .data(readExist));
+            log.info("========{} 에게 알림 발송========", emitterId);
         }catch (IOException e) {
+            log.info("========{} 에게 전송실패=========", emitterId);
             sseEmitterRepository.deleteById(emitterId);
         }
     }

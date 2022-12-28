@@ -1,26 +1,21 @@
-server:
-  servlet:
-    encoding:
-      charset: UTF-8
-      
 spring:
   http:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
-
   h2:
     console:
       enabled: true
       path: /h2
-
   datasource:
+    hikari:
+      maximum-pool-size: 50 #커넥션 풀 갯수 설정
     sql-script-encoding: UTF-8
     url: jdbc:h2:mem:test #;MODE=MySQL #- mysql문법으로 변경하는 설버
     driver-class-name: org.h2.Driver
-
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: create  # 스키마 자동 생성
     properties:
@@ -34,9 +29,12 @@ spring:
   sql:
     init:
       data-locations: classpath*:db/data.sql
-
   # 이미지 파일 용량 제한 수정
   servlet:
     multipart:
       maxFileSize: 10MB
       maxRequestSize: 10MB
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
