@@ -19,11 +19,11 @@ public class ArtworkLike extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long artworkLikeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ARTWORK_ID")
     private Artwork artwork;
 

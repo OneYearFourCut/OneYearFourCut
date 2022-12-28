@@ -18,7 +18,7 @@ public class RefreshToken extends Auditable {
 
     private String token;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
