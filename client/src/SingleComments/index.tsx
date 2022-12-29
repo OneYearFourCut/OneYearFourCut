@@ -5,6 +5,8 @@ import { Suspense } from 'react';
 import React from 'react';
 // const CommentsList = React.lazy(() => import('./CommentsZone'));
 import CommentsList from './CommentsZone';
+import SingleCommentsOnly from 'SingleComments/SingleCommentsOnly';
+import ReplyComment from 'SingleComments/ReplyComments/ReplyComment';
 
 const Body = styled.div`
   width: 100%;
@@ -32,14 +34,11 @@ const RoundBody = styled.div`
   border-radius: ${rem(30)} ${rem(30)} 0 0;
 `;
 
-const SingleComment = () => {
+const SingleComment = ({ single }: { single: boolean }) => {
   return (
     <Body>
       <RoundBody>
-        {/* <Suspense fallback={<div>Loading...</div>}> */}
-        <CommentsList />
-        {/* </Suspense> */}
-        <CommentInput />
+        {single ? <SingleCommentsOnly /> : <ReplyComment />}
       </RoundBody>
     </Body>
   );
