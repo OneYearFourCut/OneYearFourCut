@@ -5,7 +5,7 @@ import React from 'react';
 const temp = [
   {
     content: [
-      'test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용 test내용test내용       test내용',
+      'test내용',
       '123',
       '123',
     ],
@@ -23,7 +23,7 @@ const temp = [
   },
   {
     content: [
-      'test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용test내용 test내용test내용       test내용',
+      'test내용',
       '123',
     ],
     time: '22:22',
