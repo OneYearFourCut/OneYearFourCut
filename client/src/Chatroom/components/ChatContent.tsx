@@ -5,11 +5,11 @@ import { IchatContent } from 'Chatroom/types';
 export const ChatContent = (props: IchatContent) => {
   return (
     <S.ChatContentBox type={props.type}>
-      {props.type === 'right' && (
+      {props.last && props.type === 'right' && (
         <label className='sendTime'>{props.time}</label>
       )}
       <div className={`${props.type}Content`}>{props.content}</div>
-      {props.type === 'left' && (
+      {props.last && props.type === 'left' && (
         <label className='sendTime'>{props.time}</label>
       )}
     </S.ChatContentBox>

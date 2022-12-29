@@ -3,12 +3,6 @@ import type { IChat } from 'Chatroom/types';
 import { ChatContent } from './ChatContent';
 
 export const Chat = (props: IChat) => {
-  const data = Object.assign({
-    content: props.content,
-    type: props.type,
-    time: props.time,
-  });
-
   return (
     <S.ChatContainer type={props.type}>
       {props.type === 'left' && <S.ChatRoomProfileImg src={props.img} alt='' />}
@@ -16,10 +10,15 @@ export const Chat = (props: IChat) => {
         {props.type === 'left' && (
           <label className='useName'>{props.nickName}</label>
         )}
-        {/* ChatContent map 돌려야함 */
-        /* 첫번째 인덱스일때는 이름나오게 */
-        /* 마지막 인덱스일때는 날짜 나오게 */}
-        <ChatContent {...data}></ChatContent>
+        {props.content.map((data, idx) => (
+          <ChatContent
+            content={data}
+            type={props.type}
+            time={props.time}
+            last={idx === props.content.length - 1}
+            key={idx}
+          ></ChatContent>
+        ))}
       </S.ChatContentListBox>
     </S.ChatContainer>
   );

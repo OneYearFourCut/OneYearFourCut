@@ -70,7 +70,7 @@ const ChatRoomInputContainer = styled.div`
 
 //채팅 컴포넌트
 const ChatContainer = styled.div<{ type: string }>`
-  width: ${rem(428)};
+  width: 99%;
   height: auto;
   display: flex;
   justify-content: ${({ type }) => type};

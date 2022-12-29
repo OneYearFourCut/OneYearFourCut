@@ -23,12 +23,12 @@ const useHandleIntersection = () => {
                 if (res.data.data.length >= 7) {
                   //7개 다왔을때
                   setIsData(true);
-                  setPage(page + 1);
+                  setPage((page) => page + 1);
                   observer.observe(entry.target);
                 } else {
                   setIsData(false);
                 }
-                setAlarmListData([...[...alarmListData, ...res.data.data]]);
+                setAlarmListData((Data) => [...Data, ...res.data.data]);
               }
               //데이터가 없을때
               else {
@@ -39,12 +39,21 @@ const useHandleIntersection = () => {
         }
       });
     },
-    [alarmListData],
+    [filter],
   );
 
   const target = useIntersection(callbackfunc, { threshold: 0.5 });
 
-  return { isData, alarmListData, target, filter, setFilter, setPage, setAlarmListData, setIsData };
+  return {
+    isData,
+    alarmListData,
+    target,
+    filter,
+    setFilter,
+    setPage,
+    setAlarmListData,
+    setIsData,
+  };
 };
 
 export default useHandleIntersection;

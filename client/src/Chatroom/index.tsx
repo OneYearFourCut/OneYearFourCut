@@ -7,7 +7,7 @@ const Chatroom = () => {
   return (
     <DefualtContainer>
       <ChatRoomHeader title='test' img='/images/4.jpg'></ChatRoomHeader>
-      <ChatRoomBody title='test' img='/images/4.jpg'></ChatRoomBody>
+      <ChatRoomBody></ChatRoomBody>
       <ChatRoomInput />
     </DefualtContainer>
   );
