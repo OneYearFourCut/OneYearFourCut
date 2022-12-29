@@ -92,7 +92,7 @@ const ChatContentListBox = styled.div`
 `;
 
 //실제 채팅 내용
-const ChatContentBox = styled.div<{ type: string }>`
+const ChatContentBox = styled.div<{ type: string}>`
   display: flex;
   align-items: end;
   justify-content: ${({ type }) => type};
@@ -109,33 +109,36 @@ const ChatContentBox = styled.div<{ type: string }>`
     border-radius: ${rem(5)};
     font-size: ${rem(12)};
     background-color: ${({ theme, type }) =>
-      type === 'left' ? theme.colors.black_008 : theme.colors.green_008};
+      type === 'left' ? theme.colors.black_011 : 'transparent'};
+    border: solid 2px
+      ${({ theme, type }) =>
+        type === 'left' ? theme.colors.black_011 : theme.colors.green_008};
   }
 
-  .leftContent::before {
+  .leftContent.first::before {
     content: '';
     position: absolute;
     top: ${rem(5)};
-    left: ${rem(-8)};
+    left: ${rem(-10)};
     width: 0;
     height: 0;
     border: ${rem(5)} solid transparent;
-    border-top: ${rem(5)} solid ${({ theme }) => theme.colors.black_008};
-    border-right: ${rem(5)} solid ${({ theme }) => theme.colors.black_008};
-    border-radius: ${rem(2)};
+    border-top: ${rem(5)} solid ${({ theme }) => theme.colors.black_011};
+    border-right: ${rem(5)} solid ${({ theme }) => theme.colors.black_011};
+    border-radius: ${rem(3)};
   }
 
-  .rightContent::after {
+  .rightContent.first::after {
     content: '';
     position: absolute;
     top: ${rem(5)};
-    right: ${rem(-8)};
+    right: ${rem(-10)};
     width: 0;
     height: 0;
     border: ${rem(5)} solid transparent;
     border-top: ${rem(5)} solid ${({ theme }) => theme.colors.green_008};
     border-left: ${rem(5)} solid ${({ theme }) => theme.colors.green_008};
-    border-radius: ${rem(2)};
+    border-radius: ${rem(3)};
   }
   .sendTime {
     display: inline-block;
@@ -158,7 +161,7 @@ const DayDateBox = styled.div`
   text-align: center;
   line-height: ${rem(25)};
   font-size: ${rem(13)};
-  background-color: ${({ theme }) => theme.colors.black_010};
+  background-color: ${({ theme }) => theme.colors.beige_006};
   margin: ${rem(10)};
 `;
 

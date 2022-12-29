@@ -8,7 +8,7 @@ export const ChatContent = (props: IchatContent) => {
       {props.last && props.type === 'right' && (
         <label className='sendTime'>{props.time}</label>
       )}
-      <div className={`${props.type}Content`}>{props.content}</div>
+      <div className={`${props.type}Content ${props.first && 'first'}`}>{props.content}</div>
       {props.last && props.type === 'left' && (
         <label className='sendTime'>{props.time}</label>
       )}

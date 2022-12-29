@@ -1,6 +1,7 @@
 import * as S from './style';
 import { Chat } from './Chat';
 import { IDateChat, IChat } from '../types';
+import { useHandleData } from 'Chatroom/hooks/useHandleData';
 import React from 'react';
 const temp = [
   {
@@ -45,13 +46,13 @@ const temp2 = [
 ];
 
 export const ChatRoomBody = () => {
+  let result = useHandleData(1);
   return (
     <S.ChatRoomBodyContainer>
       {/* 날짜 map */}
-      {temp2.map((el: IDateChat, i) => (
+      {result.map((el: IDateChat, i) => (
         <React.Fragment key={i}>
           <S.DayDateBox>{el.dayDate}</S.DayDateBox>
-
           {/* 채팅리스트 map */}
           {el.chatList.map((chatList: IChat, j) => (
             <Chat {...chatList} key={j}></Chat>

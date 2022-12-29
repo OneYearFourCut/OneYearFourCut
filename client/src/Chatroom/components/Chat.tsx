@@ -15,6 +15,7 @@ export const Chat = (props: IChat) => {
             content={data}
             type={props.type}
             time={props.time}
+            first={idx === 0}
             last={idx === props.content.length - 1}
             key={idx}
           ></ChatContent>

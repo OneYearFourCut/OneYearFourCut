@@ -11,13 +11,14 @@ const colors = {
   black_007: '#FCFCFC',
   black_008: '#F4F4F4',
   black_009: '#AFAFAF',
-  black_010: '#D9D9D9',
+  black_011: '#EAEAEA',
   
   beige_001: '#FFF6CA',
   beige_002: '#FDFAEB',
   beige_003: '#FFFDF5',
   beige_004: '#FFFEFB',
   beige_005: '#FBF6F2',
+  beige_006: '#F9F4DF',
 
   gold_001: '#A76D28',
   gold_002: '#D99441',
