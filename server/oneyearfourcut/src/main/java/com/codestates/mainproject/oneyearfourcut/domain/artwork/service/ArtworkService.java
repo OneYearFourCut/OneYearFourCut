@@ -13,6 +13,11 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourC
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.controller.CommentController;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.CommentStatus;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.service.CommentService;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -46,6 +51,7 @@ public class ArtworkService {
     private final ArtworkLikeRepository artworkLikeRepository;
     private final AwsS3Service awsS3Service;
     private final AlarmService alarmService;
+    private final CommentRepository commentRepository;
 
 
     @Transactional
@@ -135,6 +141,10 @@ public class ArtworkService {
         galleryService.verifiedGalleryExist(galleryId);
         Artwork findArtwork = findVerifiedArtwork(galleryId, artworkId);
         verifyAuthority(memberId, findArtwork);
+        // 댓글 삭제 (상태 변경)
+        List<Comment> comments = commentRepository.findAllByArtworkId(artworkId);
+        comments.forEach(comment -> comment.changeCommentStatus(CommentStatus.DELETED));
+
         findArtwork.setStatus(ArtworkStatus.DELETED);
     }
 

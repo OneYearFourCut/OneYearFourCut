@@ -27,11 +27,24 @@ const InputZone = styled.div`
   padding: ${rem(12)};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   justify-content: space-between;
+<<<<<<< HEAD
+  /* background-color: ${({ theme }) => theme.colors.black_007}; */
+=======
   background-color: ${({ theme }) => theme.colors.black_007};
+>>>>>>> 91b10dcc24e91068bac836680aa2990640c360c4
   pointer-events: auto;
 
   display: flex;
   flex-direction: row;
+<<<<<<< HEAD
+
+  background-color: ${({ theme }) => theme.colors.black_008};
+
+  &:focus-within {
+    border: solid ${rem(1.5)} ${({ theme }) => theme.colors.green_002};
+  }
+=======
+>>>>>>> 91b10dcc24e91068bac836680aa2990640c360c4
 `;
 
 const Input = styled.input`
