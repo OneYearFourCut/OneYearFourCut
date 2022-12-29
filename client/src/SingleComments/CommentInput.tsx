@@ -3,8 +3,6 @@ import { rem } from 'polished';
 import useCreateComment from './hooks/useCreateComment';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useGetSingleComments from './hooks/useGetSingleComments';
-import useCommentFetch from './hooks/useCommentFetch';
 
 const Body = styled.div`
   height: 40%;
@@ -63,21 +61,19 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-const CommentInput = () => {
+const CommentInput = ({ placeHold }: { placeHold: string }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
   const artworkId = parseInt(params.artworkId!);
   const text = useRef<HTMLInputElement>(null);
 
   const { mutate } = useCreateComment(galleryId, artworkId);
-  const { setIsData } = useCommentFetch();
 
   const [value, setValue] = useState('');
 
   const SendComment = () => {
     if (text.current) {
       mutate(text.current.value);
-      setIsData(true);
       text.current.focus();
       setValue('');
     }
@@ -90,6 +86,7 @@ const CommentInput = () => {
           ref={text}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          placeholder={placeHold}
         />
         <SubmitButton type='button' onClick={() => SendComment()}>
           입력
