@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import UploadPicture from 'UploadPicture';
 import AlarmList from 'AlarmList';
+import ChatList from 'ChatList';
 import ToastRender from 'shared/components/Toast';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import ForBidden from 'ForBidden';
@@ -109,6 +110,14 @@ const router = createBrowserRouter([
           <Suspense fallback={<div>Loading...</div>}>
             <SingleComment single={false} />
           </Suspense>
+        ),
+      },
+      {
+        path: '/chatList',
+        element: (
+          <AuthCheck>
+            <ChatList />
+          </AuthCheck>
         ),
       },
     ],
