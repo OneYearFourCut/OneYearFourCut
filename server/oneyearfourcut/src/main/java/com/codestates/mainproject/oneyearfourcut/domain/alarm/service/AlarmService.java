@@ -5,7 +5,6 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.dto.AlarmResponseD
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.Alarm;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.SseEmitterRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -18,11 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -34,9 +30,6 @@ public class AlarmService {
     private final MemberService memberService;
     private final ArtworkRepository artworkRepository;
     private final AlarmRepository alarmRepository;
-    private final SseEmitterRepository sseEmitterRepository;
-
-    private static final Long DEFAULT_TIMEOUT = 1000L * 45;
 
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         Member member = memberService.findMember(memberId);
@@ -97,50 +90,5 @@ public class AlarmService {
                 .build();
 
         alarmRepository.save(alarm);
-    }
-
-    public SseEmitter subscribe(Long memberId) {
-        String emitterId = memberId + "_" + System.currentTimeMillis();
-
-
-        SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
-        //만료시 삭제
-        emitter.onCompletion(() -> {
-            log.info("=============onCompletion Delete=============");
-            sseEmitterRepository.deleteById(emitterId);
-        });
-        emitter.onTimeout(() -> {
-            log.info("=============onTimeout Delete=============");
-            sseEmitterRepository.deleteById(emitterId);
-        });
-
-
-        Boolean readAlarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
-        sendAlarm(emitter, memberId, emitterId, readAlarmExist);
-
-        return emitter;
-    }
-
-    public void send(Long memberId) { //해당 회원의 emitter에 모두 알림 보내기
-        Map<String, SseEmitter> map = sseEmitterRepository.findAllById(memberId);
-
-        map.forEach(
-                (key, emitter) -> {
-                    sendAlarm(emitter, memberId, key, true);
-                }
-        );
-    }
-
-    private void sendAlarm(SseEmitter emitter, Long memberId, String emitterId, Boolean readExist) {
-        try {
-            emitter.send(SseEmitter.event()
-                    .id(String.valueOf(memberId))
-                    .name("newAlarms")
-                    .data(readExist));
-            log.info("========{} Alarm Success!========", emitterId);
-        }catch (IOException e) {
-            log.info("========{} Alarm Error=========", emitterId);
-            sseEmitterRepository.deleteById(emitterId);
-        }
     }
 }

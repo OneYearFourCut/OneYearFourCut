@@ -38,14 +38,12 @@ server:
   servlet:
     encoding:
       charset: UTF-8
-# 커넥션 풀 로그
-#logging:
-#  level:
-#    com.zaxxer.hikari.pool.HikariPool: debug
+
 logging:
   level:
+    com.zaxxer.hikari.pool.HikariPool: debug # 커넥션 풀 로그
     org:
       hibernate:
         type:
           descriptor:
-            sql: trace
+            sql: trace # sql에 들어가는 값 로그

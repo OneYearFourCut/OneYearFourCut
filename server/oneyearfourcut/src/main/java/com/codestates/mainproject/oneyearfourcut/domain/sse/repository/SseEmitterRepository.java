@@ -1,4 +1,4 @@
-package com.codestates.mainproject.oneyearfourcut.domain.alarm.repository;
+package com.codestates.mainproject.oneyearfourcut.domain.sse.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
