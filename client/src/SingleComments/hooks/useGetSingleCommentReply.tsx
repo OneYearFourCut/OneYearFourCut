@@ -3,7 +3,7 @@ import { jsonInstance } from 'shared/utils/axios';
 
 const useGetSingleCommentReply = (commentId: number) => {
   const { data, isLoading, refetch } = useQuery(
-    ['singleComment'],
+    ['singleCommentReply'],
     () => {
       return jsonInstance.get(`/galleries/comments/${commentId}/replies`);
     },
