@@ -1,9 +1,9 @@
 export interface roominfo {
-  title: string;
-  img: string;
+  title?: string;
+  profileImg?: string;
 }
 
-export interface IchatContent {
+export interface IChatContent {
   content: string;
   time: string | undefined;
   type: string;
@@ -19,17 +19,12 @@ export interface IChat {
   type: string;
 }
 
-export interface IDateChat {
-  dayDate: string;
-  chatList: IChat[];
-}
-
 export interface IChatServerData {
   chatRoomId: string;
   message: string;
   memberId: number;
   nickname: string;
-  proflie: string;
+  profile: string;
   createdAt: string;
 }
 

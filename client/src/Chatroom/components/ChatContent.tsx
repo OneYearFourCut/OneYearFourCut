@@ -1,8 +1,8 @@
 import * as S from './style';
-import { IchatContent } from 'Chatroom/types';
+import { IChatContent } from 'Chatroom/types';
 
 //말풍선 하나
-export const ChatContent = (props: IchatContent) => {
+export const ChatContent = (props: IChatContent) => {
   return (
     <S.ChatContentBox type={props.type}>
       {props.last && props.type === 'right' && (

@@ -1,56 +1,37 @@
 import * as S from './style';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Chat } from './Chat';
-import { IDateChat, IChat } from '../types';
-import { useHandleData } from 'Chatroom/hooks/useHandleData';
-import React from 'react';
-const temp = [
-  {
-    content: [
-      'test내용',
-      '123',
-      '123',
-    ],
-    time: '22:22',
-    img: '/images/4.jpg',
-    nickName: '닉네임',
-    type: 'left',
-  },
-  {
-    content: ['test내용'],
-    time: '22:21',
-    img: '/images/4.jpg',
-    nickName: '닉네임',
-    type: 'right',
-  },
-  {
-    content: [
-      'test내용',
-      '123',
-    ],
-    time: '22:22',
-    img: '/images/4.jpg',
-    nickName: '닉네임',
-    type: 'right',
-  },
-];
+import { IChatData, IChat, IChatServerData } from '../types';
+import { handleData } from 'Chatroom/helper/handleData';
+import { loginStore } from 'store/store';
 
-const temp2 = [
-  {
-    dayDate: '2022년 12월 22일 월요일',
-    chatList: temp,
-  },
-  {
-    dayDate: '2022년 12월 23일 월요일',
-    chatList: temp,
-  },
-];
+export const ChatRoomBody = ({
+  serverData,
+}: {
+  serverData: IChatServerData[];
+}) => {
+  const memberId = loginStore().user!.memberId!;
 
-export const ChatRoomBody = () => {
-  let result = useHandleData(1);
+  const [processedData, setProcessedData] = useState<IChatData[]>([]);
+
+  //processedData가 클로저에의해 안될 가능성이 있으므로 얘도 매개변수로 주는게 좋을것 같다.
+  const processingData = useCallback((serverData: IChatServerData[]) => {
+    console.log('콜백함수 작동');
+    return handleData(serverData, processedData, memberId);
+  }, []);
+
+  useEffect(() => {
+    setProcessedData(processingData(serverData));
+  }, []);
+  //서버에서 새로운 데이터 하나줄때 배열에 감싸서 주면 됨.
+  useEffect(() => {
+    //새로운데이터를 전달.processingData에다가.
+  },[])
+
   return (
     <S.ChatRoomBodyContainer>
       {/* 날짜 map */}
-      {result.map((el: IDateChat, i) => (
+      {processedData.map((el: IChatData, i) => (
         <React.Fragment key={i}>
           <S.DayDateBox>{el.dayDate}</S.DayDateBox>
           {/* 채팅리스트 map */}
@@ -62,7 +43,6 @@ export const ChatRoomBody = () => {
     </S.ChatRoomBodyContainer>
   );
 };
-
 
 /*
 [
