@@ -63,9 +63,14 @@ public class SecurityConfig {
                                 .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
                                 .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
                                 .antMatchers("/h2/**").permitAll()
+//                                .antMatchers("/ws/stomp/**").authenticated()
+                                .antMatchers("/sub/**").permitAll()
+                                .antMatchers("/pub/**").permitAll()
+                                .antMatchers("/ws/**").permitAll() // -> websocket test
 //                        .antMatchers("/members/**").hasRole("USER")
 //                        .antMatchers("/galleries/**").hasRole("USER")
 //                        .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
+
                                 .anyRequest().hasRole("USER")
                 )
                 .oauth2Login(oauth2 -> oauth2

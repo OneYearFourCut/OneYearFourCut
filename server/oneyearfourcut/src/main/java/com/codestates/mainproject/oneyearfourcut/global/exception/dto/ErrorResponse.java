@@ -18,4 +18,12 @@ public class ErrorResponse {
     public static ErrorResponse of(HttpStatus httpStatus) {
         return new ErrorResponse(httpStatus.value(), httpStatus.name(), httpStatus.getReasonPhrase());
     }
+
+
+    public String toStringWithoutStatus() { // status를 제외한 toString()
+        return "ErrorResponse{" +
+                ", exception='" + exception + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
