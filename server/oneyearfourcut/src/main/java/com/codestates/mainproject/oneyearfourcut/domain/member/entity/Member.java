@@ -82,6 +82,7 @@ public class Member extends Auditable {
         return MemberResponseDto.builder()
                 .nickname(this.nickname)
                 .profile(this.profile)
+                .memberId(this.memberId)
                 .galleryId(galleryId)
                 .build();
     }
