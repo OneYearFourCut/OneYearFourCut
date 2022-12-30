@@ -5,7 +5,9 @@ import { ChatRoomBody } from './components/ChatRoomBody';
 import { useGetChatData } from './hooks/useGetChatData';
 import { useParams } from 'react-router-dom';
 import { roominfo } from 'Chatroom/types';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { bind, connect } from './helper/sock';
+import StompJS from 'stompjs';
 
 const data = [
   {
@@ -78,15 +80,23 @@ const data = [
 const Chatroom = (props: roominfo) => {
   const params = useParams();
   const roomId = parseInt(params.roomId!);
-  // const { data, status } = useGetChatData(roomId);
-  // if (status === 'loading') return <div>loading</div>;
-  // else if (status === 'error') return <div>error</div>;
-  useEffect(() => console.log('hi'), []);
+
+  const { processedData, setProcessedData, dataProcessing } =
+    useGetChatData(roomId);
+
+  const sockJS = useRef({});
+  const client = useRef<StompJS.Client>(null);
+
+  useEffect(() => {
+    bind(sockJS, client);
+    connect(client.current!, processedData, setProcessedData, dataProcessing);
+  }, []);
 
   return (
     <DefualtContainer>
       <ChatRoomHeader {...props}></ChatRoomHeader>
-      <ChatRoomBody serverData={data} />
+      {/* <ChatRoomBody serverData={data} /> */}
+      <ChatRoomBody processedData={processedData} />
       <ChatRoomInput />
     </DefualtContainer>
   );
