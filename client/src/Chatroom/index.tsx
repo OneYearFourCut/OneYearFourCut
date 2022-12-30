@@ -30,7 +30,7 @@ const Chatroom = (props: roominfo) => {
       <ChatRoomHeader {...props}></ChatRoomHeader>
       {/* <ChatRoomBody serverData={data} /> */}
       <ChatRoomBody processedData={processedData} />
-      <ChatRoomInput />
+      <ChatRoomInput client={client.current!} />
     </DefualtContainer>
   );
 };
