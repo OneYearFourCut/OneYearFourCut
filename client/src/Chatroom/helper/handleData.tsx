@@ -1,4 +1,4 @@
-import type { IChat, IChatServerData, IChatData } from 'Chatroom/types';
+import type { IChat, IChatServerData, IChatData } from 'ChatRoom/types';
 
 export const handleData = (
   serverData: IChatServerData[],

@@ -1,8 +1,8 @@
 import * as S from './style';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Chat } from './Chat';
+import { ChatComponent } from './ChatComponent';
 import { IChatData, IChat, IChatServerData } from '../types';
-import { handleData } from 'Chatroom/helper/handleData';
+import { handleData } from 'ChatRoom/helper/handleData';
 import { loginStore } from 'store/store';
 
 // export const ChatRoomBody = ({
@@ -45,7 +45,7 @@ export const ChatRoomBody = ({
           <S.DayDateBox>{el.dayDate}</S.DayDateBox>
           {/* 채팅리스트 map */}
           {el.chatList.map((chatList: IChat, j) => (
-            <Chat {...chatList} key={j}></Chat>
+            <ChatComponent {...chatList} key={j}></ChatComponent>
           ))}
         </React.Fragment>
       ))}

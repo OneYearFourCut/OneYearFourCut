@@ -10,7 +10,7 @@ import RedirectPage from 'Intro/RedirectPage';
 import SinglePicPage from './SinglePicture/index';
 import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
-import Chatroom from 'Chatroom';
+import Chatroom from 'ChatRoom';
 import { TriggerBox } from 'AlarmList/components/AlarmContainer';
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
@@ -34,11 +34,11 @@ const router = createBrowserRouter([
         element: <Intro />,
       },
       {
-        path: '/chat/:roomId',
+        path: '/chatroom/:roomId',
         element: (
-          <AuthCheck>
+          // <AuthCheck>
             <Chatroom />
-          </AuthCheck>
+          // </AuthCheck>
         ),
       },
       {

@@ -1,4 +1,4 @@
-import { roominfo } from 'Chatroom/types';
+import { roominfo } from 'ChatRoom/types';
 import { ChatRoomHeaderContainer, ChatRoomProfileImg } from './style';
 
 export const ChatRoomHeader = ({ title = 'title', profileImg = '/images/4.jpg' }: roominfo) => {

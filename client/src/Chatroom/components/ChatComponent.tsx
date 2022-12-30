@@ -1,8 +1,8 @@
 import * as S from './style';
-import type { IChat } from 'Chatroom/types';
+import type { IChat } from 'ChatRoom/types';
 import { ChatContent } from './ChatContent';
 
-export const Chat = (props: IChat) => {
+export const ChatComponent = (props: IChat) => {
   return (
     <S.ChatContainer type={props.type}>
       {props.type === 'left' && <S.ChatRoomProfileImg src={props.img} alt='' />}

@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import apis from 'Chatroom/api';
+import apis from '../api';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { IChatData, IChat, IChatServerData } from '../types';
-import { handleData } from 'Chatroom/helper/handleData';
+import { handleData } from '../helper/handleData';
 import { loginStore } from 'store/store';
 
 export const useGetChatData = (roomId: number) => {
-  
   const memberId = loginStore().user!.memberId!;
   const [processedData, setProcessedData] = useState<IChatData[]>([]);
 
@@ -18,21 +17,23 @@ export const useGetChatData = (roomId: number) => {
     },
     [],
   );
-  
+
   const { data, status } = useQuery(
     ['useGetChatData'],
     () => apis.getChatData(roomId),
     {
-      // staleTime: 5000,
+      staleTime: Infinity,
       onError(err) {
         console.log(err);
       },
     },
   );
 
-  if (status === 'success') {
-    setProcessedData(dataProcessing(data.data, processedData));
-  }
+  useEffect(() => {
+    if (status === 'success') {
+      setProcessedData(dataProcessing(data.data, processedData));
+    }
+  }, [data]);
 
   return { processedData, setProcessedData, dataProcessing };
 };

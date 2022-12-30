@@ -1,5 +1,5 @@
 import * as S from './style';
-import { IChatContent } from 'Chatroom/types';
+import { IChatContent } from 'ChatRoom/types';
 
 //말풍선 하나
 export const ChatContent = (props: IChatContent) => {
