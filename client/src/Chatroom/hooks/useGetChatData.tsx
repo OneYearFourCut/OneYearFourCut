@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import apis from '../api';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { IChatData, IChat, IChatServerData } from '../types';
+import { useCallback, useEffect, useState } from 'react';
+import { IChatData, IChatServerData } from '../types';
 import { handleData } from '../helper/handleData';
 import { loginStore } from 'store/store';
 

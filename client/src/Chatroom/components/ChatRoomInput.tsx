@@ -1,8 +1,7 @@
 import * as S from './style';
 import { send } from 'ChatRoom/helper/sock';
-import { useState } from 'react';
+import React, { useRef } from 'react';
 import { loginStore } from 'store/store';
-import StompJS from 'stompjs';
 
 export const ChatRoomInput = ({
   client,
@@ -11,22 +10,41 @@ export const ChatRoomInput = ({
   client: any;
   roomId: number;
 }) => {
-  const [text, setText] = useState('');
   const memberId = loginStore().user!.memberId!;
-  const handleText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      const sendData = {
+        roomId: roomId,
+        senderId: memberId,
+        message: textAreaRef.current && textAreaRef.current.value,
+      };
+      send(client.current, sendData);
+    }
   };
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      textAreaRef.current!.value = '';
+    }
+  };
+
   return (
     <S.ChatRoomInputContainer>
-      <textarea onChange={handleText} autoComplete='off' value={text} />
+      <textarea
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        autoComplete='off'
+        ref={textAreaRef}
+      />
       <button
         onClick={() => {
-          const sendData = {
+          send(client.current, {
             roomId: roomId,
             senderId: memberId,
-            message: text
-          }
-          send(client.current, sendData);
+            message: textAreaRef.current && textAreaRef.current.value,
+          });
+          textAreaRef.current!.value = '';
         }}
       >
         전송

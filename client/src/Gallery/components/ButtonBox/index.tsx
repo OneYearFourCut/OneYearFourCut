@@ -7,7 +7,8 @@ import GalleryType from 'GallerySetting/galleryType';
 const Index = ({ galleryId }: GalleryType) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/uploadPicture/${galleryId}`);
+    // navigate(`/uploadPicture/${galleryId}`);
+    navigate(`/chatroom/1`);
   };
 
   return (

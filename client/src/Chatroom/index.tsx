@@ -25,7 +25,6 @@ const Chatroom = (props: roominfo) => {
     return () => {
       client.current &&
         client.current.disconnect(() => console.log('소켓종료'));
-      // sockJS.current.CLOSED;
     };
   }, []);
 

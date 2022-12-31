@@ -8,19 +8,9 @@ const headers = {
 };
 
 export const bind = (sockJS: any, client: any) => {
-  console.log('bind');
   sockJS.current = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
   client.current = StompJS.over(sockJS.current);
-  /*
-  여러가지 옵션보기
-   counter: number;
-    heartbeat: {
-        incoming: number,
-        outgoing: number
-    };
-    maxWebSocketFrameSize: number;
-    subscriptions: {};
-  */
+  client.current.debug = null;
 };
 
 export const connect = (
@@ -45,11 +35,9 @@ export const connect = (
   );
 
   const read = () => {
-    console.log('연결');
     client.current.subscribe(
       `/sub/chat/room/${roomId}`,
       (data: any) => {
-        console.log(data);
         setProcessedData(
           dataProcessing([JSON.parse(data.body)], processedData),
         );
@@ -60,5 +48,6 @@ export const connect = (
 };
 
 export const send = (client: StompJS.Client, sendData: any) => {
-  client.send(`/pub/chats/message`, headers, JSON.stringify(sendData));
+  if(sendData.message !=='')
+    client.send(`/pub/chats/message`, headers, JSON.stringify(sendData));
 };

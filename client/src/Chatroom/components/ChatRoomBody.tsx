@@ -1,44 +1,21 @@
 import * as S from './style';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ChatComponent } from './ChatComponent';
-import { IChatData, IChat, IChatServerData } from '../types';
-import { handleData } from 'ChatRoom/helper/handleData';
-import { loginStore } from 'store/store';
-
-// export const ChatRoomBody = ({
-//   serverData,
-// }: {
-//   serverData: IChatServerData[];
-// }) => {
-//   const memberId = loginStore().user!.memberId!;
-
-//   const [processedData, setProcessedData] = useState<IChatData[]>([]);
-
-//   const dataProcessing = useCallback(
-//     (serverData: IChatServerData[], processedData: IChatData[]) => {
-//       console.log('콜백함수 작동');
-//       return handleData(serverData, processedData, memberId);
-//     },
-//     [],
-//   );
-
-//   useEffect(() => {
-//     setProcessedData(dataProcessing(serverData, processedData));
-//   }, []);
-
-//   //서버에서 새로운 데이터 하나줄때 배열에 감싸서 주면 됨.
-//   useEffect(() => {
-//     //새로운데이터를 전달.dataProcessing에다가.
-//   }, []);
+import { IChatData, IChat } from '../types';
 
 export const ChatRoomBody = ({
   processedData,
 }: {
   processedData: IChatData[];
 }) => {
+  const scrollRef = useRef<any>(null);
+
+  useEffect(() => {
+    // scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [processedData]);
 
   return (
-    <S.ChatRoomBodyContainer>
+    <S.ChatRoomBodyContainer ref={scrollRef}>
       {/* 날짜 map */}
       {processedData.map((el: IChatData, i) => (
         <React.Fragment key={i}>
