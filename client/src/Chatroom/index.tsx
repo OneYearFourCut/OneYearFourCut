@@ -13,7 +13,7 @@ const Chatroom = (props: roominfo) => {
   const params = useParams();
   const roomId = parseInt(params.roomId!);
 
-  const { processedData, setProcessedData, dataProcessing } =
+  const { processedData, setProcessedData, dataProcessing, serverData } =
     useGetChatData(roomId);
 
   const sockJS = useRef({});
@@ -21,10 +21,11 @@ const Chatroom = (props: roominfo) => {
 
   useEffect(() => {
     bind(sockJS, client);
-    connect(client, roomId, processedData, setProcessedData, dataProcessing);
+    connect(client, roomId, setProcessedData, dataProcessing, serverData);
     return () => {
       client.current &&
         client.current.disconnect(() => console.log('소켓종료'));
+      client.current?.unsubscribe(`/sub/chat/room/${roomId}`);
     };
   }, []);
 

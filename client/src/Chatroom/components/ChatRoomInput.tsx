@@ -15,6 +15,7 @@ export const ChatRoomInput = ({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); //줄바꿈 동작 막음
       const sendData = {
         roomId: roomId,
         senderId: memberId,

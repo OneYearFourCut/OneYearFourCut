@@ -11,7 +11,7 @@ export const ChatRoomBody = ({
   const scrollRef = useRef<any>(null);
 
   useEffect(() => {
-    // scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [processedData]);
 
   return (

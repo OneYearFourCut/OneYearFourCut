@@ -29,7 +29,6 @@ export const handleData = (
   const addDataListOrContent = (chatList: IChat[], data: IChatServerData) => {
     let time = data.createdAt.split('T')[1];
 
-    console.log(data.memberId);
     let type = memberId === data.memberId ? 'right' : 'left';
     if (chatList[chatList.length - 1].type !== type) {
       chatList.push(makeChatListObject(data));

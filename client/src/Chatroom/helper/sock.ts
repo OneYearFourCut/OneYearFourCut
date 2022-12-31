@@ -16,16 +16,17 @@ export const bind = (sockJS: any, client: any) => {
 export const connect = (
   client: any,
   roomId: number,
-  processedData: IChatData[],
-  setProcessedData: (chatData: IChatData[]) => void,
+  setProcessedData: any,
   dataProcessing: (
     serverData: IChatServerData[],
     processedData: IChatData[],
   ) => IChatData[],
+  serverData: any,
 ) => {
   client.current.connect(
     headers,
     (frame: any) => {
+      console.log('연결성공');
       read();
     },
     (err: any) => {
@@ -38,9 +39,11 @@ export const connect = (
     client.current.subscribe(
       `/sub/chat/room/${roomId}`,
       (data: any) => {
-        setProcessedData(
-          dataProcessing([JSON.parse(data.body)], processedData),
-        );
+        serverData.data.unshift(JSON.parse(data.body));
+
+        setProcessedData((processedData: IChatData[]) => {
+          return dataProcessing([JSON.parse(data.body)], processedData);
+        });
       },
       headers,
     );
@@ -48,6 +51,6 @@ export const connect = (
 };
 
 export const send = (client: StompJS.Client, sendData: any) => {
-  if(sendData.message !=='')
+  if (sendData.message !== '')
     client.send(`/pub/chats/message`, headers, JSON.stringify(sendData));
 };

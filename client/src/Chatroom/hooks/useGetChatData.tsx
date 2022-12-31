@@ -9,6 +9,7 @@ import { loginStore } from 'store/store';
 export const useGetChatData = (roomId: number) => {
   const memberId = loginStore().user!.memberId!;
   const [processedData, setProcessedData] = useState<IChatData[]>([]);
+
   const dataProcessing = useCallback(
     (serverData: IChatServerData[], processedData: IChatData[]) => {
       console.log('콜백함수 작동');
@@ -17,7 +18,7 @@ export const useGetChatData = (roomId: number) => {
     [],
   );
 
-  const { data, status } = useQuery(
+  const { data: serverData, status } = useQuery(
     ['useGetChatData'],
     () => apis.getChatData(roomId),
     {
@@ -27,11 +28,13 @@ export const useGetChatData = (roomId: number) => {
       },
     },
   );
+
+  //처음 요청시에만
   useEffect(() => {
     if (status === 'success') {
-      setProcessedData(dataProcessing(data.data, processedData));
+      setProcessedData(dataProcessing(serverData.data, []));
     }
-  }, [data]);
+  }, []);
 
-  return { processedData, setProcessedData, dataProcessing };
+  return { processedData, setProcessedData, dataProcessing,serverData };
 };
