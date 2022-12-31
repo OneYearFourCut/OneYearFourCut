@@ -12,11 +12,13 @@ import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
 import Chatroom from 'ChatRoom';
 import { TriggerBox } from 'AlarmList/components/AlarmContainer';
+
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
 const SingleComment = React.lazy(() => import('./SingleComments/index'));
 const AllComment = React.lazy(() => import('./AllComments/AllComments'));
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -36,9 +38,9 @@ const router = createBrowserRouter([
       {
         path: '/chatroom/:roomId',
         element: (
-          // <AuthCheck>
+          <AuthCheck>
             <Chatroom />
-          // </AuthCheck>
+          </AuthCheck>
         ),
       },
       {

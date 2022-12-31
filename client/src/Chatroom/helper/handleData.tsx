@@ -28,6 +28,8 @@ export const handleData = (
   // 같은 시간, 분 을가진 것과 같은 type을 가진게 있는지 판단.
   const addDataListOrContent = (chatList: IChat[], data: IChatServerData) => {
     let time = data.createdAt.split('T')[1];
+
+    console.log(data.memberId);
     let type = memberId === data.memberId ? 'right' : 'left';
     if (chatList[chatList.length - 1].type !== type) {
       chatList.push(makeChatListObject(data));

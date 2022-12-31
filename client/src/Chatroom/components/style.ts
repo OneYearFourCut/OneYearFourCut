@@ -92,7 +92,7 @@ const ChatContentListBox = styled.div`
 `;
 
 //실제 채팅 내용
-const ChatContentBox = styled.div<{ type: string}>`
+const ChatContentBox = styled.div<{ type: string }>`
   display: flex;
   align-items: end;
   justify-content: ${({ type }) => type};

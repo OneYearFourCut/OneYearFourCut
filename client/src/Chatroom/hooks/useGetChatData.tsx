@@ -9,7 +9,6 @@ import { loginStore } from 'store/store';
 export const useGetChatData = (roomId: number) => {
   const memberId = loginStore().user!.memberId!;
   const [processedData, setProcessedData] = useState<IChatData[]>([]);
-
   const dataProcessing = useCallback(
     (serverData: IChatServerData[], processedData: IChatData[]) => {
       console.log('콜백함수 작동');
@@ -28,7 +27,6 @@ export const useGetChatData = (roomId: number) => {
       },
     },
   );
-
   useEffect(() => {
     if (status === 'success') {
       setProcessedData(dataProcessing(data.data, processedData));

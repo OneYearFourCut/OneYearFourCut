@@ -9,7 +9,6 @@ import { useEffect, useRef } from 'react';
 import { bind, connect } from './helper/sock';
 import StompJS from 'stompjs';
 
-
 const Chatroom = (props: roominfo) => {
   const params = useParams();
   const roomId = parseInt(params.roomId!);
@@ -22,7 +21,12 @@ const Chatroom = (props: roominfo) => {
 
   useEffect(() => {
     bind(sockJS, client);
-    connect(client.current!, processedData, setProcessedData, dataProcessing);
+    connect(client, roomId, processedData, setProcessedData, dataProcessing);
+    return () => {
+      client.current &&
+        client.current.disconnect(() => console.log('소켓종료'));
+      // sockJS.current.CLOSED;
+    };
   }, []);
 
   return (
@@ -30,7 +34,7 @@ const Chatroom = (props: roominfo) => {
       <ChatRoomHeader {...props}></ChatRoomHeader>
       {/* <ChatRoomBody serverData={data} /> */}
       <ChatRoomBody processedData={processedData} />
-      <ChatRoomInput client={client.current!} />
+      <ChatRoomInput client={client} roomId={roomId} />
     </DefualtContainer>
   );
 };

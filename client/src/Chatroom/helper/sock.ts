@@ -8,8 +8,9 @@ const headers = {
 };
 
 export const bind = (sockJS: any, client: any) => {
+  console.log('bind');
   sockJS.current = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
-  client.current = StompJS.over(sockJS);
+  client.current = StompJS.over(sockJS.current);
   /*
   여러가지 옵션보기
    counter: number;
@@ -23,7 +24,8 @@ export const bind = (sockJS: any, client: any) => {
 };
 
 export const connect = (
-  client: StompJS.Client,
+  client: any,
+  roomId: number,
   processedData: IChatData[],
   setProcessedData: (chatData: IChatData[]) => void,
   dataProcessing: (
@@ -31,26 +33,32 @@ export const connect = (
     processedData: IChatData[],
   ) => IChatData[],
 ) => {
-  client.connect(
+  client.current.connect(
     headers,
-    () => read,
-    (err) => {
+    (frame: any) => {
+      read();
+    },
+    (err: any) => {
       console.log('소켓연결오류');
       console.log(err);
     },
   );
 
   const read = () => {
-    client.subscribe('/sub/chat/room/chat_room_name', (data) => {
-      setProcessedData(dataProcessing([JSON.parse(data.body)], processedData));
-    });
+    console.log('연결');
+    client.current.subscribe(
+      `/sub/chat/room/${roomId}`,
+      (data: any) => {
+        console.log(data);
+        setProcessedData(
+          dataProcessing([JSON.parse(data.body)], processedData),
+        );
+      },
+      headers,
+    );
   };
 };
 
-export const send = (client: StompJS.Client, message: string) => {
-  client.send(
-    '/sub/chat/room/chat_room_name',
-    headers,
-    JSON.stringify(message),
-  );
+export const send = (client: StompJS.Client, sendData: any) => {
+  client.send(`/pub/chats/message`, headers, JSON.stringify(sendData));
 };

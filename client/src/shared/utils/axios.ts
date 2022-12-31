@@ -20,10 +20,11 @@ function refreshTrigger(access_token: string) {
 //json용도
 const jsonInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
-  timeout: 2000,
+  timeout: 5000,
   headers: {
     'Content-Type': APPLICATION_JSON,
     Authorization: ACCESS_TOKEN,
+    'ngrok-skip-browser-warning': true,
   },
 });
 
