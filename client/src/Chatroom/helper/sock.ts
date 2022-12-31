@@ -36,7 +36,7 @@ export const connect = (
   );
 
   const read = () => {
-    client.current.subscribe(
+    let t = client.current.subscribe(
       `/sub/chat/room/${roomId}`,
       (data: any) => {
         serverData.data.unshift(JSON.parse(data.body));
@@ -47,6 +47,7 @@ export const connect = (
       },
       headers,
     );
+    console.log(t);
   };
 };
 

@@ -18,14 +18,17 @@ const Chatroom = (props: roominfo) => {
 
   const sockJS = useRef({});
   const client = useRef<StompJS.Client>(null);
-
+  console.log(client.current);
   useEffect(() => {
     bind(sockJS, client);
     connect(client, roomId, setProcessedData, dataProcessing, serverData);
     return () => {
+      for (let subscriptionId in client.current?.subscriptions) {
+        client.current?.unsubscribe(subscriptionId);
+      }
       client.current &&
         client.current.disconnect(() => console.log('소켓종료'));
-      client.current?.unsubscribe(`/sub/chat/room/${roomId}`);
+      console.log(client.current);
     };
   }, []);
 
