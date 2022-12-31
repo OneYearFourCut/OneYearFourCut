@@ -1,6 +1,6 @@
 export interface roominfo {
-  title?: string;
-  profileImg?: string;
+  img?: string;
+  roomTitle?: string;
 }
 
 export interface IChatContent {
@@ -26,6 +26,12 @@ export interface IChatServerData {
   nickname: string;
   profile: string;
   createdAt: string;
+}
+
+export interface IRoomData {
+  img: string;
+  roomTitle: string;
+  roomData: IChatServerData[];
 }
 
 export interface IChatData {

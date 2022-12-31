@@ -7,10 +7,10 @@ const headers = {
   Authorization: getStoredToken()?.access_token,
 };
 
-export const bind = (sockJS: any, client: any) => {
-  sockJS.current = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
-  client.current = StompJS.over(sockJS.current);
-  client.current.debug = null;
+export const bind = (client: any) => {
+  const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
+  client.current = StompJS.over(sockJS);
+  // client.current.debug = null;
 };
 
 export const connect = (
@@ -36,9 +36,10 @@ export const connect = (
   );
 
   const read = () => {
-    let t = client.current.subscribe(
+    client.current.subscribe(
       `/sub/chat/room/${roomId}`,
       (data: any) => {
+        //caching을 위함.
         serverData.data.unshift(JSON.parse(data.body));
 
         setProcessedData((processedData: IChatData[]) => {
@@ -47,11 +48,14 @@ export const connect = (
       },
       headers,
     );
-    console.log(t);
   };
 };
 
-export const send = (client: StompJS.Client, sendData: any) => {
+export const send = (client: any, sendData: any) => {
   if (sendData.message !== '')
-    client.send(`/pub/chats/message`, headers, JSON.stringify(sendData));
+    client.current.send(
+      `/pub/chats/message`,
+      headers,
+      JSON.stringify(sendData),
+    );
 };

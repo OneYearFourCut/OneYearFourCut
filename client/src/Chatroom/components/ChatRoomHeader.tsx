@@ -1,11 +1,11 @@
 import { roominfo } from 'ChatRoom/types';
 import { ChatRoomHeaderContainer, ChatRoomProfileImg } from './style';
 
-export const ChatRoomHeader = ({ title = 'title', profileImg = '/images/4.jpg' }: roominfo) => {
+export const ChatRoomHeader = ({ img, roomTitle }: roominfo) => {
   return (
     <ChatRoomHeaderContainer>
-      <ChatRoomProfileImg src={profileImg} alt='' />
-      <h4>{title}</h4>
+      <ChatRoomProfileImg src={img} alt='' />
+      <h4>{roomTitle}</h4>
     </ChatRoomHeaderContainer>
   );
 };

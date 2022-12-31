@@ -21,7 +21,7 @@ export const ChatRoomInput = ({
         senderId: memberId,
         message: textAreaRef.current && textAreaRef.current.value,
       };
-      send(client.current, sendData);
+      send(client, sendData);
     }
   };
   const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -40,8 +40,8 @@ export const ChatRoomInput = ({
       />
       <button
         onClick={() => {
-          send(client.current, {
-            roomId: roomId,
+          send(client, {
+            chatRoomId: roomId,
             senderId: memberId,
             message: textAreaRef.current && textAreaRef.current.value,
           });

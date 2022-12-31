@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import apis from '../api';
 
 import { useCallback, useEffect, useState } from 'react';
-import { IChatData, IChatServerData } from '../types';
+import { IChatData, IChatServerData, IRoomData } from '../types';
 import { handleData } from '../helper/handleData';
 import { loginStore } from 'store/store';
 
@@ -11,9 +11,9 @@ export const useGetChatData = (roomId: number) => {
   const [processedData, setProcessedData] = useState<IChatData[]>([]);
 
   const dataProcessing = useCallback(
-    (serverData: IChatServerData[], processedData: IChatData[]) => {
+    (serverRoomContentData: IChatServerData[], processedData: IChatData[]) => {
       console.log('콜백함수 작동');
-      return handleData(serverData, processedData, memberId);
+      return handleData(serverRoomContentData, processedData, memberId);
     },
     [],
   );
@@ -32,9 +32,9 @@ export const useGetChatData = (roomId: number) => {
   //처음 요청시에만
   useEffect(() => {
     if (status === 'success') {
-      setProcessedData(dataProcessing(serverData.data, []));
+      setProcessedData(dataProcessing(serverData.data.roomData, []));
     }
   }, []);
 
-  return { processedData, setProcessedData, dataProcessing,serverData };
+  return { processedData, setProcessedData, dataProcessing, serverData };
 };
