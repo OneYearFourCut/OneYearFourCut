@@ -32,6 +32,7 @@ public class ChatService {
     public ChatResponseDto createMessage(long memberId,
                                          ChatRequestDto chatRequestDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
+        log.info("pub Message - memberId : {}", memberId);
         long chatRoomId = chatRequestDto.getChatRoomId();
         Chat chatRequest = chatRequestDto.toEntity();
 

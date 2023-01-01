@@ -63,9 +63,9 @@ public class SecurityConfig {
                                 .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
                                 .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
                                 .antMatchers("/h2/**").permitAll()
-                                .antMatchers("/ws/stomp/**").authenticated()
-                                .antMatchers("/sub/**").authenticated()
-                                .antMatchers("/pub/**").authenticated()
+                                .antMatchers("/ws/stomp/**").hasRole("USER")
+                                .antMatchers("/sub/**").hasRole("USER")
+                                .antMatchers("/pub/**").hasRole("USER")
 //                                .antMatchers("/ws/**").permitAll() // -> websocket test
 //                        .antMatchers("/members/**").hasRole("USER")
 //                        .antMatchers("/galleries/**").hasRole("USER")
