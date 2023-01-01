@@ -70,7 +70,9 @@ public class MessagePreHandler implements ChannelInterceptor {
         if (isVerify) {
             String authorizationHeader = String.valueOf(accessor.getNativeHeader("Authorization"));
             try {
+                log.info("authorizationHeader : {}", authorizationHeader);
                 String jws = authorizationHeader.replace("Bearer ", "");
+                log.info("jws : {}", jws);
                 String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
                 claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey);
 
