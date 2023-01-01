@@ -31,9 +31,8 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/chats/message") // pub/chats/message -> 메세지를 pub 시킬 url
-    public void message(@Header("senderId") Long memberId,
-                        @Payload ChatRequestDto chatRequestDto) {
-        ChatResponseDto response = chatService.createMessage(memberId, chatRequestDto);
+    public void message(@Payload ChatRequestDto chatRequestDto) {
+        ChatResponseDto response = chatService.createMessage(chatRequestDto);
         // 해당 채팅방 url : "/sub/chat/room/{roomId} -> 실시간으로 채팅을 받으려면 해당 rul 구독 필요
         messagingTemplate.convertAndSend("/sub/chat/room/" + response.getChatRoomId(),
                 response);

@@ -13,13 +13,15 @@ public class ChatRequestDto {
 
     // 메세지를 던질 roomId
     private long chatRoomId;
+    private long senderId;
 
     // 메세지
     private String message;
 
     @Builder
-    public ChatRequestDto(long chatRoomId, String message) {
+    public ChatRequestDto(long chatRoomId, long senderId, String message) {
         this.chatRoomId = chatRoomId;
+        this.senderId = senderId;
         this.message = message;
     }
 

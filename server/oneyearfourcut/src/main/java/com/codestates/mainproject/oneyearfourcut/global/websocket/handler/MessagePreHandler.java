@@ -68,7 +68,7 @@ public class MessagePreHandler implements ChannelInterceptor {
         }
         // 연결, 메세지 발행, 구독일 때만 토큰 검사
         if (isVerify) {
-            String authorizationHeader = String.valueOf(accessor.getFirstNativeHeader("Authorization"));
+            String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
             try {
                 log.info("authorizationHeader : {}", authorizationHeader);
                 String jws = authorizationHeader.replace("Bearer ", "");
@@ -88,7 +88,6 @@ public class MessagePreHandler implements ChannelInterceptor {
             }
             senderId = Long.valueOf((Integer) claims.getBody().get("id"));
             log.info("senderId : {}", senderId);
-            message.getHeaders().put("senderId", senderId);
         }
         return message;
     }

@@ -29,11 +29,10 @@ public class ChatService {
     private final MemberService memberService;
     private final ChatRoomService chatRoomService;
 
-    public ChatResponseDto createMessage(long memberId,
-                                         ChatRequestDto chatRequestDto) {
+    public ChatResponseDto createMessage(ChatRequestDto chatRequestDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
-        log.info("pub Message - memberId : {}", memberId);
         long chatRoomId = chatRequestDto.getChatRoomId();
+        long memberId = chatRequestDto.getSenderId();
         Chat chatRequest = chatRequestDto.toEntity();
 
         ChatRoom findChatRoom = chatRoomService.findVerifiedChatRoomWithMember(memberId, chatRoomId);
