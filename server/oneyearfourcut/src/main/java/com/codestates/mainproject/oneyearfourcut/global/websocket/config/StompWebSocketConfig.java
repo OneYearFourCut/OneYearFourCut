@@ -25,7 +25,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws/stomp") // websocket 핸드쉐이크 커넥션 엔드포인트
                 .setAllowedOriginPatterns("*") // 테스트용, 실제 : front분들 요청의 origin으로 변경해야 함.
-                .withSockJS();
+                .withSockJS().setHeartbeatTime(1000);
         registry.setErrorHandler(messageErrorHandler);
     }
 
