@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 public class ChatResponseDto {
     private long chatRoomId;
+    // 채팅 주인 구분용 Id
+    private long senderId;
     // 유저 사진
     private String profile;
     // 유저 이름
@@ -20,12 +22,11 @@ public class ChatResponseDto {
     // 시간
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
-    // 가능하다면 1분 이내 말한건 리스트로?
-    // 음?
 
     @Builder
-    public ChatResponseDto(long chatRoomId, String profile, String nickName, String message, LocalDateTime createdAt) {
+    public ChatResponseDto(long chatRoomId, long senderId, String profile, String nickName, String message, LocalDateTime createdAt) {
         this.chatRoomId = chatRoomId;
+        this.senderId = senderId;
         this.profile = profile;
         this.nickname = nickName;
         this.message = message;

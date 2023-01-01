@@ -25,15 +25,17 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
     @Override
     public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage, Throwable ex) {
         String errorMessage = ex.getCause().getMessage();
-        if (errorMessage.equals("JWT signature")) {
-            log.error("JWT 토큰 값과 관련한 에러 발생");
+        if (errorMessage.equals("잘못된")) {
+            log.error("WRONG_ACCESS_TOKEN");
             return prepareErrorMessage(ErrorResponse.of(ExceptionCode.WRONG_ACCESS_TOKEN));
         }
-        if (errorMessage.equals("JWT expired")) {
+        if (errorMessage.equals("expired")) {
+            log.error("EXPIRED_ACCESS_TOKEN");
             return prepareErrorMessage(ErrorResponse.of(ExceptionCode.EXPIRED_ACCESS_TOKEN));
         }
-        if (errorMessage.equals("Auth")) {
-            return prepareErrorMessage(ErrorResponse.of(ExceptionCode.UNAUTHORIZED));
+        if (errorMessage.equals("Access")) {
+            log.error("NO_ACEESS_TOKEN");
+            return prepareErrorMessage(ErrorResponse.of(ExceptionCode.NO_ACEESS_TOKEN));
         }
         return super.handleClientMessageProcessingError(clientMessage, ex);
 }

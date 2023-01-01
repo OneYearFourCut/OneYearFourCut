@@ -25,7 +25,8 @@ public enum ExceptionCode {
     //파일 관련
     EXCEEDED_FILE_SIZE(400, "파일 사이즈가 10MB를 초과하였습니다."),
     INVALID_FILE_TYPE(400, "잘못된 파일명입니다."),
-    UNSUPPORTED_FILE_EXTENSION(400, "지원하지 않는 확장자입니다.");
+    UNSUPPORTED_FILE_EXTENSION(400, "지원하지 않는 확장자입니다."),
+    CHATROOM_NOT_FOUND(400, "채팅방이 존재하지 않습니다.");
 
     @Getter
     private int status;

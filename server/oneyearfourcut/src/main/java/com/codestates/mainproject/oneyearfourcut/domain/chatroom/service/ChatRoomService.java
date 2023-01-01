@@ -1,6 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.chatroom.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomPageResponseDto;
+import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomMemberInfo;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,14 +45,12 @@ public class ChatRoomService {
         Member receiver = memberService.findMember(receiverId);
         ChatRoom createdChatRoom = chatRoomRepository.save(chatRoom);
 
-        // 테스트용
-//        Member receiver = new Member(receiverId);
         return new ChatRoomResponseDto().of(receiver, createdChatRoom);
     }
 
     /* 채팅방 전체 조회 */
     // 채팅방을 불러올 때 채팅리스트가 비어있다면 삭제하면?
-    public List<ChatRoomResponseDto> getChatRoomList(long memberId) {
+    public List<ChatRoomResponseDto> findChatRoomList(long memberId) {
         // 아래 메서드 jpql
         List<ChatRoomResponseDto> findChatRoomResponseDtoList = chatRoomRepository.findAllByMemberId(memberId);
 
@@ -68,11 +65,9 @@ public class ChatRoomService {
         return findChatRoomResponseDtoList;
     }
 
-    // 채팅방 단일 조회 -> 채팅 리스트 반환 -> chatService에서 구현
-
-
     // void type 메서드 테스트코드 작성하기 힘들어서 boolean으로 지정
     public boolean verifyChatRoomWithMember(long memberId, long chatRoomId) {
+        verifyExistsChatRoom(chatRoomId);
         Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByMemberIdAndChatRoomId(memberId, chatRoomId);
 
         optionalChatRoom.orElseThrow(
@@ -88,6 +83,20 @@ public class ChatRoomService {
                 () -> new BusinessLogicException(ExceptionCode.UNAUTHORIZED));
 
         return findChatRoom;
+    }
+
+    public boolean verifyExistsChatRoom(long chatRoomId) {
+        boolean doesChatRoomExists = chatRoomRepository.existsByChatRoomId(chatRoomId);
+
+        if (!doesChatRoomExists) {
+            throw new BusinessLogicException(ExceptionCode.CHATROOM_NOT_FOUND);
+        }
+        return doesChatRoomExists;
+    }
+
+    public List<ChatRoomMemberInfo> findChatRoomMemberInfo(long memberId, long chatRoomId) {
+        List<ChatRoomMemberInfo> memberInfos = chatRoomRepository.findChatRoomMemberInfoByMemberIdAndChatRoomId(memberId, chatRoomId);
+        return memberInfos;
     }
 
 }

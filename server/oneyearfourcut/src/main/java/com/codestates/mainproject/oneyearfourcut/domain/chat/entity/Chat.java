@@ -30,10 +30,8 @@ public class Chat extends Auditable {
     private Member member;
 
     @Builder
-    public Chat(Long roomId, String message, Long senderId) {
+    public Chat(String message) {
         this.message = message;
-        this.setChatRoom(new ChatRoom(roomId));
-        this.setMember(new Member(senderId));
     }
 
     public void setMember(Member member) {
@@ -41,14 +39,13 @@ public class Chat extends Auditable {
     }
     public void setChatRoom(ChatRoom chatRoom) {
         chatRoom.setLastChatMessage(this.getMessage());
-        System.out.println("this.getMessage() = " + this.getMessage());
-        System.out.println("chatRoom.getLastChatMessage() = " + chatRoom.getLastChatMessage());
         this.chatRoom = chatRoom;
     }
 
     public ChatResponseDto toResponseDto() {
         return ChatResponseDto.builder()
                 .chatRoomId(this.chatRoom.getChatRoomId())
+                .senderId(this.member.getMemberId())
                 .profile(this.member.getProfile())
                 .nickName(this.member.getNickname())
                 .message(this.message)

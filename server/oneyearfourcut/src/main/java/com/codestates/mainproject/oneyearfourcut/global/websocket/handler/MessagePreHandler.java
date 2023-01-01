@@ -1,6 +1,8 @@
 package com.codestates.mainproject.oneyearfourcut.global.websocket.handler;
 
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,6 +17,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.ObjectError;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,31 +33,61 @@ public class MessagePreHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String command = String.valueOf(accessor.getCommand());
+        boolean isVerify = command.equals("CONNECT") || command.equals("SEND") || command.equals("SUBSCRIBE");
 
-        // 일단 연결할 때만 jwt 검사
-        if (command.equals("CONNECT")) {
-            log.info("WebSocket CONNECT 요청");
+        Long senderId = null;
+        Jws<Claims> claims = null;
+        switch (command) { // 테스트용 command 로그
+            case ("CONNECT"):
+                log.info("CONNECT 요청");
+                break;
+            case ("DISCONNECT"):
+                log.info("DISCONNECT 요청");
+                break;
+            case ("SUBSCRIBE"):
+                log.info("SUBSCRIBE 요청");
+                break;
+            case ("UNSUBSCRIBE"):
+                log.info("UNSUBSCRIBE 요청");
+                break;
+            case ("SEND"):
+                log.info("SEND 요청");
+                break;
+            case ("ACK"):
+                log.info("ACK 요청");
+                break;
+            case ("BEGIN"):
+                log.info("BEGIN 요청");
+                break;
+            case ("COMMIT"):
+                log.info("COMMIT 요청");
+                break;
+            case ("ABORT"):
+                log.info("ABORT 요청");
+                break;
+        }
+        // 연결, 메세지 발행, 구독일 때만 토큰 검사
+        if (isVerify) {
             String authorizationHeader = String.valueOf(accessor.getNativeHeader("Authorization"));
-//            try {
-//                String jws = authorizationHeader.replace("Bearer ", "");
-//                String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-//                Jws<Claims> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey);
-//
-//            } catch (ExpiredJwtException ne) {
-//                throw new MessageDescriptorFormatException()
-//            } catch (SignatureException se) {
-//
-//            } catch (NullPointerException ne) {
-//
-//            }
-        }
-        if (command.equals("SEND")) {
-            log.info("WebSocket SEND 요청");
-            log.info("WebSocket SEND 요청(payload) : {}", message.getPayload());
-            log.info("WebSocket SEND 요청(header) : {}", message.getHeaders());
-            log.info("WebSocket SEND 요청(payload) : {}", gson.toJson(message.getPayload()));
-        }
+            try {
+                String jws = authorizationHeader.replace("Bearer ", "");
+                String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+                claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey);
 
+            } catch (ExpiredJwtException ne) {
+                log.info("EXPIRED_ACCESS_TOKEN");
+                throw new BusinessLogicException(ExceptionCode.EXPIRED_ACCESS_TOKEN);
+            } catch (SignatureException se) {
+                log.info("WRONG_ACCESS_TOKEN");
+                throw new BusinessLogicException(ExceptionCode.WRONG_ACCESS_TOKEN);
+            } catch (NullPointerException ne) {
+                log.info("NO_ACEESS_TOKEN");
+                throw new BusinessLogicException(ExceptionCode.NO_ACEESS_TOKEN);
+            }
+            senderId = Long.valueOf((Integer) claims.getBody().get("id"));
+            log.info("senderId : {}", senderId);
+            message.getHeaders().put("senderId", senderId);
+        }
         return message;
     }
 }

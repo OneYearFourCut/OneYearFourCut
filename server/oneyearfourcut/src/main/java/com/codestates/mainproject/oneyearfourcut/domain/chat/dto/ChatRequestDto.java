@@ -12,24 +12,19 @@ import lombok.Setter;
 public class ChatRequestDto {
 
     // 메세지를 던질 roomId
-    private long roomId;
+    private long chatRoomId;
 
-    // 메세지를 발신하는 memberId;
-    private long senderId;
     // 메세지
     private String message;
 
     @Builder
-    public ChatRequestDto(long roomId, long senderId, String message) {
-        this.roomId = roomId;
-        this.senderId = senderId;
+    public ChatRequestDto(long chatRoomId, String message) {
+        this.chatRoomId = chatRoomId;
         this.message = message;
     }
 
     public Chat toEntity() {
         return Chat.builder()
-                .roomId(this.roomId)
-                .senderId(senderId)
                 .message(this.message)
                 .build();
     }

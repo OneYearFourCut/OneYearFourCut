@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.chat.controller;
 
+import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatListResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.serivce.ChatService;
@@ -30,15 +31,9 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/chats/message") // pub/chats/message -> 메세지를 pub 시킬 url
-    public void message(ChatRequestDto chatRequestDto) {
-
-//        String requestDto = message.ge;
-        // 채팅방을 구독하고 있는 user에게 sse로 send해야 함.
-        ChatResponseDto response = chatService.createMessage(chatRequestDto);
-
-        // roomId의 member가 맞는지 확인하는 로직 필요?
-
-        // 해당 room을 구독하고 있는 user에게 메세지를 뿌림.
+    public void message(@Header("senderId") Long memberId,
+                        @Payload ChatRequestDto chatRequestDto) {
+        ChatResponseDto response = chatService.createMessage(memberId, chatRequestDto);
         // 해당 채팅방 url : "/sub/chat/room/{roomId} -> 실시간으로 채팅을 받으려면 해당 rul 구독 필요
         messagingTemplate.convertAndSend("/sub/chat/room/" + response.getChatRoomId(),
                 response);
@@ -47,7 +42,7 @@ public class ChatController {
     @GetMapping("/rooms/{chat-room-id}")
     public ResponseEntity<?> getChatMessageList(@LoginMember Long memberId, @PathVariable("chat-room-id") long chatRoomId) {
 
-        List<ChatResponseDto> response = chatService.findChatList(memberId, chatRoomId);
+        ChatListResponseDto response = chatService.findChatList(memberId, chatRoomId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
