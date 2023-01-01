@@ -11,6 +11,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberSer
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRoomService {
 
     private final MemberService memberService;
@@ -81,7 +83,6 @@ public class ChatRoomService {
 
         ChatRoom findChatRoom = optionalChatRoom.orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.UNAUTHORIZED));
-
         return findChatRoom;
     }
 

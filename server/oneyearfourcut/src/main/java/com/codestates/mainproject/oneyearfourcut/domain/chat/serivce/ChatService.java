@@ -33,6 +33,9 @@ public class ChatService {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
         long chatRoomId = chatRequestDto.getChatRoomId();
         long memberId = chatRequestDto.getSenderId();
+        log.info("chatRoomId : {}", chatRoomId);
+        log.info("memberId : {}", memberId);
+
         Chat chatRequest = chatRequestDto.toEntity();
 
         ChatRoom findChatRoom = chatRoomService.findVerifiedChatRoomWithMember(memberId, chatRoomId);
@@ -41,7 +44,7 @@ public class ChatService {
         chatRequest.setMember(findMember);
         chatRequest.setChatRoom(findChatRoom);
         Chat savedChat = chatRepository.save(chatRequest);
-
+        log.info("savedChat.chatRoomId : {}", savedChat.getChatRoom().getChatRoomId());
         return savedChat.toResponseDto();
     }
 
