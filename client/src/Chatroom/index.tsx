@@ -21,6 +21,7 @@ const Chatroom = () => {
   useEffect(() => {
     bind(client);
     connect(client, roomId, setProcessedData, dataProcessing, serverData);
+
     return () => {
       const headers = {
         Authorization: getStoredToken()?.access_token,
@@ -35,8 +36,7 @@ const Chatroom = () => {
   return (
     <DefualtContainer>
       <ChatRoomHeader
-        img={serverData?.data.img}
-        roomTitle={serverData?.data.title}
+        chatRoomMemberInfoList = {serverData?.data.chatRoomMemberInfoList}
       ></ChatRoomHeader>
       <ChatRoomBody processedData={processedData} />
       <ChatRoomInput client={client} roomId={roomId} />

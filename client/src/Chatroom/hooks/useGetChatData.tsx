@@ -32,7 +32,7 @@ export const useGetChatData = (roomId: number) => {
   //처음 요청시에만
   useEffect(() => {
     if (status === 'success') {
-      setProcessedData(dataProcessing(serverData.data.roomData, []));
+      setProcessedData(dataProcessing(serverData.data.chatResponseDtoList, []));
     }
   }, []);
 

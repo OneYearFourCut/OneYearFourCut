@@ -13,39 +13,38 @@ export const ChatRoomInput = ({
   const memberId = loginStore().user!.memberId!;
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+  const handleSendMsg = () => {
+    const sendData = {
+      chatRoomId: roomId,
+      senderId: memberId,
+      message: textAreaRef.current && textAreaRef.current.value,
+    };
+    send(client, sendData);
+    textAreaRef.current!.value = '';
+  };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault(); //줄바꿈 동작 막음
-      const sendData = {
-        roomId: roomId,
-        senderId: memberId,
-        message: textAreaRef.current && textAreaRef.current.value,
-      };
-      send(client, sendData);
+      handleSendMsg();
     }
   };
-  const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      textAreaRef.current!.value = '';
-    }
-  };
+  // const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  //   if (e.key === 'Enter' && !e.shiftKey) {
+  //     // textAreaRef.current!.value = '';
+  //   }
+  // };
 
   return (
     <S.ChatRoomInputContainer>
       <textarea
         onKeyDown={handleKeyDown}
-        onKeyUp={handleKeyUp}
+        // onKeyUp={handleKeyUp}
         autoComplete='off'
         ref={textAreaRef}
       />
       <button
         onClick={() => {
-          send(client, {
-            chatRoomId: roomId,
-            senderId: memberId,
-            message: textAreaRef.current && textAreaRef.current.value,
-          });
-          textAreaRef.current!.value = '';
+          handleSendMsg();
         }}
       >
         전송

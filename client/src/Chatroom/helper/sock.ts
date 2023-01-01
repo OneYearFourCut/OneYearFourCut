@@ -10,9 +10,8 @@ const headers = {
 export const bind = (client: any) => {
   const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
   client.current = StompJS.over(sockJS);
-  // client.current.debug = null;
+  client.current.debug = null;
 };
-
 export const connect = (
   client: any,
   roomId: number,
@@ -28,6 +27,8 @@ export const connect = (
     (frame: any) => {
       console.log('연결성공');
       read();
+      client.current.heartbeat.incoming = 0;
+      client.current.heartbeat.outgoing = 0;
     },
     (err: any) => {
       console.log('소켓연결오류');
@@ -40,7 +41,7 @@ export const connect = (
       `/sub/chat/room/${roomId}`,
       (data: any) => {
         //caching을 위함.
-        serverData.data.unshift(JSON.parse(data.body));
+        serverData.data.chatResponseDtoList.unshift(JSON.parse(data.body));
 
         setProcessedData((processedData: IChatData[]) => {
           return dataProcessing([JSON.parse(data.body)], processedData);
