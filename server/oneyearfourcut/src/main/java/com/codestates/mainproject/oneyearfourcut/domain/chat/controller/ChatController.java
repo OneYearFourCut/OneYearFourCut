@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -39,6 +40,11 @@ public class ChatController {
         // 해당 채팅방 url : "/sub/chat/room/{roomId} -> 실시간으로 채팅을 받으려면 해당 rul 구독 필요
         messagingTemplate.convertAndSend("/sub/chats/rooms/" + response.getChatRoomId(), // "/sub/chats/rooms/{chat-room-id}
                 response);
+    }
+    @MessageExceptionHandler
+    public void handleExceptions(Throwable ta, @Payload ChatRequestDto chatRequestDto) {
+        log.error("에러발생 : {}", ta.getMessage());
+        messagingTemplate.convertAndSend("/sub/chats/rooms/" + chatRequestDto.getChatRoomId(), ta.getMessage());
     }
 
     @GetMapping("/rooms/{chat-room-id}")  // "chats/rooms/{chat-room-id}/messages"
