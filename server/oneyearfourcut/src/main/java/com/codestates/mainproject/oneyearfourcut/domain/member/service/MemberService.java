@@ -88,7 +88,8 @@ public class MemberService {
         findMember.updateStatus(MemberStatus.DELETE);
 
         followRepository.updateAllFollowCheckBooleanByMemberId(memberId); //해당 갤러리 맞팔 체크 false
-        followRepository.deleteAllByMemberId(memberId); // 멤버 삭제시 follower 벌크 삭제 커스텀 쿼리
+        followRepository.deleteAllByMemberId(memberId); // 멤버 삭제시 following 벌크 삭제 커스텀 쿼리
+        followRepository.deleteAllByFollowMemberId(memberId); // 멤버 삭제시 follower 벌크 삭제 커스텀 쿼리
 
         Member member = memberRepository.save(findMember);
 

@@ -36,9 +36,14 @@ public interface FollowRepository extends JpaRepository<Follow, Long> , PagingAn
     @Query("UPDATE from Follow f SET f.isFollowTogetherCheck = false where f.member = :memberId")
     void updateAllFollowCheckBooleanByMemberId(Long memberId);
 
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("DELETE from Follow f where f.followMemberId = :followMemberId")
+    void deleteAllByFollowMemberId(Long followMemberId);
+
     List<Follow> findAllByFollowMemberIdOrderByFollowIdDesc(Long followMemberId); // 나(나의갤러리)를 팔로잉 하는 팔로워 리스트 조회
 
     List<Follow> findAllByMember_MemberIdOrderByFollowIdDesc(Long memberId); //내가 팔로잉하는 ...리스트 조회
+
 
 }
 
