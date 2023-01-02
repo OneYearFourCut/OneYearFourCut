@@ -31,4 +31,5 @@ public class chatRoomController {
                 chatRoomService.findChatRoomList(memberId);
         return new ResponseEntity(response, HttpStatus.OK);
     }
+
 }

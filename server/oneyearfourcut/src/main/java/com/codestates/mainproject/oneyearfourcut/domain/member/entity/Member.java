@@ -106,7 +106,4 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
-
-    @OneToOne(mappedBy = "member")
-    private RefreshToken refreshToken;
 }

@@ -34,7 +34,6 @@ public class MessagePreHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String command = String.valueOf(accessor.getCommand());
         boolean isVerify = command.equals("CONNECT") || command.equals("SEND") || command.equals("SUBSCRIBE");
-
         Long senderId = null;
         Jws<Claims> claims = null;
         switch (command) { // 테스트용 command 로그
@@ -43,9 +42,13 @@ public class MessagePreHandler implements ChannelInterceptor {
                 break;
             case ("DISCONNECT"):
                 log.info("DISCONNECT 요청");
+                log.info("DISCONNECT - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
+                log.info("DISCONNECT - getSessionId : {}", accessor.getSessionId());
                 break;
             case ("SUBSCRIBE"):
                 log.info("SUBSCRIBE 요청");
+                log.info("SUBSCRIBE - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
+                log.info("SUBSCRIBE - getSessionId : {}", accessor.getSessionId());
                 break;
             case ("UNSUBSCRIBE"):
                 log.info("UNSUBSCRIBE 요청");
@@ -91,4 +94,6 @@ public class MessagePreHandler implements ChannelInterceptor {
         }
         return message;
     }
+
+
 }
