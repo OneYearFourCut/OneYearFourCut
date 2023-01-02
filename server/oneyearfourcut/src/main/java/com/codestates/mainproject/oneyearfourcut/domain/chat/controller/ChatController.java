@@ -40,11 +40,6 @@ public class ChatController {
         messagingTemplate.convertAndSend("/sub/chats/rooms/" + response.getChatRoomId(), // "/sub/chats/rooms/{chat-room-id}
                 response);
     }
-    @SubscribeMapping("/sub/chats/rooms/")
-    public String onSubscribe() {
-        log.info("##### onSubscribe ####");
-        return "구독 Good~!";
-    }
 
     @GetMapping("/rooms/{chat-room-id}")  // "chats/rooms/{chat-room-id}/messages"
     public ResponseEntity<?> getChatMessageList(@LoginMember Long memberId, @PathVariable("chat-room-id") long chatRoomId) {
