@@ -25,7 +25,7 @@ public class Member extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(length = 8, nullable = false)
+    @Column(nullable = false)
     private String nickname;
 
     @Column(nullable = false, unique = true)
@@ -82,6 +82,7 @@ public class Member extends Auditable {
         return MemberResponseDto.builder()
                 .nickname(this.nickname)
                 .profile(this.profile)
+                .memberId(this.memberId)
                 .galleryId(galleryId)
                 .build();
     }
@@ -106,6 +107,6 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member")
-    private RefreshToken refreshToken;
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+//    private RefreshToken refreshToken;
 }

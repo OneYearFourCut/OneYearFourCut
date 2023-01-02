@@ -33,7 +33,8 @@ public enum ExceptionCode {
     FOLLOW_NOT_FOUND(400, "Follow 유저가 존재 하지 않습니다." ),
     ALREADY_FOLLOWED(400, "이미 팔로우 한 상태입니다." ),
     CANNOT_FOLLOW_OWN_GALLERY(400 ,"자기 자신의 Gallery는 Follow 할 수 없습니다." ),
-    CANNOT_DELETE_FOLLOW_FROM_OTHERS(400,"타인의 Follow는 삭제 할 수 없습니다." );
+    CANNOT_DELETE_FOLLOW_FROM_OTHERS(400,"타인의 Follow는 삭제 할 수 없습니다." ),
+    CHATROOM_NOT_FOUND(400, "채팅방이 존재하지 않습니다.");
 
     @Getter
     private int status;
