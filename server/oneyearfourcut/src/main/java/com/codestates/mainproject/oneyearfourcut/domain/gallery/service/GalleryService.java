@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.follow.repository.FollowRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
@@ -26,6 +27,7 @@ import static com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Ga
 public class GalleryService {
     private final GalleryRepository galleryRepository;
     private final MemberService memberService;
+    private final FollowRepository followRepository;
 
     public GalleryResponseDto createGallery(GalleryRequestDto galleryRequestDto, Long memberId) {
         // 오픈된 전시관이 이미 존재하는지 확인하고 있으면 에러
@@ -68,6 +70,9 @@ public class GalleryService {
         Gallery findGallery = findLoginGallery(loginId);
 
         findGallery.updateStatus(CLOSED);
+
+        followRepository.updateAllFollowCheckBooleanByGalleryId(findGallery.getGalleryId()); //해당 갤러리 맞팔 체크 false
+        followRepository.deleteAllByGalleryId(findGallery.getGalleryId()); //해당 갤러리의 follower 벌크 삭제 커스텀 쿼리
     }
 
     //전시관이 유효한지 검증하는 메서드
