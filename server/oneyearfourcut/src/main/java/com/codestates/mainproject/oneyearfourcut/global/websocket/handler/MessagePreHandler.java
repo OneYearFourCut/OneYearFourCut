@@ -55,6 +55,8 @@ public class MessagePreHandler implements ChannelInterceptor {
                 break;
             case ("SEND"):
                 log.info("SEND 요청");
+                log.info("SEND - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
+                log.info("SEND - getSessionId : {}", accessor.getSessionId());
                 break;
             case ("ACK"):
                 log.info("ACK 요청");

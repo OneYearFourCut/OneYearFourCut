@@ -68,6 +68,7 @@ class MemberControllerRestDocsTest {
                     .build();
         }
     }
+
     @BeforeAll
     public static void setup() {
         //security context holder
@@ -77,16 +78,15 @@ class MemberControllerRestDocsTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(new PrincipalDto(username, id), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-
     private String jwt = "Bearer test1234test1234";
-    private Member member = Member.builder()
-            .nickname("홍길동")
-            .profile("http://testprofile")
-            .build();
 
     @Test
     void getMember() throws Exception {
         //given
+        Member member = new Member(1L);
+        member.updateProfile("http://testprofile");
+        member.updateNickname("홍길동");
+
         given(memberService.findMember(anyLong()))
                 .willReturn(member);
 
@@ -111,8 +111,10 @@ class MemberControllerRestDocsTest {
                         responseFields(
                                 List.of(
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("이름"),
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
                                         fieldWithPath("profile").type(JsonFieldType.STRING).description("프로필 이미지 경로"),
                                         fieldWithPath("galleryId").type(JsonFieldType.NULL).description("오픈 전시관 식별자(없으면 null, 있으면 숫자)")
+
                                 )
                         )
                 ));
@@ -121,7 +123,11 @@ class MemberControllerRestDocsTest {
     @Test
     void patchMember() throws Exception {
         //given
-        // member 등록
+        Member member = Member.builder()
+                .nickname("홍길동")
+                .profile("http://testprofile")
+                .build();
+
         given(memberService.modifyMember(anyLong(), any(MemberRequestDto.class)))
                 .willReturn(member.toMemberResponseDto());
 

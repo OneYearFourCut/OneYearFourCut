@@ -82,7 +82,6 @@ public class Member extends Auditable {
         return MemberResponseDto.builder()
                 .nickname(this.nickname)
                 .profile(this.profile)
-                .memberId(this.memberId)
                 .galleryId(galleryId)
                 .build();
     }
@@ -106,4 +105,7 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
+
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+//    private RefreshToken refreshToken;
 }

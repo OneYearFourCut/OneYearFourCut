@@ -29,16 +29,16 @@ public class Comment extends Auditable {
     @Column(length = 30, nullable = false)
     private String content; // 댓글 내용
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 작성자 회원 id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gallery_id")
     private Gallery gallery;  //작품이 아닌 전시관 전체 댓글일때
 
     // Artwork 연관관계 매핑 추가 (단방향)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artwork_id")
     private Artwork artwork;
 
