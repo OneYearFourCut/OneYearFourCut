@@ -8,7 +8,7 @@ const Index = ({ galleryId }: GalleryType) => {
   const navigate = useNavigate();
   const handleClick = () => {
     // navigate(`/uploadPicture/${galleryId}`);
-    navigate(`/chatroom/1`);
+    navigate(`/chatroom/4`);
   };
 
   return (

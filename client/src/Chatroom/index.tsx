@@ -6,7 +6,7 @@ import { useGetChatData } from './hooks/useGetChatData';
 import { getStoredToken } from 'Intro/hooks/tokenStorage';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import { bind, connect } from './helper/sock';
+import { bind, connect, disconnect } from './helper/sock';
 import StompJS from 'stompjs';
 
 const Chatroom = () => {
@@ -21,22 +21,18 @@ const Chatroom = () => {
   useEffect(() => {
     bind(client);
     connect(client, roomId, setProcessedData, dataProcessing, serverData);
-
     return () => {
-      const headers = {
-        Authorization: getStoredToken()?.access_token,
-      };
-      for (let subscriptionId in client.current?.subscriptions) {
-        client.current?.unsubscribe(subscriptionId);
-      }
-      client.current?.disconnect(() => console.log('소켓종료'), headers);
+      disconnect(client);
+      // window.location.reload();
     };
   }, []);
+
+
 
   return (
     <DefualtContainer>
       <ChatRoomHeader
-        chatRoomMemberInfoList = {serverData?.data.chatRoomMemberInfoList}
+        chatRoomMemberInfoList={serverData?.data.chatRoomMemberInfoList}
       ></ChatRoomHeader>
       <ChatRoomBody processedData={processedData} />
       <ChatRoomInput client={client} roomId={roomId} />

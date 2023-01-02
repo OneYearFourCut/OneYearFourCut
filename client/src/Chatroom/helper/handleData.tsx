@@ -6,21 +6,21 @@ export const handleData = (
   senderId: number,
 ) => {
   const checkDataListAtdayDate = (dataList: IChatData[], dayDate: string) => {
-    //dataList에 해당날짜가 존재하면 해당 인덱스 리턴, 존재하지 않으면 false
     for (let i = dataList.length - 1; i >= 0; i--) {
       if (dataList[i].dayDate === dayDate) return i;
     }
     return false;
   };
 
-  const makeChatListObject = (data: IChatServerData): IChat => {
-    let time = data.createdAt.split('T')[1];
+  //넣을 데이터 가공하는곳
+  const makeChatListObject = (serverData: IChatServerData): IChat => {
+    let time = serverData.createdAt.split('T')[1];
     return {
-      content: [data.message],
+      content: [serverData.message],
       time,
-      img: data.profile,
-      nickName: data.nickname,
-      type: senderId === data.senderId ? 'right' : 'left',
+      img: serverData.profile,
+      nickName: serverData.nickname,
+      type: typeDecision(senderId, serverData.senderId),
     };
   };
 
@@ -29,18 +29,26 @@ export const handleData = (
   const addDataListOrContent = (chatList: IChat[], data: IChatServerData) => {
     let time = data.createdAt.split('T')[1];
 
-    let type = senderId === data.senderId ? 'right' : 'left';
+    let type = typeDecision(senderId, data.senderId);
+
+    //마지막으로 보낸 메세지가 상대방이라면
     if (chatList[chatList.length - 1].type !== type) {
       chatList.push(makeChatListObject(data));
-    } else {
-      for (let i = chatList.length - 1; i >= 0; i--) {
-        if (chatList[i].type === type && chatList[i].time === time) {
-          chatList[i].content.push(data.message);
-          return;
-        }
-      }
-      chatList.push(makeChatListObject(data));
     }
+
+    //마지막으로 보낸 메세지가 내가보낸것인것중에
+    else {
+      // 가장 최신의 메세지의 시간이 보낸시간과 같으면 해당 content에 push
+      if (chatList[chatList.length - 1].time === time) {
+        chatList[chatList.length - 1].content.push(data.message);
+      }
+      // 가장 최신의 메세지의 시간이 보낸시간과 다르면 새로운 chatList 생성(push)
+      else chatList.push(makeChatListObject(data));
+    }
+  };
+
+  const typeDecision = (memberId: number, senderId: number) => {
+    return memberId === senderId ? 'right' : 'left';
   };
 
   const day = [
@@ -53,6 +61,7 @@ export const handleData = (
     '토요일',
   ];
 
+  //실시간 채팅으로 받는 데이터는 배열의 크기가 1이므로 한번만 작동
   for (let i = serverData.length - 1; i >= 0; i--) {
     let date = new Date(serverData[i].createdAt);
     let dayDate = `${date.getFullYear()}년 ${
@@ -60,27 +69,33 @@ export const handleData = (
     }월 ${date.getDate()}일 ${day[date.getDay()]}`;
 
     let checkResult = checkDataListAtdayDate(processedData, dayDate);
-
+    //dataList에 해당날짜가 존재하면 해당 '인덱스' 리턴, 존재하지 않으면 false
     if (checkResult === false) {
       processedData.push({
         dayDate: dayDate,
         chatList: [makeChatListObject(serverData[i])],
       });
-    } else {
-      if (
-        processedData[checkResult].chatList[0].time ===
-        serverData[i].createdAt.split('T')[1]
-      )
-        processedData[checkResult].chatList[0].content.push(
-          serverData[i].message,
-        );
-      else
-        addDataListOrContent(
-          processedData[checkResult].chatList,
-          serverData[i],
-        );
+    }
+    //새로운 날짜에 넣음
+    else {
+      addDataListOrContent(processedData[checkResult].chatList, serverData[i]);
     }
   }
   //useState값인 processedData를 매개변수로 받았기 때문에 그대로 setState를 하면 배열이 안변한줄알아서 업데이트가 안된다. 따라서 새로운 배열을 할당해줘야한다.
   return [...processedData];
 };
+
+/*
+[
+  {
+    dayDate: '2022년 12월 22일 월요일',
+    chatList: {
+                content: ['test내용1' 'test내용2'],
+                time: '10:20',
+                img: '이미지 경로',
+                nickName: '닉네임',
+                type: 'left or right',
+              },
+  },
+] 
+*/

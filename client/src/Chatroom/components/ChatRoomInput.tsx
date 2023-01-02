@@ -28,17 +28,17 @@ export const ChatRoomInput = ({
       handleSendMsg();
     }
   };
-  // const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-  //   if (e.key === 'Enter' && !e.shiftKey) {
-  //     // textAreaRef.current!.value = '';
-  //   }
-  // };
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      textAreaRef.current!.value = '';
+    }
+  };
 
   return (
     <S.ChatRoomInputContainer>
       <textarea
         onKeyDown={handleKeyDown}
-        // onKeyUp={handleKeyUp}
+        onKeyUp={handleKeyUp}
         autoComplete='off'
         ref={textAreaRef}
       />
