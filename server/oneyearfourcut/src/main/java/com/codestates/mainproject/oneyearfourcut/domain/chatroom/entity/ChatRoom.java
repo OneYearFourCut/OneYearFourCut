@@ -22,7 +22,6 @@ public class ChatRoom {
     // 채팅이 추가되면 lastChatDate -> LocalDateTime.now()
     private LocalDateTime chattedAt;
 
-
     private String lastChatMessage;
 
     public ChatRoom(Long chatRoomId) {

@@ -22,6 +22,9 @@ public class ChatRoomResponseDto {
     // 상대방 이름
     private String nickName;
 
+    // 상대방 갤러리 Pk
+    private long galleryId;
+
     // 최종 수정 시간
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime chattedAt;
@@ -29,10 +32,11 @@ public class ChatRoomResponseDto {
     private String lastChatMessage;
 
     @Builder
-    public ChatRoomResponseDto(long chatRoomId, String profile, String nickName, LocalDateTime lastChatDate, String lastChatMessage) {
+    public ChatRoomResponseDto(long chatRoomId, String profile, String nickName, long galleryId, LocalDateTime lastChatDate, String lastChatMessage) {
         this.chatRoomId = chatRoomId;
         this.profile = profile;
         this.nickName = nickName;
+        this.galleryId = galleryId;
         this.chattedAt = lastChatDate;
         this.lastChatMessage = lastChatMessage;
     }

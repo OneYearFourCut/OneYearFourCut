@@ -16,5 +16,6 @@ public class ChatRoomRepositoryTest {
         chatRoomRepository.findAllByMemberId(1L);
         chatRoomRepository.findByMemberIdAndChatRoomId(1L, 2L);
         chatRoomRepository.findChatRoomMemberInfoByMemberIdAndChatRoomId(1L, 2L);
+
     }
 }

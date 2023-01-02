@@ -15,13 +15,16 @@ import java.util.Optional;
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @Query("SELECT new com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto."
-            + "ChatRoomResponseDto(cr.chatRoomId, m.profile, m.nickname, cr.chattedAt, cr.lastChatMessage) "
+            + "ChatRoomResponseDto(cr.chatRoomId, m.profile, m.nickname, mg.galleryId, cr.chattedAt, cr.lastChatMessage) "
             + "FROM ChatRoom cr "
             + "LEFT JOIN cr.chatRoomMemberList crm "
             + "LEFT JOIN Member m "
             + "ON crm.member.memberId = m.memberId "
+            + "LEFT JOIN m.galleryList mg "
             + "WHERE cr.chatRoomId IN (SELECT crm.chatRoom.chatRoomId FROM ChatRoomMember crm WHERE crm.member.memberId = :memberId) "
+            + "AND cr.lastChatMessage IS NOT NULL "
             + "AND crm.member.memberId != :memberId "
+            + "AND mg.status LIKE 'A%' "
             + "ORDER BY cr.chattedAt DESC")
     List<ChatRoomResponseDto> findAllByMemberId(Long memberId);
 
