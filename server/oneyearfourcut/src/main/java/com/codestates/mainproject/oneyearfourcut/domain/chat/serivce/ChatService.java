@@ -1,12 +1,11 @@
 package com.codestates.mainproject.oneyearfourcut.domain.chat.serivce;
 
 import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatListResponseDto;
-import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.entity.Chat;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.repository.ChatRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomMemberInfo;
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEventPublisher;
@@ -33,14 +32,14 @@ public class ChatService {
     private final ChatRoomService chatRoomService;
     private final ChatRoomEventPublisher chatRoomEventPublisher;
 
-    public ChatResponseDto createMessage(ChatRequestDto chatRequestDto) {
+    public ChatResponseDto createMessage(ChatPostDto chatPostDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
-        long chatRoomId = chatRequestDto.getChatRoomId();
-        long memberId = chatRequestDto.getSenderId();
+        long chatRoomId = chatPostDto.getChatRoomId();
+        long memberId = chatPostDto.getSenderId();
         log.info("chatRoomId : {}", chatRoomId);
         log.info("memberId : {}", memberId);
 
-        Chat chatRequest = chatRequestDto.toEntity();
+        Chat chatRequest = chatPostDto.toEntity();
 
         ChatRoom findChatRoom = chatRoomService.findVerifiedChatRoomWithMember(memberId, chatRoomId);
         Member findMember = memberService.findMember(memberId);

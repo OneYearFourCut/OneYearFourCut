@@ -58,16 +58,6 @@ public class ChatRoomService {
         // 아래 메서드 jpql
         List<ChatRoomResponseDto> findChatRoomResponseDtoList = chatRoomRepository.findAllByMemberId(memberId);
 
-
-
-        // 마지막 대화 내용이 없다면 채팅방을 만들어놓고 메세지를 안 보낸거니 조회하면 안됨. -> 상대방한테도 조회가 되니
-        // 이렇게 되면 채팅방은 쓸대없이 많이 차지하게 되는데.. 삭제를 진행하는게 좋을까
-        // 일단 주석처리 테스트용으로
-//        List<ChatRoomResponseDto> responseDtoList = findChatRoomResponseDtoList.stream()
-//                .filter(dto -> dto.getLastChatMessage() != null)
-//                .collect(Collectors.toList());
-//        return responseDtoList;
-
         return findChatRoomResponseDtoList;
     }
 

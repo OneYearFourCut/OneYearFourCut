@@ -1,29 +1,20 @@
 package com.codestates.mainproject.oneyearfourcut.domain.chat.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatListResponseDto;
-import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatRequestDto;
+import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.dto.ChatResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chat.serivce.ChatService;
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomPostDto;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.TextMessage;
-
-import javax.websocket.OnClose;
-import javax.websocket.Session;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -35,16 +26,16 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/chats/message") // pub/chats/{chat-room-id}/messages -> 메세지를 pub 시킬 url , requestMapping이랑 별도임.
-    public void message(@Payload ChatRequestDto chatRequestDto) {
-        ChatResponseDto response = chatService.createMessage(chatRequestDto);
+    public void message(@Payload ChatPostDto chatPostDto) {
+        ChatResponseDto response = chatService.createMessage(chatPostDto);
         // 해당 채팅방 url : "/sub/chat/room/{roomId} -> 실시간으로 채팅을 받으려면 해당 rul 구독 필요
         messagingTemplate.convertAndSend("/sub/chats/rooms/" + response.getChatRoomId(), // "/sub/chats/rooms/{chat-room-id}
                 response);
     }
     @MessageExceptionHandler
-    public void handleExceptions(Throwable ta, @Payload ChatRequestDto chatRequestDto) {
+    public void handleExceptions(Throwable ta, @Payload ChatPostDto chatPostDto) {
         log.error("에러발생 : {}", ta.getMessage());
-        messagingTemplate.convertAndSend("/sub/chats/rooms/" + chatRequestDto.getChatRoomId(), ta.getMessage());
+        messagingTemplate.convertAndSend("/sub/chats/rooms/" + chatPostDto.getChatRoomId(), ta.getMessage());
     }
 
     @GetMapping("/rooms/{chat-room-id}")  // "chats/rooms/{chat-room-id}/messages"

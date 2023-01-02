@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
-public class ChatRequestDto {
+public class ChatPostDto {
 
     // 메세지를 던질 roomId
     private long chatRoomId;
@@ -19,7 +19,7 @@ public class ChatRequestDto {
     private String message;
 
     @Builder
-    public ChatRequestDto(long chatRoomId, long senderId, String message) {
+    public ChatPostDto(long chatRoomId, long senderId, String message) {
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
         this.message = message;
