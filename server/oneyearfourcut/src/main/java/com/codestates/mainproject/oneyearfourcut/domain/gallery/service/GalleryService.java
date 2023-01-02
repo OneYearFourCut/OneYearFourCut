@@ -73,7 +73,6 @@ public class GalleryService {
 
         followRepository.updateAllFollowCheckBooleanByGalleryId(findGallery.getGalleryId()); //해당 갤러리 맞팔 체크 false
         followRepository.deleteAllByGalleryId(findGallery.getGalleryId()); //해당 갤러리의 follower 벌크 삭제 커스텀 쿼리
-        followRepository.deleteAllByMemberId(findGallery.getMember().getMemberId()); //해당 갤러리의 following 벌크 삭제 커스텀 쿼리
     }
 
     //전시관이 유효한지 검증하는 메서드
