@@ -3,7 +3,6 @@ import { DefualtContainer } from './components/style';
 import { ChatRoomInput } from './components/ChatRoomInput';
 import { ChatRoomBody } from './components/ChatRoomBody';
 import { useGetChatData } from './hooks/useGetChatData';
-import { getStoredToken } from 'Intro/hooks/tokenStorage';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { bind, connect, disconnect } from './helper/sock';

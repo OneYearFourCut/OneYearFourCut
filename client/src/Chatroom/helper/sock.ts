@@ -1,6 +1,6 @@
 import SockJS from 'sockjs-client';
 import StompJS from 'stompjs';
-import { IChatData, IChatServerData } from '../types';
+import { IChatData, IChatServerData } from '../types'
 import { getStoredToken } from 'Intro/hooks/tokenStorage';
 
 const headers = {
@@ -10,7 +10,7 @@ const headers = {
 export const bind = (client: any) => {
   const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
   client.current = StompJS.over(sockJS);
-  // client.current.debug = null;
+  client.current.debug = null;
 };
 
 export const connect = (

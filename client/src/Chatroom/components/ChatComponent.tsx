@@ -1,5 +1,5 @@
 import * as S from './style';
-import type { IChat } from 'ChatRoom/types';
+import type { IChat } from '../types';
 import { ChatContent } from './ChatContent';
 
 export const ChatComponent = (props: IChat) => {

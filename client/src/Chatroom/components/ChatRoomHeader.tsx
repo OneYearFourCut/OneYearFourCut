@@ -1,19 +1,10 @@
-import { IRoomInfo } from 'ChatRoom/types';
+import { IRoomInfo } from '../types'
 import { ChatRoomHeaderContainer, ChatRoomProfileImg } from './style';
-import { loginStore } from 'store/store';
-import { useEffect, useState } from 'react';
 export const ChatRoomHeader = ({
   chatRoomMemberInfoList,
 }: {
   chatRoomMemberInfoList: IRoomInfo[];
 }) => {
-  const memberId = loginStore().user?.memberId;
-  const [chatRoomImg, setChatRoomImg] = useState('');
-  const [chatRoomTitle, setChatRoomTitle] = useState('');
-
-  useEffect(() => {
-    
-  }, []);
 
   return (
     <ChatRoomHeaderContainer>

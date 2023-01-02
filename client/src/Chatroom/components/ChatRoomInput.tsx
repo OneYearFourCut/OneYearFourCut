@@ -1,5 +1,5 @@
 import * as S from './style';
-import { send } from 'ChatRoom/helper/sock';
+import { send } from '../helper/sock';
 import React, { useRef } from 'react';
 import { loginStore } from 'store/store';
 
