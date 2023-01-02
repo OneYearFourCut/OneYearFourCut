@@ -6,6 +6,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomRes
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoomMember;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.repository.ChatRoomRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class ChatRoomService {
 
     private final MemberService memberService;
+    private final GalleryService galleryService;
 
     private final ChatRoomRepository chatRoomRepository;
 
@@ -55,6 +57,8 @@ public class ChatRoomService {
     public List<ChatRoomResponseDto> findChatRoomList(long memberId) {
         // 아래 메서드 jpql
         List<ChatRoomResponseDto> findChatRoomResponseDtoList = chatRoomRepository.findAllByMemberId(memberId);
+
+
 
         // 마지막 대화 내용이 없다면 채팅방을 만들어놓고 메세지를 안 보낸거니 조회하면 안됨. -> 상대방한테도 조회가 되니
         // 이렇게 되면 채팅방은 쓸대없이 많이 차지하게 되는데.. 삭제를 진행하는게 좋을까

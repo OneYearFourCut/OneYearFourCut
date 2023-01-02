@@ -59,11 +59,8 @@ public class AlarmService {
 
 
     @Transactional(readOnly = true)
-    public AlarmReadCheckResponseDto checkReadAlarm(Long memberId) {
-        Boolean alarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
-        if (alarmExist) {
-            return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.TRUE).message("읽지않은 알림이 존재합니다.").build();
-        } else return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build();
+    public Boolean checkReadAlarm(Long memberId) {
+        return alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
     }
 
     private Page<Alarm> findAlarmPagesByFilter(String filter, Long memberId, int page) {

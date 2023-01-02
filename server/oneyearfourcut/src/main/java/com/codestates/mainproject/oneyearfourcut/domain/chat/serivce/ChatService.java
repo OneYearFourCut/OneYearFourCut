@@ -8,6 +8,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.chat.repository.ChatRepo
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomMemberInfo;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom;
+import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.service.ChatRoomService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final MemberService memberService;
     private final ChatRoomService chatRoomService;
+    private final ChatRoomEventPublisher chatRoomEventPublisher;
 
     public ChatResponseDto createMessage(ChatRequestDto chatRequestDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
@@ -44,7 +48,35 @@ public class ChatService {
         chatRequest.setMember(findMember);
         chatRequest.setChatRoom(findChatRoom);
         Chat savedChat = chatRepository.save(chatRequest);
+
         log.info("savedChat.chatRoomId : {}", savedChat.getChatRoom().getChatRoomId());
+
+        /**
+         * 알림 이벤트 발생
+         * chatroomId
+         * profile
+         * nickname
+         * chattedAt
+         * lastChateMessage
+         * chatroom
+          */
+        String nickname = findMember.getNickname();
+        String profile = findMember.getProfile();
+        String lastChatMessage = savedChat.getChatRoom().getLastChatMessage();
+        LocalDateTime chattedAt = savedChat.getChatRoom().getChattedAt();
+
+        ChatRoomEvent chatRoomEvent = ChatRoomEvent.builder()
+                .chatRoomId(chatRoomId)
+                .profile(profile)
+                .nickName(nickname)
+                .chattedAt(chattedAt)
+                .lastChatMessage(lastChatMessage)
+                .chatRoom(savedChat.getChatRoom())
+                .build();
+
+        chatRoomEventPublisher.publishAlarmEvent(chatRoomEvent);
+
+
         return savedChat.toResponseDto();
     }
 
