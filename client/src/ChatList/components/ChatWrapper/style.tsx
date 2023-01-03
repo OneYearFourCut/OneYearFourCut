@@ -12,6 +12,7 @@ export const chatContainer = styled.div`
 export const ProfileBox = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
   width: ${rem(120)};
+  height: 100%;
 `;
 
 export const ProfileCircle = styled.div`
@@ -29,7 +30,8 @@ export const Profile = styled.img`
 
 export const InfoBox = styled.div`
   min-width: ${rem(248)};
-  ${({ theme }) => theme.mixins.flexBox('column', 'flex-start', 'flex-start')};
+  height: 100%;
+  ${({ theme }) => theme.mixins.flexBox('column', 'flex-start', 'center')};
 `;
 
 export const NameBox = styled.div`
