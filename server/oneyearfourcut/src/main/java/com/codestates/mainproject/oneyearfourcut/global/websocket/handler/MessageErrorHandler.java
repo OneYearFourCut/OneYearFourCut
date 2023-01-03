@@ -42,7 +42,7 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
         String errorCode = String.valueOf(errorResponse.getStatus());
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
 
-        accessor.setMessage(String.valueOf(errorResponse.toStringWithoutStatus()));
+        accessor.setMessage(String.valueOf(errorResponse.getStatus())); // 수정된 부분
         accessor.setLeaveMutable(true);
 
         return MessageBuilder.createMessage(errorCode.getBytes(StandardCharsets.UTF_8), accessor.getMessageHeaders());

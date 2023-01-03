@@ -44,6 +44,7 @@ public class ChatController {
     // pub/chats/{chat-room-id}/messages -> 메세지를 pub 시킬 url , requestMapping이랑 별도임.
     public ResponseEntity message() {
         log.info("SockJsTaskSchedulerStatsInfo : {}", stats.getSockJsTaskSchedulerStatsInfo());
+        stats.getWebSocketSessionStatsInfo()
         log.info("WebSocketSessionStatsInfo : {}", stats.getWebSocketSessionStatsInfo());
         log.info("tompSubProtocolStatsInfo : {}", stats.getStompSubProtocolStatsInfo());
 
