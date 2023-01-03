@@ -29,7 +29,6 @@ public class MessagePreHandler implements ChannelInterceptor {
 
     private final Gson gson;
 
-    private final WebSocketMessageBrokerStats stats;
 
 
     // 메시지를 처리하기전 실행해야 하는 메서드 -> 토큰 검사
@@ -37,9 +36,6 @@ public class MessagePreHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String command = String.valueOf(accessor.getCommand());
-        log.info("WebSocketSessionStats : {}", stats.getWebSocketSessionStatsInfo());
-        log.info("SockJsTaskSchedulerStatsInfo : {}", stats.getSockJsTaskSchedulerStatsInfo());
-        log.info("StompSubProtocolStatsInfo : {}", stats.getStompSubProtocolStatsInfo());
         boolean isVerify = command.equals("CONNECT") || command.equals("SEND") || command.equals("SUBSCRIBE");
         Long senderId = null;
         Jws<Claims> claims = null;
