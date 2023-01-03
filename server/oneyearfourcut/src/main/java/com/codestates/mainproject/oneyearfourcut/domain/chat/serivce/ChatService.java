@@ -15,13 +15,10 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,7 +53,7 @@ public class ChatService {
 
         //알람 이벤트 발생
         ChatRoom chatRoom = savedChat.getChatRoom();
-        Long galleryId = galleryService.findLoginGallery(findMember.getMemberId()).getGalleryId();
+        Long galleryId = findMember.getGalleryId();
 
         ChatRoomEvent chatRoomEvent = ChatRoomEvent.builder()
                 .chatRoomId(chatRoomId)
