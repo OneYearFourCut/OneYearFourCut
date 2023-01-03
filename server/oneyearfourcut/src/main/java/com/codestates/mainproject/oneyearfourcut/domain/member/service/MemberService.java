@@ -87,9 +87,6 @@ public class MemberService {
 
         findMember.updateStatus(MemberStatus.DELETE);
 
-        followRepository.updateAllFollowCheckBooleanByMemberId(memberId); //해당 갤러리 맞팔 체크 false
-        followRepository.deleteAllByMemberId(memberId); // 멤버 삭제시 follower 벌크 삭제 커스텀 쿼리
-
         Member member = memberRepository.save(findMember);
 
         // 카카오 연결끊기 api 요청

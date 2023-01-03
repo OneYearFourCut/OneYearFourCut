@@ -3,6 +3,7 @@ package com.codestates.mainproject.oneyearfourcut.domain.gallery.entity;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.entity.Follow;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPostResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
@@ -37,7 +38,7 @@ public class Gallery extends Auditable {
     @Formula("(select count(*) from Follow f where f.member_id = member_id)")
     private Long followingCount;
 
-    @Formula("(select count(*) from Follow f where f.gallery_id = gallery_id)")
+    @Formula("(select count(*) from Follow f where f.gallery_id = gallery_id) ")
     private Long followerCount;
 
     @Builder
@@ -79,6 +80,14 @@ public class Gallery extends Auditable {
                 .createdAt(this.getCreatedAt())
                 .followingCount(this.getFollowingCount())
                 .followerCount(this.getFollowerCount())
+                .build();
+    }
+    public GalleryPostResponseDto toGalleryPostResponseDto() {
+        return GalleryPostResponseDto.builder()
+                .galleryId(this.galleryId)
+                .title(this.title)
+                .content(this.content)
+                .createdAt(this.getCreatedAt())
                 .build();
     }
 
