@@ -45,7 +45,7 @@ const Index = ({ onSubmit }: MyFormProps) => {
             placeholder='내 전시관 이름을 입력해주세요'
             value={title}
             onChange={onChange}
-            maxLength={20}
+            maxLength={15}
           />
         </S.NameArea>
         <S.DescArea>
@@ -55,10 +55,10 @@ const Index = ({ onSubmit }: MyFormProps) => {
             name='content'
             value={content}
             onChange={onChange}
-            maxLength={40}
+            maxLength={30}
           />
         </S.DescArea>
-        <SmallBtn className='square' type='submit'>
+        <SmallBtn type='submit'>
           {user?.galleryId ? '수정하기' : '등록하기'}
         </SmallBtn>
       </S.Container>
