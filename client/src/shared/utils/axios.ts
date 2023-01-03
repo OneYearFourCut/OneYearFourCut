@@ -24,6 +24,7 @@ const jsonInstance = axios.create({
   headers: {
     'Content-Type': APPLICATION_JSON,
     Authorization: ACCESS_TOKEN,
+    'ngrok-skip-browser-warning': true,
   },
 });
 

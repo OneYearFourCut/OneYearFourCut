@@ -10,7 +10,8 @@ const useReceiveAlarm = (isLoggedin: boolean) => {
     ['useReceiveAlarm'],
     apis.getCheckAlarm,
     {
-      enabled: isLoggedin,
+      // enabled: isLoggedin,
+      enabled: false,
       refetchInterval: () => (isLoggedin && !alarmIsOpen ? 3000 : false),
       refetchOnWindowFocus: false,
       refetchOnMount: false,
