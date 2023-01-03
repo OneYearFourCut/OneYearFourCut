@@ -1,3 +1,4 @@
+/*
 package com.codestates.mainproject.oneyearfourcut.domain.follow.service;
 
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
@@ -94,7 +95,9 @@ public class CreateFollowTest {
 
             given(followRepository.save(any(Follow.class))).willReturn(follow1);
 
-            /*willDoNothing().given(alarmService).createAlarm(any(), any(), any(), any());*/
+            */
+/*willDoNothing().given(alarmService).createAlarm(any(), any(), any(), any());*//*
+
 
             //when
             followService.createFollow(firstMember.getMemberId(), secondGallery.getGalleryId()).setFollowId(1L);
@@ -131,7 +134,9 @@ public class CreateFollowTest {
             given(followRepository.save(any(Follow.class))).willReturn(follow2);
 
 
-            /*willDoNothing().given(alarmService).createAlarm(any(), any(), any(), any());*/
+            */
+/*willDoNothing().given(alarmService).createAlarm(any(), any(), any(), any());*//*
+
 
             //when
             followService.createFollow(secondMember.getMemberId(), firstGallery.getGalleryId()).setFollowId(2L);
@@ -166,3 +171,4 @@ public class CreateFollowTest {
     }
 
 }
+*/

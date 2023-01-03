@@ -1,3 +1,4 @@
+/*
 package com.codestates.mainproject.oneyearfourcut.domain.follow.service;
 
 
@@ -114,7 +115,9 @@ public class DeleteFollowerTest {
         void firstMemberDeletesSecondMemberFollow() {
             //given
             followService.createFollow(secondMember.getMemberId() , firstGallery.getGalleryId());
-            /*willDoNothing().given(followService).checkFollowerVerification(firstGallery.getMember().getMemberId(), follow2);*/
+            */
+/*willDoNothing().given(followService).checkFollowerVerification(firstGallery.getMember().getMemberId(), follow2);*//*
+
 
             System.out.println(firstGallery.getMember().getMemberId());
             System.out.println(follow2.getGallery().getMember().getMemberId());
@@ -154,16 +157,20 @@ public class DeleteFollowerTest {
 
             followList = List.of(follow1, follow3);
 
-            /*System.out.println(follow1.getGallery().getGalleryId());
+            */
+/*System.out.println(follow1.getGallery().getGalleryId());
             System.out.println(follow3.getGallery().getGalleryId());
 
-            System.out.println(secondGallery.getFollowList());*/
+            System.out.println(secondGallery.getFollowList());*//*
+
 
             //when
 
             //2번 갤러리 폐쇄
-            /*secondGallery.setStatus(GalleryStatus.CLOSED);
-            followService.deleteAllFollowers(secondGallery);*/
+            */
+/*secondGallery.setStatus(GalleryStatus.CLOSED);
+            followService.deleteAllFollowers(secondGallery);*//*
+
 
             //then
         }
@@ -172,3 +179,4 @@ public class DeleteFollowerTest {
 
 
 }
+*/

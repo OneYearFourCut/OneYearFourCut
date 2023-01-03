@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPostResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -82,16 +83,18 @@ class GalleryControllerRestDocsTest {
     @Test
     void postGallery() throws Exception {
         //given
+        LocalDateTime time = LocalDateTime.of(2022, 12, 25, 12, 25, 25);
+
         String content = gson.toJson(GalleryRequestDto.builder()
                 .title("홍길동의 전시회")
                 .content("안녕하세요")
                 .build());
 
-        GalleryResponseDto responseDto = GalleryResponseDto.builder()
+        GalleryPostResponseDto responseDto = GalleryPostResponseDto.builder()
                 .galleryId(1L)
                 .title("홍길동의 전시회")
                 .content("안녕하세요")
-                .createdAt(LocalDateTime.now())
+                .createdAt(time)
                 .build();
 
         given(galleryService.createGallery(any(GalleryRequestDto.class), anyLong()))
@@ -111,7 +114,7 @@ class GalleryControllerRestDocsTest {
                 .andExpect(jsonPath("$.galleryId").value(responseDto.getGalleryId()))
                 .andExpect(jsonPath("$.title").value(responseDto.getTitle()))
                 .andExpect(jsonPath("$.content").value(responseDto.getContent()))
-                .andExpect(jsonPath("$.createdAt").value(responseDto.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.createdAt").value(String.valueOf(responseDto.getCreatedAt())))
                 .andDo(document(
                         "postGallery",
                         getRequestPreProcessor(),
@@ -141,11 +144,14 @@ class GalleryControllerRestDocsTest {
     @Test
     void getGallery() throws Exception {
         //given
+        LocalDateTime time = LocalDateTime.of(2022, 12, 25, 12, 25, 25);
         Gallery gallery = Gallery.builder()
                 .title("홍길동의 전시회")
                 .content("안녕하세요")
+                .followerCount(23L)
+                .followingCount(31L)
                 .build();
-        gallery.generateTestGallery(1L, LocalDateTime.now());
+        gallery.generateTestGallery(1L, time);
 
         given(galleryService.findGallery(1L))
                 .willReturn(gallery);
@@ -162,7 +168,7 @@ class GalleryControllerRestDocsTest {
                 .andExpect(jsonPath("$.galleryId").value(gallery.getGalleryId()))
                 .andExpect(jsonPath("$.title").value(gallery.getTitle()))
                 .andExpect(jsonPath("$.content").value(gallery.getContent()))
-//                .andExpect(jsonPath("$.createdAt").value(String.valueOf(gallery.getCreatedAt())))
+                .andExpect(jsonPath("$.createdAt").value(String.valueOf(gallery.getCreatedAt())))
                 .andDo(document(
                         "getGallery",
                                 getRequestPreProcessor(),
@@ -175,7 +181,9 @@ class GalleryControllerRestDocsTest {
                                         fieldWithPath("galleryId").type(JsonFieldType.NUMBER).description("전시관 식별자"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("전시관 제목"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("전시관 내용"),
-                                        fieldWithPath("createdAt").type(JsonFieldType.STRING).description("생성일자")
+                                        fieldWithPath("createdAt").type(JsonFieldType.STRING).description("생성일자"),
+                                        fieldWithPath("followingCount").type(JsonFieldType.NUMBER).description("팔로잉 수"),
+                                        fieldWithPath("followerCount").type(JsonFieldType.NUMBER).description("팔로워 수")
                                 )
                         )
                 ));

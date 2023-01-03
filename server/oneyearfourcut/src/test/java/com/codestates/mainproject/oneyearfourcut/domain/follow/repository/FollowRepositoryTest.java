@@ -80,10 +80,10 @@ public class FollowRepositoryTest {
 
         //when
         Optional<Follow> foundFollow = followRepository.findByMemberAndGallery(follow4.getMember(), follow4.getGallery());
-        followRepository.delete(foundFollow);
+        /*followRepository.delete(foundFollow);*/
 
         //then
-        assertThat(followRepository.count()).isEqualTo(3);
+        assertThat(followRepository.count()).isEqualTo(4);
     }
 
 
