@@ -1,8 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.chatroom.event;
 
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoomMember;
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.repository.ChatRoomRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.SseType;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +18,8 @@ public class ChatRoomEventListener {
     public void handleChatRoomEvent(ChatRoomEvent event) {
         List<ChatRoomMember> chatRoomMemberList = event.getChatRoom().getChatRoomMemberList();
         chatRoomMemberList.stream()
-                .forEach(member -> {
-                    sseService.send(member.getId(), SseType.CHATROOM, event.toChatRoomResponseDto());
+                .forEach(chatRoomMember -> {
+                    sseService.send(chatRoomMember.getMember().getMemberId(), SseType.CHATROOM, event.toChatRoomResponseDto());
                 });
     }
 }

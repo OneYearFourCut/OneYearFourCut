@@ -15,15 +15,17 @@ public class ChatRoomEvent {
     private final LocalDateTime chattedAt;
     private final String lastChatMessage;
     private final ChatRoom chatRoom;
+    private final Long galleryId;
 
     @Builder
-    public ChatRoomEvent(Long chatRoomId, String profile, String nickName, LocalDateTime chattedAt, String lastChatMessage, ChatRoom chatRoom) {
+    public ChatRoomEvent(Long chatRoomId, String profile, String nickName, LocalDateTime chattedAt, String lastChatMessage, ChatRoom chatRoom, Long galleryId) {
         this.chatRoomId = chatRoomId;
         this.profile = profile;
         this.nickName = nickName;
         this.chattedAt = chattedAt;
         this.lastChatMessage = lastChatMessage;
         this.chatRoom = chatRoom;
+        this.galleryId = galleryId;
     }
 
     public ChatRoomResponseDto toChatRoomResponseDto() {
@@ -33,6 +35,7 @@ public class ChatRoomEvent {
                 .nickName(this.nickName)
                 .lastChatDate(this.chattedAt)
                 .lastChatMessage(this.lastChatMessage)
+                .galleryId(this.galleryId)
                 .build();
     }
 }

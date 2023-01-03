@@ -25,11 +25,4 @@ public class chatRoomController {
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
-    @GetMapping
-    public ResponseEntity getChatRooms(@LoginMember Long memberId) {
-        List<ChatRoomResponseDto> response =
-                chatRoomService.findChatRoomList(memberId);
-        return new ResponseEntity(response, HttpStatus.OK);
-    }
-
 }

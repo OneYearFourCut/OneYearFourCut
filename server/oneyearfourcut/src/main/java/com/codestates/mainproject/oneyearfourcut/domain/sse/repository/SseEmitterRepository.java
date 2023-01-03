@@ -23,12 +23,12 @@ public class SseEmitterRepository {
         } else if (sseType == SseType.CHATROOM) {
             emitters = chatRoomEmitters;
         } else {
-            log.error("Wrong SseType");
-            throw new RuntimeException();
+            log.error("==========Wrong SseType==========");
+            throw new RuntimeException("Wrong SseType");
         }
 
-        log.info("=============emitter create : {}=============", sseEmitter);
         emitters.put(emitterId, sseEmitter);
+        log.info("=============emitter create : {}=============", sseEmitter);
         log.info("emitter list size: {}", emitters.size());
 
         return sseEmitter;
@@ -45,14 +45,14 @@ public class SseEmitterRepository {
         log.info("emitter deleted: {}", emitterId);
     }
 
-    public SseEmitter findById(Long memberId, SseType sseType) {
+    public SseEmitter findById(String emitterId, SseType sseType) {
         Map<String, SseEmitter> emitters;
         if (sseType == SseType.ALARM) {
             emitters = alarmEmitters;
         } else {
             emitters = chatRoomEmitters;
         }
-        return emitters.get(String.valueOf(memberId));
+        return emitters.get(emitterId);
     }
 
     public Map<String, SseEmitter> findAllById(Long memberId, SseType sseType) {

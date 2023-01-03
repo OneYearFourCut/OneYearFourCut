@@ -24,7 +24,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             + "WHERE cr.chatRoomId IN (SELECT crm.chatRoom.chatRoomId FROM ChatRoomMember crm WHERE crm.member.memberId = :memberId) "
             + "AND cr.lastChatMessage IS NOT NULL "
             + "AND crm.member.memberId != :memberId "
-            + "AND mg.status LIKE 'A%' "
+            + "AND mg.status LIKE 'O%' "
             + "ORDER BY cr.chattedAt DESC")
     List<ChatRoomResponseDto> findAllByMemberId(Long memberId);
 

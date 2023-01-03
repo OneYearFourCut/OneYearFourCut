@@ -10,6 +10,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.service.ChatRoomService;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class ChatService {
     private final MemberService memberService;
     private final ChatRoomService chatRoomService;
     private final ChatRoomEventPublisher chatRoomEventPublisher;
+    private final GalleryService galleryService;
 
     public ChatResponseDto createMessage(ChatPostDto chatPostDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
@@ -50,27 +52,18 @@ public class ChatService {
 
         log.info("savedChat.chatRoomId : {}", savedChat.getChatRoom().getChatRoomId());
 
-        /**
-         * 알림 이벤트 발생
-         * chatroomId
-         * profile
-         * nickname
-         * chattedAt
-         * lastChateMessage
-         * chatroom
-          */
-        String nickname = findMember.getNickname();
-        String profile = findMember.getProfile();
-        String lastChatMessage = savedChat.getChatRoom().getLastChatMessage();
-        LocalDateTime chattedAt = savedChat.getChatRoom().getChattedAt();
+        //알람 이벤트 발생
+        ChatRoom chatRoom = savedChat.getChatRoom();
+        Long galleryId = galleryService.findLoginGallery(findMember.getMemberId()).getGalleryId();
 
         ChatRoomEvent chatRoomEvent = ChatRoomEvent.builder()
                 .chatRoomId(chatRoomId)
-                .profile(profile)
-                .nickName(nickname)
-                .chattedAt(chattedAt)
-                .lastChatMessage(lastChatMessage)
-                .chatRoom(savedChat.getChatRoom())
+                .profile(findMember.getProfile())
+                .nickName(findMember.getNickname())
+                .chattedAt(chatRoom.getChattedAt())
+                .lastChatMessage(chatRoom.getLastChatMessage())
+                .chatRoom(chatRoom)
+                .galleryId(galleryId)
                 .build();
 
         chatRoomEventPublisher.publishAlarmEvent(chatRoomEvent);

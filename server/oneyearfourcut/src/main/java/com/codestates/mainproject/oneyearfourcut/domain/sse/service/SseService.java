@@ -63,7 +63,7 @@ public class SseService {
             sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM);
         });
 
-        List<ChatRoomResponseDto> chatRoomList = chatRoomService.findChatRoomList(9L);
+        List<ChatRoomResponseDto> chatRoomList = chatRoomService.findChatRoomList(memberId);
         sendFirstAlarm(emitter, memberId, emitterId, SseType.CHATROOM, chatRoomList);
 
         return emitter;
