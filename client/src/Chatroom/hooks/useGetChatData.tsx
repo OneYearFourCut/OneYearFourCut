@@ -12,7 +12,6 @@ export const useGetChatData = (roomId: number) => {
 
   const dataProcessing = useCallback(
     (serverRoomContentData: IChatServerData[], processedData: IChatData[]) => {
-      console.log('콜백함수 작동');
       return handleData(serverRoomContentData, processedData, memberId);
     },
     [],

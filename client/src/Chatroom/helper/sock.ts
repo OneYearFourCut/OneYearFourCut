@@ -6,7 +6,7 @@ import { getStoredToken } from 'Intro/hooks/tokenStorage';
 export const bind = (client: any) => {
   const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
   client.current = StompJS.over(sockJS);
-  // client.current.debug = null;
+  client.current.debug = null;
 };
 
 export const connect = (
@@ -19,14 +19,10 @@ export const connect = (
   ) => IChatData[],
   serverData: any,
 ) => {
-  const headers = {
-    Authorization: getStoredToken()?.access_token,
-  };
 
   client.current.connect(
     getHeader(client),
     (frame: any) => {
-      console.log(headers);
       read();
     },
     (err: any) => {
@@ -52,9 +48,6 @@ export const connect = (
 };
 
 export const send = (client: any, chatroomId: number, sendData: any) => {
-  const simpSessionId = client.current.ws._transport.url.split('/')[6];
-  console.log(simpSessionId);
-
   if (sendData.message !== '')
     client.current.send(
       `/pub/chats/message/${chatroomId}`,
@@ -68,7 +61,7 @@ export const disconnect = (client: any) => {
     client.current.unsubscribe(subscriptionId);
   }
 
-  client.current.disconnect(() => console.log('소켓종료'), getHeader(client));
+  client.current.disconnect(() => console.log('socket disconnect'), getHeader(client));
 };
 
 const getHeader = (
