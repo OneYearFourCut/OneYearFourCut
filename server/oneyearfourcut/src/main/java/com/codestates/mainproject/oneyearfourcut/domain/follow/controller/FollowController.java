@@ -31,16 +31,16 @@ public class FollowController {
         return new ResponseEntity<Object>(followService.unfollow(loginMemberId, galleryId), HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/me/followings")
-    public ResponseEntity<Object> getFollowingList(@LoginMember Long loginMemberId) {
+    @GetMapping("/{member-id}/followings")
+    public ResponseEntity<Object> getFollowingList(@Valid @PathVariable("member-id") Long memberId) {
 
-        return new ResponseEntity<Object>(followService.getFollowingListByMemberId(loginMemberId), HttpStatus.OK);
+        return new ResponseEntity<Object>(followService.getFollowingListByMemberId(memberId), HttpStatus.OK);
     }
 
-    @GetMapping("/me/followers")
-    public ResponseEntity<Object> getFollowerList(@LoginMember Long loginMemberId) {
+    @GetMapping("/{member-id}/followers")
+    public ResponseEntity<Object> getFollowerList(@Valid @PathVariable("member-id") Long memberId) {
 
-        return new ResponseEntity<Object>(followService.getFollowerListByMemberId(loginMemberId), HttpStatus.OK);
+        return new ResponseEntity<Object>(followService.getFollowerListByMemberId(memberId), HttpStatus.OK);
     }
 
     @DeleteMapping("/me/followers/{member-id}")
@@ -48,4 +48,16 @@ public class FollowController {
                                                   @Valid @PathVariable("member-id") Long followMemberId) {
         return new ResponseEntity<Object>( followService.deleteFollower(loginMemberId, followMemberId), HttpStatus.NO_CONTENT);
     }
+
+     /*@GetMapping("/me/followings")
+    public ResponseEntity<Object> getMyFollowingList(@LoginMember Long loginMemberId) {
+
+        return new ResponseEntity<Object>(followService.getFollowingListByMemberId(loginMemberId), HttpStatus.OK);
+    }
+
+    @GetMapping("/me/followers")
+    public ResponseEntity<Object> getMyFollowerList(@LoginMember Long loginMemberId) {
+
+        return new ResponseEntity<Object>(followService.getFollowerListByMemberId(loginMemberId), HttpStatus.OK);
+    }*/
 }

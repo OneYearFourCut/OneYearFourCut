@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.follow.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
@@ -8,9 +10,11 @@ import com.codestates.mainproject.oneyearfourcut.domain.follow.dto.FollowingResp
 import com.codestates.mainproject.oneyearfourcut.domain.follow.entity.Follow;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.repository.FollowRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
@@ -30,7 +34,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final MemberService memberService;
     private final GalleryService galleryService;
-    private final AlarmService alarmService;
+    private final AlarmEventPublisher alarmEventPublisher;
 
     @Transactional
     public Follow createFollow(Long loginMemberId, Long targetGalleryId) {
@@ -57,8 +61,8 @@ public class FollowService {
                     .gallery(targetGallery)
                     .isFollowTogetherCheck(true)
                     .build();
-            followRepository.save(follow);
-            // alarmService.createAlarmByFollow(); 알람생성
+            alarmEventPublisher.publishAlarmEvent(followRepository.save(follow).toAlarmEvent(galleryOwnerMemberId));
+            //알람생성
             return follow;
             }
             finally{
@@ -75,8 +79,8 @@ public class FollowService {
                     .gallery(targetGallery)
                     .isFollowTogetherCheck(false)
                     .build();
-            followRepository.save(follow);
-            // alarmService.createAlarmByFollow(); 알람생성
+            alarmEventPublisher.publishAlarmEvent(followRepository.save(follow).toAlarmEvent(galleryOwnerMemberId));
+            // 알람 생성
             return follow;
         }
 
@@ -133,14 +137,14 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)  //내 팔로잉 리스트를 불러온다.
-    public List<FollowingResponseDto> getFollowingListByMemberId(Long loginMemberId) {
-        List<Follow> followingList = followRepository.findAllByMember_MemberIdOrderByFollowIdDesc(loginMemberId);
+    public List<FollowingResponseDto> getFollowingListByMemberId(Long memberId) {
+        List<Follow> followingList = followRepository.findAllByMember_MemberIdAndGallery_StatusOrderByFollowIdDesc(memberId, GalleryStatus.OPEN);
         return FollowingResponseDto.toFollowingResponseDtoList(followingList);
     }
 
     @Transactional(readOnly = true) //내 팔로워 리스트를 불러온다.
-    public List<FollowerResponseDto> getFollowerListByMemberId(Long loginMemberId) {
-        List<Follow> followerList = followRepository.findAllByFollowMemberIdOrderByFollowIdDesc(loginMemberId);
+    public List<FollowerResponseDto> getFollowerListByMemberId(Long memberId) {
+        List<Follow> followerList = followRepository.findAllFollowerListByMemberId(memberId);
         return FollowerResponseDto.toFollowerResponseDtoList(followerList);
     }
 

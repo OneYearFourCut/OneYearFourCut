@@ -1,5 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.follow.entity;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.dto.FollowingResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.dto.FollowerResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -64,7 +66,6 @@ public class Follow extends Auditable {
                 .isFollowTogetherCheck(this.getIsFollowTogetherCheck())
                 .build();
     }
-
     public FollowerResponseDto toFollowerResponseDto(){
         return FollowerResponseDto.builder()
                 .followId(this.getFollowId())
@@ -73,6 +74,15 @@ public class Follow extends Auditable {
                 .galleryTitle(this.getGallery().getTitle())
                 .profile(this.getGallery().getMember().getProfile())
                 .isFollowTogetherCheck(this.getIsFollowTogetherCheck())
+                .build();
+    }
+    public AlarmEvent toAlarmEvent(Long receiverId){
+        return AlarmEvent.builder()
+                .receiverId(receiverId)
+                .senderId(this.getMember().getMemberId())
+                .alarmType(AlarmType.FOLLOW)
+                .galleryId(this.getGallery().getGalleryId())
+                .artworkId(null)
                 .build();
     }
 }
