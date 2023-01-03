@@ -45,6 +45,12 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoomMemberInfo> findChatRoomMemberInfoByMemberIdAndChatRoomId(Long memberId, Long chatRoomId);
 
     boolean existsByChatRoomId(Long chatRoomId);
+
+    @Query("SELECT cr FROM ChatRoom cr "
+            + "LEFT JOIN cr.chatRoomMemberList crm "
+            + "WHERE cr.chatRoomId IN (SELECT crm.chatRoom.chatRoomId FROM ChatRoomMember crm WHERE crm.member.memberId = :memberId1) "
+            + "AND crm.member.memberId = :memberId2")
+    Optional<ChatRoom> findByMemberId(Long memberId1, Long memberId2);
 }
 
 

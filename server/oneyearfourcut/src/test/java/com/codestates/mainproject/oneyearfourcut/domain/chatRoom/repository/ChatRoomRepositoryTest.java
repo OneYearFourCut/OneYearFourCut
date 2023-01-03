@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -34,6 +35,31 @@ public class ChatRoomRepositoryTest {
     private GalleryRepository galleryRepository;
     @Autowired
     private ChatRepository chatRepository;
+
+    @Test
+    void findByMemberIdTest() {
+        Member member1 = new Member(1L);
+        Member member2 = new Member(2L);
+
+        ChatRoom chatRoom = new ChatRoom();
+        ChatRoomMember chatRoomMember1 = new ChatRoomMember();
+        chatRoomMember1.setMember(member1);
+        chatRoomMember1.setChatRoom(chatRoom);
+
+        ChatRoomMember chatRoomMember2 = new ChatRoomMember();
+        chatRoomMember2.setMember(member2);
+        chatRoomMember2.setChatRoom(chatRoom);
+
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+
+        System.out.println("savedChatRoom.getChatRoomId() = " + savedChatRoom.getChatRoomId());
+        System.out.println("savedChatRoom.getChatRoomMemberList().get(0).getId() = " + savedChatRoom.getChatRoomMemberList().get(0).getId());
+        System.out.println("savedChatRoom.getChatRoomMemberList().get(1).getMember().getMemberId() = " + savedChatRoom.getChatRoomMemberList().get(1).getMember().getMemberId());
+
+        ChatRoom findChatRoom = chatRoomRepository.findByMemberId(1L, 2L).get();
+
+        assertThat(findChatRoom.getChatRoomId()).isEqualTo(savedChatRoom.getChatRoomId());
+    }
 
     @Test
     void findAllByMemberIdTest() {

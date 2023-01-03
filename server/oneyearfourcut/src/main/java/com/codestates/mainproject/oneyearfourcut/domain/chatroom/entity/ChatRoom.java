@@ -18,10 +18,11 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomId;
 
-
     // 채팅이 추가되면 lastChatDate -> LocalDateTime.now()
+    @Column()
     private LocalDateTime chattedAt;
 
+    @Column()
     private String lastChatMessage;
 
     public ChatRoom(Long chatRoomId) {
@@ -31,7 +32,7 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<Chat> chatList = new ArrayList<>();
 
     public void addChatRoomMember(ChatRoomMember chatRoomMember) {
