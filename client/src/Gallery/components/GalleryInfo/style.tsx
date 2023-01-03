@@ -26,6 +26,7 @@ export const Profile = styled.img`
 `;
 
 export const InfoBox = styled.div`
+  min-width: ${rem(280)};
   ${({ theme }) => theme.mixins.flexBox('column', 'flex-start', 'center')}
 `;
 
