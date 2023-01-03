@@ -36,10 +36,10 @@ public class ChatService {
     private final ChatRoomEventPublisher chatRoomEventPublisher;
     private final GalleryService galleryService;
 
-    public ChatResponseDto createMessage(long chatRoomId, SimpMessageHeaderAccessor accessor, ChatPostDto chatPostDto) {
+    public ChatResponseDto createMessage(long chatRoomId, ChatPostDto chatPostDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
 
-        long memberId = (Long) accessor.getHeader("senderId");
+        long memberId = chatPostDto.getSenderId();
         log.info("chatRoomId : {}", chatRoomId);
         log.info("memberId : {}", memberId);
 

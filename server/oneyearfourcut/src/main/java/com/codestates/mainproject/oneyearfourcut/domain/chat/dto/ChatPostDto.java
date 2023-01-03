@@ -11,11 +11,12 @@ import lombok.Setter;
 @Setter
 public class ChatPostDto {
 
+    private long senderId;
     // 메세지
     private String message;
 
     @Builder
-    public ChatPostDto(String message) {
+    public ChatPostDto(long senderId, String message) {
         this.message = message;
     }
 

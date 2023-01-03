@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,11 +29,17 @@ public class MessagePreHandler implements ChannelInterceptor {
 
     private final Gson gson;
 
+    private final WebSocketMessageBrokerStats stats;
+
+
     // 메시지를 처리하기전 실행해야 하는 메서드 -> 토큰 검사
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String command = String.valueOf(accessor.getCommand());
+        log.info("WebSocketSessionStats : {}", stats.getWebSocketSessionStatsInfo());
+        log.info("SockJsTaskSchedulerStatsInfo : {}", stats.getSockJsTaskSchedulerStatsInfo());
+        log.info("StompSubProtocolStatsInfo : {}", stats.getStompSubProtocolStatsInfo());
         boolean isVerify = command.equals("CONNECT") || command.equals("SEND") || command.equals("SUBSCRIBE");
         Long senderId = null;
         Jws<Claims> claims = null;

@@ -30,9 +30,8 @@ public class ChatController {
     @MessageMapping("/chats/message/{chat-room-id}")
     // pub/chats/{chat-room-id}/messages -> 메세지를 pub 시킬 url , requestMapping이랑 별도임.
     public void message(@DestinationVariable("chat-room-id") long chatRoomId,
-                        SimpMessageHeaderAccessor accessor,
                         @Payload ChatPostDto chatPostDto) {
-        ChatResponseDto response = chatService.createMessage(chatRoomId, accessor, chatPostDto);
+        ChatResponseDto response = chatService.createMessage(chatRoomId, chatPostDto);
         // 해당 채팅방 url : "/sub/chat/room/{roomId} -> 실시간으로 채팅을 받으려면 해당 rul 구독 필요
         messagingTemplate.convertAndSend("/sub/chats/rooms/" + response.getChatRoomId(), // "/sub/chats/rooms/{chat-room-id}
                 response);
