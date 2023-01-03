@@ -1,7 +1,22 @@
 import * as S from './style';
 import Message from 'assets/Icon/message';
 
-export default function index() {
+interface ChatListProps {
+  chatRoomId: number;
+  galleryId: number;
+  profile: string;
+  nickName: string;
+  chattedAt: string;
+  lastChatMessage: string;
+}
+export default function index({
+  chatRoomId,
+  galleryId,
+  profile,
+  nickName,
+  chattedAt,
+  lastChatMessage,
+}: ChatListProps) {
   return (
     <S.chatContainer>
       <S.ProfileBox>
