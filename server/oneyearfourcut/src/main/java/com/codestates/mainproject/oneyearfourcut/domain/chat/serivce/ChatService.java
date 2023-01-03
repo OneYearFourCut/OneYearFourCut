@@ -12,10 +12,12 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +30,10 @@ public class ChatService {
     private final MemberService memberService;
     private final ChatRoomService chatRoomService;
 
-    public ChatResponseDto createMessage(ChatPostDto chatPostDto) {
+    public ChatResponseDto createMessage(long chatRoomId, SimpMessageHeaderAccessor accessor, ChatPostDto chatPostDto) {
         /* 채팅방을 구독하고 있는 user에게 sse로 send해야 함. */
-        long chatRoomId = chatPostDto.getChatRoomId();
-        long memberId = chatPostDto.getSenderId();
+
+        long memberId = (Long) accessor.getHeader("senderId");
         log.info("chatRoomId : {}", chatRoomId);
         log.info("memberId : {}", memberId);
 

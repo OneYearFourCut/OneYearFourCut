@@ -36,41 +36,6 @@ public class MessagePreHandler implements ChannelInterceptor {
         boolean isVerify = command.equals("CONNECT") || command.equals("SEND") || command.equals("SUBSCRIBE");
         Long senderId = null;
         Jws<Claims> claims = null;
-        switch (command) { // 테스트용 command 로그
-            case ("CONNECT"):
-                log.info("CONNECT 요청");
-                break;
-            case ("DISCONNECT"):
-                log.info("DISCONNECT 요청");
-                log.info("DISCONNECT - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
-                log.info("DISCONNECT - getSessionId : {}", accessor.getSessionId());
-                break;
-            case ("SUBSCRIBE"):
-                log.info("SUBSCRIBE 요청");
-                log.info("SUBSCRIBE - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
-                log.info("SUBSCRIBE - getSessionId : {}", accessor.getSessionId());
-                break;
-            case ("UNSUBSCRIBE"):
-                log.info("UNSUBSCRIBE 요청");
-                break;
-            case ("SEND"):
-                log.info("SEND 요청");
-                log.info("SEND - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
-                log.info("SEND - getSessionId : {}", accessor.getSessionId());
-                break;
-            case ("ACK"):
-                log.info("ACK 요청");
-                break;
-            case ("BEGIN"):
-                log.info("BEGIN 요청");
-                break;
-            case ("COMMIT"):
-                log.info("COMMIT 요청");
-                break;
-            case ("ABORT"):
-                log.info("ABORT 요청");
-                break;
-        }
         // 연결, 메세지 발행, 구독일 때만 토큰 검사
         if (isVerify) {
             String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
@@ -93,6 +58,7 @@ public class MessagePreHandler implements ChannelInterceptor {
             }
             senderId = Long.valueOf((Integer) claims.getBody().get("id"));
             log.info("senderId : {}", senderId);
+            accessor.setHeader("senderId", senderId);
         }
         return message;
     }

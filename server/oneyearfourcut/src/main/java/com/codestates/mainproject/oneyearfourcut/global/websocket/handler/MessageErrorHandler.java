@@ -39,11 +39,10 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
         return super.handleClientMessageProcessingError(clientMessage, ex);
 }
     private Message<byte[]> prepareErrorMessage(ErrorResponse errorResponse) {
-        String errorCode = errorResponse.toStringWithoutStatus();
-
+        String errorCode = String.valueOf(errorResponse.getStatus());
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
 
-        accessor.setMessage(String.valueOf(errorResponse.getStatus()));
+        accessor.setMessage(String.valueOf(errorResponse.toStringWithoutStatus()));
         accessor.setLeaveMutable(true);
 
         return MessageBuilder.createMessage(errorCode.getBytes(StandardCharsets.UTF_8), accessor.getMessageHeaders());
