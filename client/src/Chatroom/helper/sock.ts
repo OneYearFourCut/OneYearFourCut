@@ -1,11 +1,7 @@
 import SockJS from 'sockjs-client';
 import StompJS from 'stompjs';
-import { IChatData, IChatServerData } from '../types'
+import { IChatData, IChatServerData } from '../types';
 import { getStoredToken } from 'Intro/hooks/tokenStorage';
-
-const headers = {
-  Authorization: getStoredToken()?.access_token,
-};
 
 export const bind = (client: any) => {
   const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
@@ -23,8 +19,12 @@ export const connect = (
   ) => IChatData[],
   serverData: any,
 ) => {
+  const headers = {
+    Authorization: getStoredToken()?.access_token,
+  };
+
   client.current.connect(
-    headers,
+    getHeader(client),
     (frame: any) => {
       console.log(headers);
       read();
@@ -36,7 +36,6 @@ export const connect = (
   );
 
   const read = () => {
-    const simpSessionId = client.current.ws._transport.url.split('/')[6];
     client.current.subscribe(
       `/sub/chats/rooms/${roomId}`,
       (data: any) => {
@@ -47,35 +46,40 @@ export const connect = (
           return dataProcessing([JSON.parse(data.body)], processedData);
         });
       },
-      { ...headers, simpSessionId: simpSessionId },
+      getHeader(client),
     );
   };
 };
 
-export const send = (client: any, chatroomId: number ,sendData: any) => {
+export const send = (client: any, chatroomId: number, sendData: any) => {
   const simpSessionId = client.current.ws._transport.url.split('/')[6];
   console.log(simpSessionId);
 
   if (sendData.message !== '')
     client.current.send(
       `/pub/chats/message/${chatroomId}`,
-      headers,
+      getHeader(client),
       JSON.stringify(sendData),
     );
 };
 
 export const disconnect = (client: any) => {
-  const simpSessionId = client.current.ws._transport.url.split('/')[6];
-  console.log({ ...headers, simpSessionId });
-
   for (let subscriptionId in client.current.subscriptions) {
     client.current.unsubscribe(subscriptionId);
   }
 
-  console.log('디스커넥트', simpSessionId);
+  client.current.disconnect(() => console.log('소켓종료'), getHeader(client));
+};
 
-  client.current.disconnect(() => console.log('소켓종료'), {
-    ...headers,
-    simpSessionId,
-  });
+const getHeader = (
+  client: any,
+): { Authorization?: string; simpSessionId?: string } => {
+  const simpSessionId = client.current.ws._transport
+    ? client.current.ws._transport.url.split('/')[6]
+    : undefined;
+  const headers = {
+    Authorization: getStoredToken()?.access_token,
+  };
+
+  return simpSessionId ? { ...headers, simpSessionId } : headers;
 };

@@ -22,7 +22,6 @@ const Chatroom = () => {
     connect(client, roomId, setProcessedData, dataProcessing, serverData);
     return () => {
       disconnect(client);
-      // window.location.reload();
     };
   }, []);
 
