@@ -2,14 +2,14 @@ import * as S from './style';
 import Message from 'assets/Icon/message';
 
 interface ChatListProps {
-  chatRoomId: number;
-  galleryId: number;
-  profile: string;
-  nickName: string;
-  chattedAt: string;
-  lastChatMessage: string;
+  readonly chatRoomId?: number;
+  readonly galleryId?: number;
+  readonly profile?: string;
+  readonly nickName?: string;
+  readonly chattedAt?: string;
+  readonly lastChatMessage?: string;
 }
-export default function index({
+export default function Index({
   chatRoomId,
   galleryId,
   profile,
@@ -21,15 +21,15 @@ export default function index({
     <S.chatContainer>
       <S.ProfileBox>
         <S.ProfileCircle>
-          <S.Profile src='/images/1.jpg' />
+          <S.Profile src={profile} />
         </S.ProfileCircle>
       </S.ProfileBox>
       <S.InfoBox>
         <S.NameBox>
-          <h2>이름</h2>
-          <div>n분 전</div>
+          <h2>{nickName}</h2>
+          <div>{chattedAt}</div>
         </S.NameBox>
-        <div>마지막 메세지 내용</div>
+        <div>{lastChatMessage}</div>
       </S.InfoBox>
       <S.ChatBox>
         <Message />
