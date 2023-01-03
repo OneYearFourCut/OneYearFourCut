@@ -2,6 +2,8 @@ import 'moment/locale/ko';
 import moment from 'moment';
 import * as S from './style';
 import Message from 'assets/Icon/message';
+import { useNavigate } from 'react-router-dom';
+import { enCryption } from 'shared/libs/cryption';
 
 interface ChatListProps {
   readonly chatRoomId?: number;
@@ -20,22 +22,27 @@ export default function Index({
   lastChatMessage,
 }: ChatListProps) {
   let nowTime = moment(chattedAt).fromNow();
-  console.log(nowTime);
+  const navigate = useNavigate();
+
   return (
     <S.chatContainer>
-      <S.ProfileBox>
+      <S.ProfileBox
+        onClick={() => navigate(`/fourPic/${enCryption(galleryId!)}`)}
+      >
         <S.ProfileCircle>
           <S.Profile src={profile} />
         </S.ProfileCircle>
       </S.ProfileBox>
-      <S.InfoBox>
+      <S.InfoBox onClick={() => navigate(`/fourPic/${enCryption(galleryId!)}`)}>
         <S.NameBox>
           <h2>{nickName}</h2>
           <div>{nowTime}</div>
         </S.NameBox>
         <div>{lastChatMessage}</div>
       </S.InfoBox>
-      <S.ChatBox>
+      <S.ChatBox
+        onClick={() => navigate(`/chatroom/${enCryption(chatRoomId!)}`)}
+      >
         <Message />
       </S.ChatBox>
     </S.chatContainer>
