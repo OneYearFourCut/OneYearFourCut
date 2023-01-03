@@ -1,3 +1,5 @@
+import 'moment/locale/ko';
+import moment from 'moment';
 import * as S from './style';
 import Message from 'assets/Icon/message';
 
@@ -17,6 +19,8 @@ export default function Index({
   chattedAt,
   lastChatMessage,
 }: ChatListProps) {
+  let nowTime = moment(chattedAt).fromNow();
+  console.log(nowTime);
   return (
     <S.chatContainer>
       <S.ProfileBox>
@@ -27,7 +31,7 @@ export default function Index({
       <S.InfoBox>
         <S.NameBox>
           <h2>{nickName}</h2>
-          <div>{chattedAt}</div>
+          <div>{nowTime}</div>
         </S.NameBox>
         <div>{lastChatMessage}</div>
       </S.InfoBox>
