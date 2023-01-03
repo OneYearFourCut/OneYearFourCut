@@ -14,12 +14,13 @@ export const ChatRoomInput = ({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSendMsg = () => {
+
     const sendData = {
-      chatRoomId: roomId,
-      senderId: memberId,
-      message: textAreaRef.current && textAreaRef.current.value,
-    };
-    send(client, sendData);
+      message : textAreaRef.current?.value,
+      senderId : memberId
+    }
+
+    send(client, roomId, sendData);
     textAreaRef.current!.value = '';
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

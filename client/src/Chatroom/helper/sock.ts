@@ -10,7 +10,7 @@ const headers = {
 export const bind = (client: any) => {
   const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
   client.current = StompJS.over(sockJS);
-  client.current.debug = null;
+  // client.current.debug = null;
 };
 
 export const connect = (
@@ -23,8 +23,6 @@ export const connect = (
   ) => IChatData[],
   serverData: any,
 ) => {
-  console.log(client.current);
-
   client.current.connect(
     headers,
     (frame: any) => {
@@ -54,13 +52,13 @@ export const connect = (
   };
 };
 
-export const send = (client: any, sendData: any) => {
+export const send = (client: any, chatroomId: number ,sendData: any) => {
   const simpSessionId = client.current.ws._transport.url.split('/')[6];
   console.log(simpSessionId);
 
   if (sendData.message !== '')
     client.current.send(
-      `/pub/chats/message`,
+      `/pub/chats/message/${chatroomId}`,
       headers,
       JSON.stringify(sendData),
     );
