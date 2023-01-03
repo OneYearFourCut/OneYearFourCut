@@ -9,8 +9,8 @@ INSERT INTO MEMBER (nickname, email, profile, created_at, last_modified_at, stat
 ('artwork4', 'artworkPerson4@gmail.com', '/porifile.jpg', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 'ACTIVE', 'USER');
 
 INSERT INTO GALLERY (title, content ,created_at, last_modified_at, member_id, status) values
-('comment님의 전시관', '설명글', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 3, 'OPEN'),
-('gallery님의 전시관', '설명글', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 'OPEN');
+('comment gallery', '설명글', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 3, 'OPEN'),
+('gallery gallery', '설명글', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 'OPEN');
 
 INSERT INTO ARTWORK (title, content, image_path, status, created_at, last_modified_at ,gallery_id, member_id) values
 ('갤러리1-작품1', '다들 화이팅입니다!', '/1.jpg', 'REGISTRATION', '2022-11-16T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 2),
@@ -21,17 +21,17 @@ INSERT INTO ARTWORK (title, content, image_path, status, created_at, last_modifi
 ('갤러리2-작품2', '다들 화이팅입니다!', '/6.jpg', 'REGISTRATION', '2022-11-16T23:46:57.764644', '2022-11-16T23:46:57.764644', 2, 8);
 
 INSERT INTO COMMENT (content ,created_at, last_modified_at, artwork_id, gallery_id, member_id, COMMENT_STATUS) values
-('comment1댓글대스', '2022-11-11T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 1, 1, 'VALID'),
+('comment111', '2022-11-11T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 1, 1, 'VALID'),
 ('comment2', '2022-11-12T23:41:58.764644', '2022-11-16T23:41:57.764644', 2, 1, 1, 'VALID'),
 ('comment3', '2022-11-13T23:41:59.764644', '2022-11-16T23:41:57.764644', 3, 1, 2, 'DELETED'),
 ('comment444', '2022-11-14T23:41:52.764644', '2022-11-16T23:41:57.764644', null, 1, 4, 'VALID');
 
 
 INSERT INTO REPLY (content ,created_at, last_modified_at, comment_id, member_id, Reply_STATUS) values
-('대댓글', '2022-11-11T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 1, 'VALID'),
-('대댓글22', '2022-11-12T23:41:58.764644', '2022-11-16T23:41:57.764644', 1, 1, 'VALID'),
-('대댓글33', '2022-11-13T23:41:59.764644', '2022-11-16T23:41:57.764644', 1, 2, 'DELETED'),
-('대댓글455', '2022-11-14T23:41:52.764644', '2022-11-16T23:41:57.764644', 1, 4, 'VALID');
+('reply11', '2022-11-11T23:41:57.764644', '2022-11-16T23:41:57.764644', 1, 1, 'VALID'),
+('reply22', '2022-11-12T23:41:58.764644', '2022-11-16T23:41:57.764644', 1, 1, 'VALID'),
+('reply33', '2022-11-13T23:41:59.764644', '2022-11-16T23:41:57.764644', 1, 2, 'DELETED'),
+('reply44', '2022-11-14T23:41:52.764644', '2022-11-16T23:41:57.764644', 1, 4, 'VALID');
 
 INSERT INTO ARTWORK_LIKE (member_id, artwork_id, status, created_at, last_modified_at) values
 (1, 4, 'LIKE', '2022-11-11T23:41:57.764644', '2022-11-16T23:41:57.764644'),
