@@ -6,6 +6,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomRes
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoomMember;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.repository.ChatRoomRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class ChatRoomService {
 
     private final MemberService memberService;
+    private final GalleryService galleryService;
 
     private final ChatRoomRepository chatRoomRepository;
 
