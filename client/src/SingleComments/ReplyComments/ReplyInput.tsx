@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
-import useCreateComment from './hooks/useCreateComment';
+import useCreateSingleCommentReply from 'SingleComments/hooks/useCreateSingleCommentReply';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -61,13 +61,12 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-const CommentInput = ({ placeHold }: { placeHold: string }) => {
+const ReplyInput = ({ placeHold }: { placeHold: string }) => {
   const params = useParams();
-  const galleryId = parseInt(params.galleryId!);
-  const artworkId = parseInt(params.artworkId!);
+  const commentId = parseInt(params.commentId!);
   const text = useRef<HTMLInputElement>(null);
 
-  const { mutate } = useCreateComment(galleryId, artworkId);
+  const { mutate } = useCreateSingleCommentReply(commentId);
 
   const [value, setValue] = useState('');
 
@@ -96,4 +95,4 @@ const CommentInput = ({ placeHold }: { placeHold: string }) => {
   );
 };
 
-export default CommentInput;
+export default ReplyInput;
