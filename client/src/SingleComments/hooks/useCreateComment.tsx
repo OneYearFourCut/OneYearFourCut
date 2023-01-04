@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { jsonInstance } from 'shared/utils/axios';
+import CommentStore from 'store/store';
 
 const useCreateComment = (galleryId: number, artworks: number) => {
   const queryClient = useQueryClient();
-
+  const { setChangeComment, commentCount } = CommentStore();
   const { mutate } = useMutation(
     ['createComment'],
     (content: string) => {
@@ -17,10 +18,10 @@ const useCreateComment = (galleryId: number, artworks: number) => {
         console.log(err);
       },
       onSuccess() {
+        setChangeComment(commentCount + 1);
         queryClient.invalidateQueries(['singleComment']);
         window.location.reload();
-        //위 코드를 사용하고 싶진 않은데 어떻게 하면 좋을지 계속 fix해보았는데 잘 되지않더라구요..ㅠㅠ
-        //조언부탁드립니다
+        //위 코드를 사용하고 싶진 않은데 조언부탁드립니다
       },
     },
   );
