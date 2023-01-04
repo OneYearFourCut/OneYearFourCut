@@ -28,4 +28,25 @@ public class SseController {
 
         return ResponseEntity.ok(sseEmitter);
     }
+
+    /**
+     * 테스트용 SSE연결 API
+     * 삭제해야함
+     */
+    @GetMapping(value = "/chats/rooms/connect/1", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> test1() {
+        SseEmitter sseEmitter = sseService.chatRoomSubscribe(1L);
+
+        return ResponseEntity.ok(sseEmitter);
+    }
+
+    @GetMapping(value = "/chats/rooms/connect/2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> test2() {
+        SseEmitter sseEmitter = sseService.chatRoomSubscribe(3L);
+
+        return ResponseEntity.ok(sseEmitter);
+    }
+    /**
+     * 여기까지
+     */
 }

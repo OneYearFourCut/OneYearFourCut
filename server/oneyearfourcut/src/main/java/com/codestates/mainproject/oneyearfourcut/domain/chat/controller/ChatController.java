@@ -40,6 +40,16 @@ public class ChatController {
                 response);
     }
 
+    /**
+     * 테스트용 메세지 발송 API 삭제해야함
+     */
+    @PostMapping("/chats/post")
+    public ResponseEntity test(@RequestBody ChatPostDto chatPostDto) {
+        ChatResponseDto message = chatService.createMessage(1L, chatPostDto);
+
+        return ResponseEntity.ok(message);
+    }
+
     @GetMapping("/ws/stomp/info")
     // pub/chats/{chat-room-id}/messages -> 메세지를 pub 시킬 url , requestMapping이랑 별도임.
     public ResponseEntity message() {

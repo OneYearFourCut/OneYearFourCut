@@ -79,9 +79,9 @@ public class SseService {
                                 .id(String.valueOf(memberId))
                                 .name(sseType.getMessageName())
                                 .data(data));
-                        log.info("========{} Alarm Success!========", key);
+                        log.info("========{} {} Alarm Success!========", key, sseType);
                     }catch (IOException e) {
-                        log.info("========{} Alarm Error=========", key);
+                        log.info("========{} {} Alarm Error=========", key, sseType);
                         sseEmitterRepository.deleteById(key, sseType);
                     }
                 }
@@ -94,9 +94,9 @@ public class SseService {
                     .id(String.valueOf(memberId))
                     .name(sseType.getMessageName())
                     .data(data));
-            log.info("========{} Alarm Success!========", emitterId);
+            log.info("========{} {} Alarm Success!========", emitterId, sseType);
         }catch (IOException e) {
-            log.info("========{} Alarm Error=========", emitterId);
+            log.info("========{} {} Alarm Error=========", emitterId, sseType);
             sseEmitterRepository.deleteById(emitterId, sseType);
         }
     }

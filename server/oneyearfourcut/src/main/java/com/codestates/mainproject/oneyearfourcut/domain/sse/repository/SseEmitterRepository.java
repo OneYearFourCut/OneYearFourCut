@@ -29,8 +29,8 @@ public class SseEmitterRepository {
 //        }
 
         emitters.put(emitterId, sseEmitter);
-        log.info("=============emitter create : {}=============", sseEmitter);
-        log.info("emitter list size: {}", emitters.size());
+        log.info("=============emitter create : {} {}=============", sseType, emitterId);
+        log.info("emitter list size: {} {}", sseType, emitters.size());
 
         return sseEmitter;
     }
@@ -43,7 +43,8 @@ public class SseEmitterRepository {
             emitters = chatRoomEmitters;
         }
         emitters.remove(emitterId);
-        log.info("emitter deleted: {}", emitterId);
+        log.info("emitter deleted: {} {}", sseType, emitterId);
+        log.error("emitter size: {} {}", sseType, emitters.size());
     }
 
     public SseEmitter findById(String emitterId, SseType sseType) {
