@@ -14,6 +14,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Entity
@@ -71,13 +72,13 @@ public class Member extends Auditable {
         this.kakaoId = kakaoId;
     }
 
-    public Long getGalleryId() {
+    public Optional<Gallery> getOpenGallery() {
         List<Gallery> list = this.getGalleryList().stream()
                 .filter(gallery -> gallery.getStatus() == GalleryStatus.OPEN)
                 .collect(Collectors.toList());
-        if (list.size() == 0) return 0L;
+        if (list.size() == 0) return Optional.empty();
 
-        return list.get(0).getGalleryId();
+        return Optional.ofNullable(list.get(0));
     }
 
     public MemberResponseDto toMemberResponseDto() {
