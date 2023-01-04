@@ -9,7 +9,9 @@ import {
   Login,
   History,
   Comment,
-  UploadState
+  UploadState,
+  Reply,
+  ReplySet,
 } from './types';
 
 //모달
@@ -64,7 +66,7 @@ const ToastStore = create<Components>((set, get) => ({
 }));
 
 //upload
-const initUploadData : UploadState = {
+const initUploadData: UploadState = {
   imgFile: undefined,
   imgUrl: undefined,
   title: '',
@@ -142,6 +144,19 @@ const CommentStore = create<Comment>((set) => ({
   setLastOpen: (input: number) => set(() => ({ lastOpen: input })),
 }));
 
+const ReplyCommentData: Reply = {
+  comment: '',
+  date: 0,
+  nickName: '',
+};
+
+const CommentReplyStore = create<ReplySet>((set, get) => ({
+  replyData: { ...ReplyCommentData },
+  setData: (key, data) =>
+    set({ replyData: { ...Object.assign(get().replyData, { [key]: data }) } }),
+  resetData: () => set({ replyData: { ...ReplyCommentData } }),
+}));
+
 export default CommentStore;
 
 export {
@@ -152,4 +167,5 @@ export {
   loginStore,
   historyStore,
   CommentStore,
+  CommentReplyStore,
 };

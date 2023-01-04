@@ -12,12 +12,14 @@ const colors = {
   black_008: '#F4F4F4',
   black_009: '#AFAFAF',
   black_010: '#FFFFFF',
+  black_011: '#EAEAEA',
 
   beige_001: '#FFF6CA',
   beige_002: '#FDFAEB',
   beige_003: '#FFFDF5',
   beige_004: '#FFFEFB',
   beige_005: '#FBF6F2',
+  beige_006: '#F9F4DF',
 
   gold_001: '#A76D28',
   gold_002: '#D99441',
@@ -45,6 +47,7 @@ const colors = {
   green_005: '#B1EEB2',
   green_006: '#278F59',
   green_007: '#96CB97',
+  green_008: '#A8CAA9',
 
   kakao_001: '#FEE500',
   kakao_002: '#000000',
