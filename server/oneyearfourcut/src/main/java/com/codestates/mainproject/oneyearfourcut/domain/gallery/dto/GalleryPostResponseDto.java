@@ -7,12 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class GalleryResponseDto {
+public class GalleryPostResponseDto {
     private Long galleryId;
-    private Long memberId;
     private String title;
     private String content;
     private LocalDateTime createdAt;
-    private Long followingCount;
-    private Long followerCount;
 }

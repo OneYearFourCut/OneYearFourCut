@@ -12,6 +12,7 @@ import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +77,7 @@ public class Member extends Auditable {
         List<Gallery> list = this.getGalleryList().stream()
                 .filter(gallery -> gallery.getStatus() == GalleryStatus.OPEN)
                 .collect(Collectors.toList());
+
         if (list.size() == 0) return Optional.empty();
 
         return Optional.ofNullable(list.get(0));
@@ -116,6 +118,8 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
+
+
 
 //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
 //    private RefreshToken refreshToken;

@@ -3,7 +3,6 @@ import XIcon from 'shared/components/Icons/XIcon';
 import useGetAllComments from 'AllComments/hooks/usGetAllComment';
 import { useParams, useNavigate } from 'react-router-dom';
 import React from 'react';
-import useGetSinglePicture from 'shared/hooks/useGetSinglePicture';
 
 const AllSingleComment = React.lazy(() => import('./AllCommentOne'));
 
@@ -13,11 +12,6 @@ const AllCommentsList = () => {
   let Page = 1;
   const navigate = useNavigate();
   const { data } = useGetAllComments(galleryId, Page);
-
-  const GetPicData = (galleryId: number, artworkId: number) => {
-    const { data } = useGetSinglePicture(galleryId, artworkId);
-    return data?.data.imagePath;
-  };
 
   return (
     <S.CommentBody>
@@ -45,6 +39,8 @@ const AllCommentsList = () => {
               nickname={el.nickname}
               time={el.createdAt}
               comment={el.content}
+              picPath={el.imagePath}
+              artworkId={el.artworkId}
             />
           );
         })

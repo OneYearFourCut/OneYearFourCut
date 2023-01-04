@@ -11,6 +11,8 @@ const useDeleteSinglePic = (galleryId: number, artworks: number) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['pictures']);
+        queryClient.invalidateQueries(['like']);
+        queryClient.invalidateQueries(['allComment']);
       },
     },
   );

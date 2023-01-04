@@ -2,7 +2,7 @@ import * as S from 'SingleComments/SingleComment/SingleComment.style';
 import useDeleteComment from 'SingleComments/hooks/useDeleteComment';
 import 'moment/locale/ko';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { loginStore, ModalStore, UploadStore } from 'store/store';
 import { Alert } from 'shared/components/Modal/Alert';
 import { DeleteComment } from 'shared/components/Modal/AlertData';
@@ -33,11 +33,14 @@ const AllSingleComment = ({
   nickname,
   time,
   comment,
+  picPath,
+  artworkId,
 }: {
   commentId: number;
   nickname: string;
   time: number;
   comment: string;
+  artworkId?: number;
   picPath?: any;
 }) => {
   const params = useParams();
@@ -47,6 +50,7 @@ const AllSingleComment = ({
   const { target, openModal, closeModal } = ModalStore();
   const { resetData } = UploadStore();
   const { user } = loginStore();
+  const navigate = useNavigate();
 
   let nowTime = moment(time).format('YYMMDD HH:mm');
   const OpenModal = () => {
@@ -74,14 +78,26 @@ const AllSingleComment = ({
             ) : null}
           </S.Comment>
         </Zone>
-        <Pic
-          style={{
-            // backgroundImage: `url(${picPath})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-          }}
-        ></Pic>
+        {picPath !== null ? (
+          <Pic
+            style={{
+              backgroundImage: `url(${picPath})`,
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}
+            onClick={() => navigate(`/allPic/${galleryId}/${artworkId}`)}
+          ></Pic>
+        ) : (
+          <Pic
+            style={{
+              backgroundImage: `url('https://cdn.discordapp.com/attachments/1039400312710115408/1049733372114649129/8a4b8881269d0ccc.png')`,
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}
+          ></Pic>
+        )}
       </CommentZone>
       <S.ButtonZone>
         <S.Button type='button'>답글</S.Button>

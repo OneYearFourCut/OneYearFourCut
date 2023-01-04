@@ -45,4 +45,5 @@ public class AlarmController {
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+
 }

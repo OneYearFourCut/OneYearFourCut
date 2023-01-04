@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.chatroom.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomMemberInfo;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomResponseDto;

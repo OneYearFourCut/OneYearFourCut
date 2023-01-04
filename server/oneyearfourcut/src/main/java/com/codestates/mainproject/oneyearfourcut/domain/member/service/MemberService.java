@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.member.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.follow.repository.FollowRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
@@ -30,6 +31,7 @@ public class MemberService {
     private final RestTemplate restTemplate;
     @Value("${kakao.admin-key}")
     private String adminKey;
+    private final FollowRepository followRepository;
 
     public void createMember(Member postMember) {   //Oauth Kakao 로그인 시 회원가입 진행
         Optional<Member> optionalMember = memberRepository.findByEmail(postMember.getEmail());
@@ -84,6 +86,7 @@ public class MemberService {
         Member findMember = findMember(memberId);//회원이 존재하는지 확인
 
         findMember.updateStatus(MemberStatus.DELETE);
+
         Member member = memberRepository.save(findMember);
 
         // 카카오 연결끊기 api 요청
