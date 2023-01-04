@@ -1,31 +1,23 @@
 package com.codestates.mainproject.oneyearfourcut.domain.follow.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentRequestDto;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Reply;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.dto.FollowerResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.dto.FollowingResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.entity.Follow;
 import com.codestates.mainproject.oneyearfourcut.domain.follow.repository.FollowRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
-import com.codestates.mainproject.oneyearfourcut.domain.member.entity.MemberStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
-import com.codestates.mainproject.oneyearfourcut.global.page.ReplyListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +33,6 @@ public class FollowService {
         Member loginMember = memberService.findMember(loginMemberId);
         galleryService.verifiedGalleryExist(targetGalleryId);
         Gallery targetGallery = galleryService.findGallery(targetGalleryId);
-
         Long galleryOwnerMemberId = targetGallery.getMember().getMemberId();
 
         if(Objects.equals( loginMemberId, galleryOwnerMemberId )){
@@ -100,7 +91,6 @@ public class FollowService {
             // 검증 성공시 다음 로직 실행
             foundOppositeFollow.changeFollowTogetherCheck(false);
         }
-
         followRepository.delete(foundMyFollowing);
         return true;
     }
@@ -114,7 +104,6 @@ public class FollowService {
         if(!Objects.equals(foundFollower.getGallery().getGalleryId(), myGallery.getGalleryId())){
             throw new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY);
         }
-
         // 내가 팔로잉 하고 있을떄 (맞팔 상태일때) : (other) true, true (me) -> (other) deleted, false (me)
         if(foundFollower.getIsFollowTogetherCheck()){
             Follow foundMyFollow =
