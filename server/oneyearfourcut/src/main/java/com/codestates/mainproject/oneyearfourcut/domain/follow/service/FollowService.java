@@ -118,28 +118,12 @@ public class FollowService {
         // 내가 팔로잉 하고 있을떄 (맞팔 상태일때) : (other) true, true (me) -> (other) deleted, false (me)
         if(foundFollower.getIsFollowTogetherCheck()){
             Follow foundMyFollow =
-                    findVerifiedFollowByFollowMemberIdAndGallery(myMember.getMemberId() , foundFollower.getGallery() );
+                    findVerifiedFollowByFollowMemberIdAndMember(foundFollower.getMember().getMemberId(), myMember);
             // 검증 성공시 다음 로직 실행
             foundMyFollow.changeFollowTogetherCheck(false);
         }
-
         followRepository.delete(foundFollower);
         return true;
-    }
-
-    private Follow findVerifiedFollowByFollowMemberIdAndGallery(Long memberId, Gallery gallery) {
-        return followRepository.findByFollowMemberIdAndGallery(memberId, gallery).orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY));
-    }
-
-    private Follow findVerifiedFollow(Long followId) {
-        return followRepository.findById(followId).orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND));
-    }
-
-    private Follow findVerifiedFollowByMemberAndGallery(Member member, Gallery gallery) {
-        return followRepository.findByMemberAndGallery(member, gallery).orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY));
     }
 
     @Transactional(readOnly = true) //해당 갤러리의 팔로잉 리스트를 불러온다.
@@ -156,16 +140,19 @@ public class FollowService {
         return FollowerResponseDto.toFollowerResponseDtoList(followerList);
     }
 
-    //---------------------미사용------------------//
-    @Transactional(readOnly = true)
-    public List<FollowingResponseDto> getFollowingListByMemberId(Long memberId) {
-        List<Follow> followingList = followRepository.findAllByMember_MemberIdAndGallery_StatusOrderByFollowIdDesc(memberId, GalleryStatus.OPEN);
-        return FollowingResponseDto.toFollowingResponseDtoList(followingList);
+    //---검증로직---//
+    private Follow findVerifiedFollowByFollowMemberIdAndMember(Long memberId, Member myMember) {
+        return followRepository.findByFollowMemberIdAndMember(memberId, myMember).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY));
     }
-    @Transactional(readOnly = true)
-    public List<FollowerResponseDto> getFollowerListByMemberId(Long memberId) {
-        List<Follow> followerList = followRepository.findAllFollowerListByMemberId(memberId);
-        return FollowerResponseDto.toFollowerResponseDtoList(followerList);
+    private Follow findVerifiedFollow(Long followId) {
+        return followRepository.findById(followId).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND));
     }
+    private Follow findVerifiedFollowByMemberAndGallery(Member member, Gallery gallery) {
+        return followRepository.findByMemberAndGallery(member, gallery).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY));
+    }
+
 }
 
