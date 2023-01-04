@@ -4,6 +4,7 @@ import com.codestates.mainproject.oneyearfourcut.global.exception.dto.ErrorRespo
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -44,7 +45,7 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
     private Message<byte[]> prepareErrorMessage(Message<byte[]> clientMessage, ErrorResponse errorResponse) {
         String errorCode = String.valueOf(errorResponse.getStatus());
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String errorResponseMessage = gson.toJson(errorResponse.toString());
         accessor.setMessage(errorResponseMessage);
         accessor.setLeaveMutable(true);
