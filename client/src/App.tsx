@@ -18,6 +18,7 @@ const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
 const AllComment = React.lazy(() => import('./AllComments/AllComments'));
+
 const ChatRoom = React.lazy(() => import('./Chatroom'));
 
 const router = createBrowserRouter([
