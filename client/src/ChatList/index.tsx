@@ -5,7 +5,14 @@ import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 
 export default function Index() {
-  const [status, setStatus] = useState('idle');
+  interface ChatListProps {
+    chatRoomId?: number;
+    galleryId?: number;
+    profile?: string;
+    nickName?: string;
+    chattedAt?: string;
+    lastChatMessage?: string;
+  }
   const [chatLists, setChatLists] = useState([]);
   const ACCESS_TOKEN = getStoredToken()?.access_token;
 
@@ -32,21 +39,26 @@ export default function Index() {
     eventSource.addEventListener(
       'chatRoom',
       (e: any) => {
-        setChatLists(e.data);
+        setChatLists(JSON.parse(e.data));
       },
       false,
     );
 
     // 서버로부터 데이터가 오면
-    eventSource.onmessage = async (event) => {
-      const res = await event.data;
-      console.log(res);
-      // 여기서 전역 상태 바꿔줘야겠다.
-      setChatLists(res);
+    eventSource.onmessage = async (e: any) => {
+      const res = await e.data;
+      console.log('메세지 올 때', res);
+
+      // let elementIndex = chatLists.findIndex((obj) => obj.id == 1);
+      // console.log('After update: ', chatLists[elementIndex]);
+
+      setChatLists((prevState) => {
+        return { ...prevState };
+      });
+      // 메세지 오면 chatRoomId가 같으면 바꿔치기
     };
 
     eventSource.onerror = (event) => {
-      // console.log(event.target.readyState);
       console.log(event);
       if (event.target.readyState === EventSource.CLOSED) {
         console.log('eventsource closed (' + event.target.readyState + ')');
@@ -54,56 +66,11 @@ export default function Index() {
     };
     return () => {
       eventSource.close();
+      console.log('eventsource closed');
     };
   }, []);
 
-  let abc = [
-    {
-      chatRoomId: 7,
-      profile:
-        'http://k.kakaocdn.net/dn/cs8QmZ/btrOQi6QnJZ/kKvGMJYkjA7qsDm8mMd2XK/img_640x640.jpg',
-      nickName: '고대연',
-      galleryId: 59,
-      chattedAt: '2023-01-03T23:51',
-      lastChatMessage: 'test',
-    },
-    {
-      chatRoomId: 7,
-      profile:
-        'http://k.kakaocdn.net/dn/cs8QmZ/btrOQi6QnJZ/kKvGMJYkjA7qsDm8mMd2XK/img_640x640.jpg',
-      nickName: '고대연',
-      galleryId: 59,
-      chattedAt: '2023-01-03T23:51',
-      lastChatMessage: 'test',
-    },
-    {
-      chatRoomId: 7,
-      profile:
-        'http://k.kakaocdn.net/dn/cs8QmZ/btrOQi6QnJZ/kKvGMJYkjA7qsDm8mMd2XK/img_640x640.jpg',
-      nickName: '고대연',
-      galleryId: 59,
-      chattedAt: '2023-01-03T23:51',
-      lastChatMessage: 'test',
-    },
-    {
-      chatRoomId: 7,
-      profile:
-        'http://k.kakaocdn.net/dn/cs8QmZ/btrOQi6QnJZ/kKvGMJYkjA7qsDm8mMd2XK/img_640x640.jpg',
-      nickName: '고대연',
-      galleryId: 59,
-      chattedAt: '2023-01-03T23:51',
-      lastChatMessage: 'test',
-    },
-  ];
-  interface ChatListProps {
-    chatRoomId?: number;
-    galleryId?: number;
-    profile?: string;
-    nickName?: string;
-    chattedAt?: string;
-    lastChatMessage?: string;
-  }
-  const chatList = abc.map(
+  const chatList = chatLists.map(
     (
       {
         chatRoomId,
