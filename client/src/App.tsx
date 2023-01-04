@@ -13,13 +13,12 @@ import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
 import { TriggerBox } from 'AlarmList/components/AlarmContainer';
 import SingleComment from './SingleComments/index';
+
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
-// const SingleComment = React.lazy(() => import('./SingleComments/index'));
 const AllComment = React.lazy(() => import('./AllComments/AllComments'));
-
-console.log('CD test');
+const ChatRoom = React.lazy(() => import('./Chatroom'));
 
 const router = createBrowserRouter([
   {
@@ -36,6 +35,16 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Intro />,
+      },
+      {
+        path: '/chatroom/:roomId',
+        element: (
+          <Suspense fallback={<TriggerBox />}>
+            <AuthCheck>
+              <ChatRoom />
+            </AuthCheck>
+          </Suspense>
+        ),
       },
       {
         path: '/gallerySetting',

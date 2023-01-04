@@ -55,6 +55,7 @@ export interface UserType {
   nickname?: string;
   profile?: string;
   galleryId?: number;
+  memberId?: number;
 }
 
 export interface Login {
