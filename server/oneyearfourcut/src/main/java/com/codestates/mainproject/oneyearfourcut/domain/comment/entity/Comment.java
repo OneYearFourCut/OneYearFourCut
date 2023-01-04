@@ -10,10 +10,11 @@ import com.codestates.mainproject.oneyearfourcut.domain.comment.dto.CommentGalle
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,18 +43,12 @@ public class Comment extends Auditable {
     @JoinColumn(name = "artwork_id")
     private Artwork artwork;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Reply> replyList = new ArrayList<>(); // 대댓글, targetEntity
 
-    @Enumerated(EnumType.STRING)
-    private CommentStatus commentStatus;
 
     public void changeContent(String content) {
         this.content = content;
-    }
-
-    public void changeCommentStatus(CommentStatus commentStatus) {
-        this.commentStatus = commentStatus;
     }
 
     /* Builder 및 생성자 */
@@ -64,11 +59,9 @@ public class Comment extends Auditable {
         this.member = member;
         this.gallery = gallery;
         this.artwork = artwork;
-        this.commentStatus = CommentStatus.VALID;
     }
     public Comment(Long commentId) {
         this.commentId = commentId;
-        this.commentStatus = CommentStatus.VALID;
     }
 
     /* Setter Getter */

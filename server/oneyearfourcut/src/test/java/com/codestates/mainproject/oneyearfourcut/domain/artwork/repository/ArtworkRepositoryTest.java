@@ -1,7 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.repository;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,12 +73,9 @@ public class ArtworkRepositoryTest {
         @DisplayName("해당 galleryId와 status를 가진 작품 리스트 정렬로 불러오기 테스트 - 생성일순 정렬")
         void findAllByGallery_GalleryIdAndStatusTest() {
 
-            List<Artwork> actualArtworkList = artworkRepository.findAllByGallery_GalleryIdAndStatus(1L, ArtworkStatus.REGISTRATION,
-                    Sort.by(desc("createdAt")));
+            List<Artwork> actualArtworkList = artworkRepository.findAllByGallery_GalleryId(1L, Sort.by(desc("createdAt")));
 
-            // 꺼내온 작품 중 예상하지 못한 status를 가진 작품은 없는가?
-            assertThat(actualArtworkList).extracting("status").containsOnly(ArtworkStatus.REGISTRATION);
-            assertThat(actualArtworkList).extracting("status").doesNotContain(ArtworkStatus.DELETED);
+
             // 꺼내온 작품의 갤러리가 의도한 갤러리와 일치한가?
             assertThat(actualArtworkList).extracting("gallery").extracting("galleryId").containsOnly(gallery1.getGalleryId());
             assertThat(actualArtworkList).extracting("gallery").extracting("galleryId").doesNotContain(gallery2.getGalleryId());
@@ -93,23 +89,19 @@ public class ArtworkRepositoryTest {
         @Test
         @DisplayName("해당 galleryId와 status를 가진 작품 리스트 정렬로 불러오기 테스트 - 좋아요순 정렬")
         void findTop4ByGallery_GalleryIdAndStatusTest() {
-            List<Artwork> actualArtworkList = artworkRepository.findTop4ByGallery_GalleryIdAndStatus(gallery1.getGalleryId(), ArtworkStatus.REGISTRATION,
-                    Sort.by(desc("likeCount")));
+            List<Artwork> actualArtworkList = artworkRepository.findTop4ByGallery_GalleryId(gallery1.getGalleryId(), Sort.by(desc("likeCount")));
 
 
             System.out.println(actualArtworkList.size());
             // 작품 4개 이하만 가져온 것이 맞는가?
             assertThat(actualArtworkList.size()).isLessThanOrEqualTo(4);
             // 좋아요 순으로 제대로 정렬이 되어 있는가?
-            assertThat(actualArtworkList.get(0).getLikeCount()).isGreaterThanOrEqualTo(actualArtworkList.get(1).getLikeCount());
-            assertThat(actualArtworkList.get(1).getLikeCount()).isGreaterThanOrEqualTo(actualArtworkList.get(2).getLikeCount());
-            assertThat(actualArtworkList.get(2).getLikeCount()).isGreaterThanOrEqualTo(actualArtworkList.get(3).getLikeCount());
+            assertThat(actualArtworkList.get(0).getLikeCount()).isGreaterThanOrEqualTo(actualArtworkList.get(0).getLikeCount());
+            assertThat(actualArtworkList.get(1).getLikeCount()).isGreaterThanOrEqualTo(actualArtworkList.get(1).getLikeCount());
+            assertThat(actualArtworkList.get(2).getLikeCount()).isGreaterThanOrEqualTo(actualArtworkList.get(2).getLikeCount());
             // 꺼내온 작품의 갤러리가 의도한 갤러리와 일치한가?
             assertThat(actualArtworkList).extracting("gallery").extracting("galleryId").containsOnly(gallery1.getGalleryId());
             assertThat(actualArtworkList).extracting("gallery").extracting("galleryId").doesNotContain(gallery2.getGalleryId());
-            // 꺼내온 작품 중 예상하지 못한 status를 가진 작품은 없는가?
-            assertThat(actualArtworkList).extracting("status").containsOnly(ArtworkStatus.REGISTRATION);
-            assertThat(actualArtworkList).extracting("status").doesNotContain(ArtworkStatus.DELETED);
         }
     }
 

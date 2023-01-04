@@ -6,6 +6,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
+import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
@@ -38,9 +39,6 @@ public class Artwork extends Auditable {
     @Column(columnDefinition = "TEXT", nullable = false, unique = true)
     private String imagePath;
 
-    @Enumerated(EnumType.STRING)
-    private ArtworkStatus status = ArtworkStatus.REGISTRATION;
-
     @Transient
     private MultipartFile image;
 
@@ -49,7 +47,7 @@ public class Artwork extends Auditable {
     @Transient
     private boolean liked;
 
-    @Formula("(select count(*) from comment c where c.artwork_id = artwork_id and c.comment_status = 'VALID')")
+    @Formula("(select count(*) from comment c where c.artwork_id = artwork_id)")
     private int commentCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,24 +57,24 @@ public class Artwork extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "artwork", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "artwork", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArtworkLike> artworkLikeList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "artwork", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+
+    /* ################### Getter ################### */
     public Long getMemberId() {
         return this.member.getMemberId();
     }
-
     public int getLikeCount() {
         return this.likeCount;
     }
-
     public int getCommentCount() {
         return this.commentCount;
     }
-
     /* ################### Setter ################### */
     public void setGallery(Gallery gallery) {
-
         if (this.gallery != null) {
             this.gallery.getArtworkList().remove(this);
         }
@@ -96,15 +94,7 @@ public class Artwork extends Auditable {
     public void setLiked(boolean liked) {
         this.liked = liked;
     }
-
-
-    public void setStatus(ArtworkStatus status) {
-        this.status = status;
-
-    }
-
     public void modify(Artwork artwork) {
-
         Optional.ofNullable(artwork.getImagePath())
                 .ifPresent(imagePath -> this.imagePath = imagePath);
         Optional.ofNullable(artwork.getTitle())
@@ -112,7 +102,6 @@ public class Artwork extends Auditable {
         Optional.ofNullable(artwork.getContent())
                 .ifPresent(content -> this.content = content);
     }
-
     /* ################### 생성자 ################### */
     @Builder
     public Artwork(String title, String content, MultipartFile image) {

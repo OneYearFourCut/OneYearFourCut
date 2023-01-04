@@ -4,6 +4,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
+import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,6 +21,8 @@ public class ArtworkLikeRepositoryTest {
 
     @Autowired
     private ArtworkLikeRepository artworkLikeRepository;
+    @Autowired
+    private ArtworkRepository artworkRepository;
 
     @DisplayName("쿼리 메서드 관련")
     @Nested
