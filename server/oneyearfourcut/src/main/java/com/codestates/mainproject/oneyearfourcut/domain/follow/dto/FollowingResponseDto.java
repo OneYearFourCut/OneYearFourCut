@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @Builder
 public class FollowingResponseDto {
     public Long followId;
-    public String memberNickname;
 
     public Long galleryId;
     public String galleryTitle;
+    public String galleryMemberNickname;
 
     public String profile;
     public Boolean isFollowTogetherCheck;

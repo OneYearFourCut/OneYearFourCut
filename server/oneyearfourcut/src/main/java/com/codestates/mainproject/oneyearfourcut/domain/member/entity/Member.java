@@ -13,6 +13,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.entity.Refr
 import lombok.*;
 
 import javax.persistence.*;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +107,8 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
+
+
 
 //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
 //    private RefreshToken refreshToken;

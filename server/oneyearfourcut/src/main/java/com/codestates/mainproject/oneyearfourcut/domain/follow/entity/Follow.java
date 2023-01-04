@@ -10,6 +10,7 @@ import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 
@@ -59,9 +60,9 @@ public class Follow extends Auditable {
     public FollowingResponseDto toFollowingResponseDto(){
         return FollowingResponseDto.builder()
                 .followId(this.getFollowId())
-                .memberNickname(this.getGallery().getMember().getNickname())
                 .galleryId(this.getGallery().getGalleryId())
                 .galleryTitle(this.getGallery().getTitle())
+                .galleryMemberNickname(this.getGallery().getMember().getNickname())
                 .profile(this.getGallery().getMember().getProfile())
                 .isFollowTogetherCheck(this.getIsFollowTogetherCheck())
                 .build();
@@ -69,13 +70,14 @@ public class Follow extends Auditable {
     public FollowerResponseDto toFollowerResponseDto(){
         return FollowerResponseDto.builder()
                 .followId(this.getFollowId())
-                .memberNickname(this.getGallery().getMember().getNickname())
-                .galleryId(this.getGallery().getGalleryId())
-                .galleryTitle(this.getGallery().getTitle())
-                .profile(this.getGallery().getMember().getProfile())
+                .galleryId(this.getMember().getGallery().getGalleryId())
+                .galleryTitle(this.getMember().getGallery().getTitle())
+                .galleryMemberNickname(this.getMember().getNickname())
+                .profile(this.getMember().getProfile())
                 .isFollowTogetherCheck(this.getIsFollowTogetherCheck())
                 .build();
     }
+
     public AlarmEvent toAlarmEvent(Long receiverId){
         return AlarmEvent.builder()
                 .receiverId(receiverId)

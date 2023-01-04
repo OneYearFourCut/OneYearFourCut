@@ -106,29 +106,30 @@ public class FollowService {
     }
 
     @Transactional
-    public Boolean deleteFollower(Long myMemberId, Long otherMemberId) {
-        memberService.findMember(myMemberId);
-        Member otherMember = memberService.findMember(otherMemberId);
+    public Boolean deleteFollower(Long myMemberId, Long followId) {
+        Member myMember = memberService.findMember(myMemberId);
         Gallery myGallery = galleryService.findLoginGallery(myMemberId);
+        Follow foundFollower = findVerifiedFollow(followId); //맞팔리스트의 follow id
 
-        Follow foundOtherFollowing =
-                followRepository.findByFollowMemberIdAndMemberAndGallery(myMemberId, otherMember, myGallery)
-                        .orElseThrow(
-                                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND)
-                        );
+        if(foundFollower.getGallery() != myGallery){
+            throw new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY);
+        }
 
         // 내가 팔로잉 하고 있을떄 or 맞팔 상태일때 : (other) true, true (me) -> (other) deleted, false (me)
-        if(foundOtherFollowing.getIsFollowTogetherCheck()){
-            Follow foundMyFollow = findVerifiedFollowByMemberAndGallery(
-                    memberService.findMember( otherMemberId ) ,
-                    galleryService.findLoginGallery( myMemberId ) );
+        if(foundFollower.getIsFollowTogetherCheck()){
+            Follow foundMyFollow =
+                    findVerifiedFollowByMemberAndGallery(myMember , foundFollower.getGallery() );
             // 검증 성공시 다음 로직 실행
             foundMyFollow.changeFollowTogetherCheck(false);
         }
 
-        followRepository.delete(foundOtherFollowing);
-
+        followRepository.delete(foundFollower);
         return true;
+    }
+
+    private Follow findVerifiedFollow(Long followId) {
+        return followRepository.findById(followId).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND));
     }
 
     private Follow findVerifiedFollowByMemberAndGallery(Member member, Gallery gallery) {
@@ -136,17 +137,30 @@ public class FollowService {
                 () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY));
     }
 
-    @Transactional(readOnly = true)  //내 팔로잉 리스트를 불러온다.
+    @Transactional(readOnly = true) //해당 갤러리의 팔로잉 리스트를 불러온다.
+    public Object getFollowingListByGalleryId(Long galleryId) {
+        Long galleryOwnerMemberId = galleryService.findGallery(galleryId).getMember().getMemberId();
+        List<Follow> followingList = followRepository.findAllByMember_MemberIdAndGallery_StatusOrderByFollowIdDesc(galleryOwnerMemberId, GalleryStatus.OPEN);
+        return FollowingResponseDto.toFollowingResponseDtoList(followingList);
+    }
+
+    @Transactional(readOnly = true) //해당 갤러리의 팔로워 리스트를 불러온다.
+    public Object getFollowerListByGalleryId(Long galleryId) {
+        Long galleryOwnerMemberId = galleryService.findGallery(galleryId).getMember().getMemberId();
+        List<Follow> followerList = followRepository.findAllFollowerListByMemberId(galleryOwnerMemberId);
+        return FollowerResponseDto.toFollowerResponseDtoList(followerList);
+    }
+
+    //---------------------미사용------------------//
+    @Transactional(readOnly = true)
     public List<FollowingResponseDto> getFollowingListByMemberId(Long memberId) {
         List<Follow> followingList = followRepository.findAllByMember_MemberIdAndGallery_StatusOrderByFollowIdDesc(memberId, GalleryStatus.OPEN);
         return FollowingResponseDto.toFollowingResponseDtoList(followingList);
     }
-
-    @Transactional(readOnly = true) //내 팔로워 리스트를 불러온다.
+    @Transactional(readOnly = true)
     public List<FollowerResponseDto> getFollowerListByMemberId(Long memberId) {
         List<Follow> followerList = followRepository.findAllFollowerListByMemberId(memberId);
         return FollowerResponseDto.toFollowerResponseDtoList(followerList);
     }
-
 }
 

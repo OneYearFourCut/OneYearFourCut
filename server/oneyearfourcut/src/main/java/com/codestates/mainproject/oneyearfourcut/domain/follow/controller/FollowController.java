@@ -12,41 +12,43 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/follows")
+@RequestMapping("/galleries")
 @RequiredArgsConstructor
 @Validated
 public class FollowController {
     private final FollowService followService;
 
-    @PostMapping("/{gallery-id}")
+    @PostMapping("/{gallery-id}/follows")
     public ResponseEntity<Object> followByMember(@LoginMember Long loginMemberId,
                                                  @Valid @PathVariable("gallery-id") Long targetGalleryId) {
-        Follow follow = followService.createFollow(loginMemberId, targetGalleryId);
-        return new ResponseEntity<Object>(follow.toFollowingResponseDto(), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                followService.createFollow(loginMemberId, targetGalleryId).toFollowingResponseDto(), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{gallery-id}")
+    @GetMapping("/{gallery-id}/followings")
+    public ResponseEntity<Object> getFollowingList(@Valid @PathVariable("gallery-id") Long galleryId) {
+        return new ResponseEntity<>(
+                followService.getFollowingListByGalleryId(galleryId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{gallery-id}/followers")
+    public ResponseEntity<Object> getFollowerList(@Valid @PathVariable("gallery-id") Long galleryId) {
+        return new ResponseEntity<>(
+                followService.getFollowerListByGalleryId(galleryId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{gallery-id}/follows")
     public ResponseEntity<Object> unfollow(@LoginMember Long loginMemberId,
                                            @Valid @PathVariable("gallery-id") Long galleryId) {
-        return new ResponseEntity<Object>(followService.unfollow(loginMemberId, galleryId), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(
+                followService.unfollow(loginMemberId, galleryId), HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/{member-id}/followings")
-    public ResponseEntity<Object> getFollowingList(@Valid @PathVariable("member-id") Long memberId) {
-
-        return new ResponseEntity<Object>(followService.getFollowingListByMemberId(memberId), HttpStatus.OK);
-    }
-
-    @GetMapping("/{member-id}/followers")
-    public ResponseEntity<Object> getFollowerList(@Valid @PathVariable("member-id") Long memberId) {
-
-        return new ResponseEntity<Object>(followService.getFollowerListByMemberId(memberId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/me/followers/{member-id}")
+    @DeleteMapping("/me/followers/{follow-id}")
     public ResponseEntity<Object> deletedFollower(@LoginMember Long loginMemberId,
-                                                  @Valid @PathVariable("member-id") Long followMemberId) {
-        return new ResponseEntity<Object>( followService.deleteFollower(loginMemberId, followMemberId), HttpStatus.NO_CONTENT);
+                                                  @Valid @PathVariable("follow-id") Long followMemberId) {
+        return new ResponseEntity<>(
+                followService.deleteFollower(loginMemberId, followMemberId), HttpStatus.NO_CONTENT);
     }
 
      /*@GetMapping("/me/followings")
