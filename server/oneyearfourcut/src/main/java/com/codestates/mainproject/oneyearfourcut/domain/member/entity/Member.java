@@ -9,13 +9,13 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.entity.RefreshToken;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -70,6 +70,15 @@ public class Member extends Auditable {
     }
     public void updateKakaoId(Long kakaoId) {
         this.kakaoId = kakaoId;
+    }
+
+    public Long getGalleryId() {
+        List<Gallery> list = this.getGalleryList().stream()
+                .filter(gallery -> gallery.getStatus() == GalleryStatus.OPEN)
+                .collect(Collectors.toList());
+        if (list.size() == 0) return 0L;
+
+        return list.get(0).getGalleryId();
     }
 
     public MemberResponseDto toMemberResponseDto() {

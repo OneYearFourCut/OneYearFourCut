@@ -19,9 +19,10 @@ public class ErrorResponse {
         return new ErrorResponse(httpStatus.value(), httpStatus.name(), httpStatus.getReasonPhrase());
     }
 
-
-    public String toStringWithoutStatus() { // status를 제외한 toString()
+    @Override
+    public String toString() {
         return "ErrorResponse{" +
+                "status=" + status +
                 ", exception='" + exception + '\'' +
                 ", message='" + message + '\'' +
                 '}';

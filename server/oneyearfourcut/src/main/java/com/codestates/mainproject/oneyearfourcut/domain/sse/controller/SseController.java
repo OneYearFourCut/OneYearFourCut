@@ -21,4 +21,11 @@ public class SseController {
 
         return ResponseEntity.ok(sseEmitter);
     }
+
+    @GetMapping(value = "/chats/rooms/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> chatRoomSubscribe(@LoginMember Long memberId) {
+        SseEmitter sseEmitter = sseService.chatRoomSubscribe(memberId);
+
+        return ResponseEntity.ok(sseEmitter);
+    }
 }

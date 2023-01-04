@@ -58,22 +58,22 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                                 .antMatchers(HttpMethod.GET, "/galleries/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
+                                .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
                                 .antMatchers(HttpMethod.GET, "/").permitAll()
                                 .antMatchers(HttpMethod.GET, "/receive-token").permitAll()
-//                                .antMatchers(HttpMethod.GET, "/sse").permitAll()
-//                                .antMatchers(HttpMethod.GET, "/members/me/alarms/connect").permitAll()
-                                .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
-                                .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
                                 .antMatchers("/h2/**").permitAll()
-
                                 .antMatchers("/ws/stomp/**").permitAll()
                                 .antMatchers("/sub/**").permitAll()
                                 .antMatchers("/pub/**").permitAll()
-//                                .antMatchers("/ws/**").permitAll() // -> websocket test
-//                        .antMatchers("/members/**").hasRole("USER")
-//                        .antMatchers("/galleries/**").hasRole("USER")
-//                        .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.GET, "/members/me/alarms/connect").permitAll()
+//                                .antMatchers("/chats/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/sse").permitAll()
 
+//                                .antMatchers("/ws/**").permitAll() // -> websocket test
+//                                .antMatchers("/members/**").hasRole("USER")
+//                                .antMatchers("/galleries/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
                                 .anyRequest().hasRole("USER")
                 )
                 .oauth2Login(oauth2 -> oauth2

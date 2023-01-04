@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.alarm.controller;
 
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.dto.AlarmReadCheckResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,21 @@ public class AlarmController {
 
     @GetMapping("/read")
     public ResponseEntity<Object> checkReadAlarm(@LoginMember Long memberId){
-        return new ResponseEntity<>(alarmService.checkReadAlarm(memberId), HttpStatus.OK);
+        Boolean alarmExist = alarmService.checkReadAlarm(memberId);
+        AlarmReadCheckResponseDto dto;
+        if (alarmExist) {
+            dto = AlarmReadCheckResponseDto.builder()
+                    .readAlarmExist(Boolean.TRUE)
+                    .message("읽지않은 알림이 존재합니다.")
+                    .build();
+        } else{
+            dto = AlarmReadCheckResponseDto.builder()
+                    .readAlarmExist(Boolean.FALSE)
+                    .message("현재 알림이 없습니다.")
+                    .build();
+        }
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 }

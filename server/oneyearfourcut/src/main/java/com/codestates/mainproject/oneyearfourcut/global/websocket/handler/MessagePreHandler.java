@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +29,8 @@ public class MessagePreHandler implements ChannelInterceptor {
 
     private final Gson gson;
 
+
+
     // 메시지를 처리하기전 실행해야 하는 메서드 -> 토큰 검사
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -36,41 +39,6 @@ public class MessagePreHandler implements ChannelInterceptor {
         boolean isVerify = command.equals("CONNECT") || command.equals("SEND") || command.equals("SUBSCRIBE");
         Long senderId = null;
         Jws<Claims> claims = null;
-        switch (command) { // 테스트용 command 로그
-            case ("CONNECT"):
-                log.info("CONNECT 요청");
-                break;
-            case ("DISCONNECT"):
-                log.info("DISCONNECT 요청");
-                log.info("DISCONNECT - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
-                log.info("DISCONNECT - getSessionId : {}", accessor.getSessionId());
-                break;
-            case ("SUBSCRIBE"):
-                log.info("SUBSCRIBE 요청");
-                log.info("SUBSCRIBE - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
-                log.info("SUBSCRIBE - getSessionId : {}", accessor.getSessionId());
-                break;
-            case ("UNSUBSCRIBE"):
-                log.info("UNSUBSCRIBE 요청");
-                break;
-            case ("SEND"):
-                log.info("SEND 요청");
-                log.info("SEND - getDetailedLogMessage : {}",accessor.getDetailedLogMessage(message.getPayload()));
-                log.info("SEND - getSessionId : {}", accessor.getSessionId());
-                break;
-            case ("ACK"):
-                log.info("ACK 요청");
-                break;
-            case ("BEGIN"):
-                log.info("BEGIN 요청");
-                break;
-            case ("COMMIT"):
-                log.info("COMMIT 요청");
-                break;
-            case ("ABORT"):
-                log.info("ABORT 요청");
-                break;
-        }
         // 연결, 메세지 발행, 구독일 때만 토큰 검사
         if (isVerify) {
             String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
@@ -93,6 +61,7 @@ public class MessagePreHandler implements ChannelInterceptor {
             }
             senderId = Long.valueOf((Integer) claims.getBody().get("id"));
             log.info("senderId : {}", senderId);
+            accessor.setHeader("senderId", senderId);
         }
         return message;
     }
