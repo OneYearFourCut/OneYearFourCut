@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeType;
 import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
 import java.nio.charset.StandardCharsets;
@@ -50,16 +51,11 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
     private Message<byte[]> prepareErrorMessage(Message<byte[]> clientMessage, ErrorResponse errorResponse) {
         String errorCode = String.valueOf(errorResponse.getStatus());
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
-        accessor.setHeader(HTTP.CONTENT_TYPE, ContentType.APPLICATION_JSON);
-        ObjectMapper mapper = new ObjectMapper();
-        String errorResponseMessage = null;
-        try {
-            errorResponseMessage = mapper.writeValueAsString(errorResponse);
 
-        } catch (JsonProcessingException jpe) {
-            jpe.printStackTrace(); // 실행되지 않지만 Exception catch를 위해 작성
-        }
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String errorResponseMessage = gson.toJson(errorResponse);
 
+        accessor.setContentType(MimeType.valueOf(ContentType.APPLICATION_JSON.getMimeType()));
         accessor.setMessage(errorResponseMessage);
         accessor.setLeaveMutable(true);
 
