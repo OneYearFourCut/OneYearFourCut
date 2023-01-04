@@ -1,5 +1,3 @@
-import { LargeNumberLike } from 'crypto';
-
 export interface ModalState {
   AlertModal: boolean;
   ProfileModal: boolean;
