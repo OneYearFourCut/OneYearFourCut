@@ -148,6 +148,7 @@ const ReplyCommentData: Reply = {
   comment: '',
   date: 0,
   nickName: '',
+  replyId: 0,
 };
 
 const CommentReplyStore = create<ReplySet>((set, get) => ({

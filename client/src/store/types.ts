@@ -84,6 +84,7 @@ export interface Reply {
   nickName: string;
   date: number;
   comment: string;
+  replyId: number;
 }
 
 export interface ReplySet {
