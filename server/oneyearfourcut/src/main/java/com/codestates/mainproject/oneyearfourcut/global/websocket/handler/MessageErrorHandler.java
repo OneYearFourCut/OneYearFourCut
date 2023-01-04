@@ -51,7 +51,7 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String jsonContent = gson.toJson(messageErrorResponse);
 
-        byte[] payload = jsonContent.getBytes();
+        byte[] payload = jsonContent.getBytes(StandardCharsets.UTF_8);
 
         accessor.setContentType(MimeType.valueOf(ContentType.APPLICATION_JSON.getMimeType()));
         accessor.setLeaveMutable(true);
