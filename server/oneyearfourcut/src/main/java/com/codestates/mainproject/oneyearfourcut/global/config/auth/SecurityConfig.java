@@ -71,10 +71,9 @@ public class SecurityConfig {
                                 .antMatchers(HttpMethod.GET, "/sse").permitAll()
 
 //                                .antMatchers("/ws/**").permitAll() // -> websocket test
-//                        .antMatchers("/members/**").hasRole("USER")
-//                        .antMatchers("/galleries/**").hasRole("USER")
-//                        .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
-
+//                                .antMatchers("/members/**").hasRole("USER")
+//                                .antMatchers("/galleries/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.DELETE, "/galleries/**").hasRole("USER")
                                 .anyRequest().hasRole("USER")
                 )
                 .oauth2Login(oauth2 -> oauth2

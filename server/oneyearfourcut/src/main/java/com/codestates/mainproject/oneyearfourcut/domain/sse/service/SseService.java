@@ -26,7 +26,7 @@ public class SseService {
     private final SseEmitterRepository sseEmitterRepository;
     private final AlarmService alarmService;
     private final ChatRoomService chatRoomService;
-    private static final Long DEFAULT_TIMEOUT = 1000L * 45;
+    private static final Long DEFAULT_TIMEOUT = 1000L * 30;
 
     public SseEmitter alarmSubscribe(Long memberId) {
         String emitterId = memberId + "_" + System.currentTimeMillis();
