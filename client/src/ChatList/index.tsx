@@ -49,9 +49,6 @@ export default function Index() {
       const res = await e.data;
       console.log('메세지 올 때', res);
 
-      // let elementIndex = chatLists.findIndex((obj) => obj.id == 1);
-      // console.log('After update: ', chatLists[elementIndex]);
-
       setChatLists((prevState) => {
         return { ...prevState };
       });
