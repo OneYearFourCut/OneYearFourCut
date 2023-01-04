@@ -19,12 +19,4 @@ public class ErrorResponse {
         return new ErrorResponse(httpStatus.value(), httpStatus.name(), httpStatus.getReasonPhrase());
     }
 
-    @Override
-    public String toString() {
-        return "ErrorResponse{" +
-                "status=" + status +
-                ", exception='" + exception + '\'' +
-                ", message='" + message + '\'' +
-                '}';
-    }
 }
