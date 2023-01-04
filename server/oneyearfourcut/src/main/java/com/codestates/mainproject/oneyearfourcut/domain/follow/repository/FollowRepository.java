@@ -34,7 +34,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> , PagingAn
             " ORDER BY f.followId DESC")
     List<Follow> findAllFollowerListByMemberId(Long memberId); //해당 갤러리 팔로워 리스트 조회 (유저 ACTIVE)
 
-    Follow findByFollowMemberIdAndGallery(Long myMemberId, Gallery myGallery);
+    Optional<Follow> findByFollowMemberIdAndGallery(Long myMemberId, Gallery myGallery);
 
     //-------------------- 미사용 bulk 삭제 쿼리--------------------//
 

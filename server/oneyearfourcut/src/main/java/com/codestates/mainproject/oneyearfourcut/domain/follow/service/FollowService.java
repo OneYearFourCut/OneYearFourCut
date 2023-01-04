@@ -111,20 +111,25 @@ public class FollowService {
         Gallery myGallery = galleryService.findLoginGallery(myMemberId);
         Follow foundFollower = findVerifiedFollow(followId); //맞팔리스트의 follow id
 
-        if(foundFollower.getGallery() != myGallery){
+        if(!Objects.equals(foundFollower.getGallery().getGalleryId(), myGallery.getGalleryId())){
             throw new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY);
         }
 
-        // 내가 팔로잉 하고 있을떄 or 맞팔 상태일때 : (other) true, true (me) -> (other) deleted, false (me)
+        // 내가 팔로잉 하고 있을떄 (맞팔 상태일때) : (other) true, true (me) -> (other) deleted, false (me)
         if(foundFollower.getIsFollowTogetherCheck()){
             Follow foundMyFollow =
-                    findVerifiedFollowByMemberAndGallery(myMember , foundFollower.getGallery() );
+                    findVerifiedFollowByFollowMemberIdAndGallery(myMember.getMemberId() , foundFollower.getGallery() );
             // 검증 성공시 다음 로직 실행
             foundMyFollow.changeFollowTogetherCheck(false);
         }
 
         followRepository.delete(foundFollower);
         return true;
+    }
+
+    private Follow findVerifiedFollowByFollowMemberIdAndGallery(Long memberId, Gallery gallery) {
+        return followRepository.findByFollowMemberIdAndGallery(memberId, gallery).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.FOLLOW_NOT_FOUND_FROM_GALLERY));
     }
 
     private Follow findVerifiedFollow(Long followId) {
