@@ -147,7 +147,7 @@ public class FollowService {
     @Transactional(readOnly = true) //해당 갤러리의 팔로워 리스트를 불러온다.
     public Object getFollowerListByGalleryId(Long galleryId) {
         Long galleryOwnerMemberId = galleryService.findGallery(galleryId).getMember().getMemberId();
-        List<Follow> followerList = followRepository.findAllFollowerListByMemberId(galleryOwnerMemberId);
+        List<Follow> followerList = followRepository.findAllFollowerListByMemberId(galleryOwnerMemberId); //member Active 만 조회
         return FollowerResponseDto.toFollowerResponseDtoList(followerList);
     }
 

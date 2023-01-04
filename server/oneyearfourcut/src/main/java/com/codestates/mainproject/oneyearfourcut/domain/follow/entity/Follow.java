@@ -68,16 +68,16 @@ public class Follow extends Auditable {
                 .build();
     }
     public FollowerResponseDto toFollowerResponseDto(){
+        Gallery openFollowerGallery = this.getMember().getOpenGallery().orElse(new Gallery());
         return FollowerResponseDto.builder()
                 .followId(this.getFollowId())
-                .galleryId(this.getMember().getGallery().getGalleryId())
-                .galleryTitle(this.getMember().getGallery().getTitle())
+                .galleryId(openFollowerGallery.getGalleryId())
+                .galleryTitle(openFollowerGallery.getTitle())
                 .galleryMemberNickname(this.getMember().getNickname())
                 .profile(this.getMember().getProfile())
                 .isFollowTogetherCheck(this.getIsFollowTogetherCheck())
                 .build();
     }
-
     public AlarmEvent toAlarmEvent(Long receiverId){
         return AlarmEvent.builder()
                 .receiverId(receiverId)

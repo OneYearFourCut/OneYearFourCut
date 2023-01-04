@@ -77,6 +77,7 @@ public class Member extends Auditable {
         List<Gallery> list = this.getGalleryList().stream()
                 .filter(gallery -> gallery.getStatus() == GalleryStatus.OPEN)
                 .collect(Collectors.toList());
+
         if (list.size() == 0) return Optional.empty();
 
         return Optional.ofNullable(list.get(0));
