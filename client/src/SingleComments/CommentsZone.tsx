@@ -2,7 +2,7 @@ import * as S from './Single Comments.style';
 import SingleComment from './SingleComment/SingleComment';
 import XIcon from 'shared/components/Icons/XIcon';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useCommentFetch from './hooks/useCommentFetch';
 import styled from 'styled-components';
 import { TriggerBox } from 'AlarmList/components/AlarmContainer';
@@ -18,7 +18,7 @@ const TrBox = styled.div`
 const CommentsList = () => {
   const navigate = useNavigate();
 
-  const { isData, comment, target, data } = useCommentFetch();
+  const { isData, comment, target } = useCommentFetch();
   const { commentCount } = CommentStore();
 
   return (
