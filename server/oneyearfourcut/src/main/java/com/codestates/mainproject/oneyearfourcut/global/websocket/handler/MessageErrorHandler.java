@@ -9,7 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
+import org.apache.http.protocol.HTTP;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
@@ -47,11 +50,12 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
     private Message<byte[]> prepareErrorMessage(Message<byte[]> clientMessage, ErrorResponse errorResponse) {
         String errorCode = String.valueOf(errorResponse.getStatus());
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
-
+        accessor.setHeader(HTTP.CONTENT_TYPE, ContentType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
         String errorResponseMessage = null;
         try {
             errorResponseMessage = mapper.writeValueAsString(errorResponse);
+
         } catch (JsonProcessingException jpe) {
             jpe.printStackTrace(); // 실행되지 않지만 Exception catch를 위해 작성
         }
