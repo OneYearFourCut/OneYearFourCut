@@ -3,6 +3,8 @@ package com.codestates.mainproject.oneyearfourcut.global.websocket.handler;
 import com.codestates.mainproject.oneyearfourcut.global.exception.dto.ErrorResponse;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +48,13 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
         String errorCode = String.valueOf(errorResponse.getStatus());
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        String errorResponseMessage = gson.toJson(errorResponse);
+        ObjectMapper mapper = new ObjectMapper();
+        String errorResponseMessage = null;
+        try {
+            errorResponseMessage = mapper.writeValueAsString(errorResponse);
+        } catch (JsonProcessingException jpe) {
+            jpe.printStackTrace(); // 실행되지 않지만 Exception catch를 위해 작성
+        }
 
         accessor.setMessage(errorResponseMessage);
         accessor.setLeaveMutable(true);
