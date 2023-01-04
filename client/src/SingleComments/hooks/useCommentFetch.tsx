@@ -39,7 +39,7 @@ const useCommentFetch = () => {
         }
       });
     },
-    [comment, page],
+    [comment],
   );
 
   const target = useIntersection(callbackCmt, { threshold: 0.3 });
