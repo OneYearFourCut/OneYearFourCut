@@ -66,6 +66,7 @@ public class Gallery extends Auditable {
                 .galleryId(this.galleryId)
                 .title(this.title)
                 .content(this.content)
+                .memberId(this.member.getMemberId())
                 .createdAt(this.getCreatedAt())
                 .build();
     }
