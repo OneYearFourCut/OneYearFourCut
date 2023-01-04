@@ -26,7 +26,7 @@ public class SseService {
     private final SseEmitterRepository sseEmitterRepository;
     private final AlarmService alarmService;
     private final ChatRoomService chatRoomService;
-    private static final Long DEFAULT_TIMEOUT = 1000L * 45;
+    private static final Long DEFAULT_TIMEOUT = 1000L * 30;
 
     public SseEmitter alarmSubscribe(Long memberId) {
         String emitterId = memberId + "_" + System.currentTimeMillis();
@@ -51,20 +51,20 @@ public class SseService {
 
     public SseEmitter chatRoomSubscribe(Long memberId) {
         String emitterId = memberId + "_" + System.currentTimeMillis();
-        SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT), SseType.CHATROOM);
+        SseEmitter emitter = sseEmitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT), SseType.CHATROOM_LIST);
 
         //만료시 삭제
         emitter.onCompletion(() -> {
             log.info("=============onCompletion Delete=============");
-            sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM);
+            sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM_LIST);
         });
         emitter.onTimeout(() -> {
             log.info("=============onTimeout Delete=============");
-            sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM);
+            sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM_LIST);
         });
 
         List<ChatRoomResponseDto> chatRoomList = chatRoomService.findChatRoomList(memberId);
-        sendFirstAlarm(emitter, memberId, emitterId, SseType.CHATROOM, chatRoomList);
+        sendFirstAlarm(emitter, memberId, emitterId, SseType.CHATROOM_LIST, chatRoomList);
 
         return emitter;
     }

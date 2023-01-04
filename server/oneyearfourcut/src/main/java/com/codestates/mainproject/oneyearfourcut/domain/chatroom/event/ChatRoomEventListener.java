@@ -19,7 +19,7 @@ public class ChatRoomEventListener {
         List<ChatRoomMember> chatRoomMemberList = event.getChatRoom().getChatRoomMemberList();
         chatRoomMemberList.stream()
                 .forEach(chatRoomMember -> {
-                    sseService.send(chatRoomMember.getMember().getMemberId(), SseType.CHATROOM, event.toChatRoomResponseDto());
+                    sseService.send(chatRoomMember.getMember().getMemberId(), SseType.CHATROOM_MESSAGE, event.toChatRoomResponseDto());
                 });
     }
 }

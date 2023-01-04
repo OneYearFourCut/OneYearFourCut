@@ -20,12 +20,13 @@ public class SseEmitterRepository {
         Map<String, SseEmitter> emitters;
         if (sseType == SseType.ALARM) {
             emitters = alarmEmitters;
-        } else if (sseType == SseType.CHATROOM) {
+        } else  {
             emitters = chatRoomEmitters;
-        } else {
-            log.error("==========Wrong SseType==========");
-            throw new RuntimeException("Wrong SseType");
         }
+//        else {
+//            log.error("==========Wrong SseType==========");
+//            throw new RuntimeException("Wrong SseType");
+//        }
 
         emitters.put(emitterId, sseEmitter);
         log.info("=============emitter create : {}=============", sseEmitter);
