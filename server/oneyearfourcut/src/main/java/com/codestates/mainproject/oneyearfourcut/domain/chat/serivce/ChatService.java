@@ -10,6 +10,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.chatroom.entity.ChatRoom
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEvent;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.event.ChatRoomEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.service.ChatRoomService;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
@@ -53,7 +54,9 @@ public class ChatService {
 
         //알람 이벤트 발생
         ChatRoom chatRoom = savedChat.getChatRoom();
-        Long galleryId = findMember.getGalleryId();
+        Long galleryId = findMember.getOpenGallery()
+                .orElse(new Gallery(0L))
+                .getGalleryId();
 
         ChatRoomEvent chatRoomEvent = ChatRoomEvent.builder()
                 .chatRoomId(chatRoomId)
