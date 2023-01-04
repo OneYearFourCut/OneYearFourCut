@@ -12,8 +12,11 @@ import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -70,6 +73,16 @@ public class Member extends Auditable {
         this.kakaoId = kakaoId;
     }
 
+    public Optional<Gallery> getOpenGallery() {
+        List<Gallery> list = this.getGalleryList().stream()
+                .filter(gallery -> gallery.getStatus() == GalleryStatus.OPEN)
+                .collect(Collectors.toList());
+
+        if (list.size() == 0) return Optional.empty();
+
+        return Optional.ofNullable(list.get(0));
+    }
+
     public MemberResponseDto toMemberResponseDto() {
         List<Gallery> galleries = this.getGalleryList();
         Long galleryId = null;
@@ -105,6 +118,8 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
+
+
 
 //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
 //    private RefreshToken refreshToken;

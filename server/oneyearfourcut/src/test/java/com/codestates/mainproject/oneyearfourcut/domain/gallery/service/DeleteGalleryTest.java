@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.follow.repository.FollowRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.GalleryRepository;
@@ -18,11 +19,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteGalleryTest {
     @Mock
     private GalleryRepository galleryRepository;
+
+    @Mock
+    private FollowRepository followRepository;
 
     @InjectMocks
     private GalleryService galleryService;
@@ -40,6 +45,7 @@ public class DeleteGalleryTest {
 
         given(galleryRepository.findByMember_MemberIdAndStatus(memberId, GalleryStatus.OPEN))
                 .willReturn(Optional.ofNullable(findGallery));
+
 
         //when
         galleryService.deleteGallery(memberId);

@@ -5,6 +5,7 @@ import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 

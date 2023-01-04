@@ -12,4 +12,6 @@ public class GalleryResponseDto {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private Long followingCount;
+    private Long followerCount;
 }

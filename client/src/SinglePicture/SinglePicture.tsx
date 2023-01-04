@@ -8,7 +8,6 @@ import { loginStore, UploadStore, ModalStore } from 'store/store';
 import ModalBackdrop from 'shared/components/Modal/components/ModalBackdrop';
 import { Alert } from 'shared/components/Modal/Alert';
 import { DeleteAlert } from '../shared/components/Modal/AlertData';
-import { urlToFile } from 'shared/libs/uploadHelper';
 import { useNavigate } from 'react-router-dom';
 
 const Back = styled.div`
@@ -64,6 +63,7 @@ const SinglePicture = ({
   const handleProgressBtn = () => {
     mutate();
     closeModal('AlertModal');
+    navigate(`/fourPic/${galleryId}`);
   };
 
   const ModifyClick = async () => {
