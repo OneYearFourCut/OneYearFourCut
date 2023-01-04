@@ -1,6 +1,5 @@
 package com.codestates.mainproject.oneyearfourcut.global.websocket.config;
 
-import com.codestates.mainproject.oneyearfourcut.global.websocket.handler.HttpHandShakeInterceptor;
 import com.codestates.mainproject.oneyearfourcut.global.websocket.handler.MessageErrorHandler;
 import com.codestates.mainproject.oneyearfourcut.global.websocket.handler.MessagePreHandler;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +20,12 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final MessagePreHandler messagePreHandler;
     private final MessageErrorHandler messageErrorHandler;
-    private final HttpHandShakeInterceptor handShakeInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws/stomp")  // websocket 핸드쉐이크 커넥션 엔드포인트
-                .addInterceptors(handShakeInterceptor) // 커넥트 디스커넥트 인터셉터
                 .setAllowedOriginPatterns("*") // 테스트용, 실제 : front분들 요청의 origin으로 변경해야 함.
-                .withSockJS().setHeartbeatTime(1000);
+                .withSockJS().setDisconnectDelay(30 * 1000);
         registry.setErrorHandler(messageErrorHandler);
 
     }
@@ -43,7 +40,6 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(messagePreHandler);
     }
-
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
         registry.setMessageSizeLimit(160 * 64 * 1024);    // Max incoming message size, default : 64 * 1024
