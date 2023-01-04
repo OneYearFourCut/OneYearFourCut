@@ -9,7 +9,6 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.GalleryStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
-import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.entity.RefreshToken;
 import lombok.*;
 
 import javax.persistence.*;
@@ -82,6 +81,7 @@ public class Member extends Auditable {
         return MemberResponseDto.builder()
                 .nickname(this.nickname)
                 .profile(this.profile)
+                .memberId(this.memberId)
                 .galleryId(galleryId)
                 .build();
     }
@@ -106,6 +106,6 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member")
     private List<Alarm> alarmList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member")
-    private RefreshToken refreshToken;
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+//    private RefreshToken refreshToken;
 }

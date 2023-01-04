@@ -7,14 +7,12 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,7 +31,6 @@ public class AlarmService {
     private final ArtworkRepository artworkRepository;
     private final AlarmRepository alarmRepository;
 
-    @Transactional
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         Member member = memberService.findMember(memberId);
 
@@ -60,7 +58,7 @@ public class AlarmService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public AlarmReadCheckResponseDto checkReadAlarm(Long memberId) {
         Boolean alarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
         if (alarmExist) {
@@ -68,7 +66,6 @@ public class AlarmService {
         } else return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build();
     }
 
-    @Transactional
     private Page<Alarm> findAlarmPagesByFilter(String filter, Long memberId, int page) {
         PageRequest pr = PageRequest.of(page - 1, 7);
         Page<Alarm> alarmPage;
@@ -82,9 +79,8 @@ public class AlarmService {
         return alarmPage;
     }
 
-    @Transactional
     public void createAlarm(Long receiverId, Long senderId, AlarmType alarmType, Long galleryId, Long artworkId) {
-        Alarm alarmOnGalleryOwner = Alarm.builder()
+        Alarm alarm = Alarm.builder()
                 .member(new Member(receiverId))
                 .senderId(senderId)
                 .alarmType(alarmType)
@@ -93,6 +89,6 @@ public class AlarmService {
                 .readCheck(false)
                 .build();
 
-        alarmRepository.save(alarmOnGalleryOwner);
+        alarmRepository.save(alarm);
     }
 }
