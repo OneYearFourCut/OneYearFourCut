@@ -67,7 +67,7 @@ public class SecurityConfig {
                                 .antMatchers("/sub/**").permitAll()
                                 .antMatchers("/pub/**").permitAll()
 //                                .antMatchers(HttpMethod.GET, "/members/me/alarms/connect").permitAll()
-                                .antMatchers("/chats/**").permitAll()
+//                                .antMatchers("/chats/**").permitAll()
                                 .antMatchers(HttpMethod.GET, "/sse").permitAll()
 
 //                                .antMatchers("/ws/**").permitAll() // -> websocket test

@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum SseType {
     ALARM("newAlarms"),
-    CHATROOM("chatRoom");
+    CHATROOM_LIST("chatRoom"),
+    CHATROOM_MESSAGE("message");
 
     private String messageName;
 
