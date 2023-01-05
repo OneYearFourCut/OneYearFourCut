@@ -25,7 +25,7 @@ public class SseService {
     private final SseEmitterRepository sseEmitterRepository;
     private final AlarmService alarmService;
     private final ChatRoomService chatRoomService;
-    private static final Long DEFAULT_TIMEOUT = 1000L * 30;
+    private static final Long DEFAULT_TIMEOUT = 1000L * 60 * 10;
 
     public SseEmitter alarmSubscribe(Long memberId) {
         String emitterId = memberId + "_" + System.currentTimeMillis();
@@ -42,16 +42,8 @@ public class SseService {
         });
         emitter.onError(e -> {
             log.info("=============onError Delete=============");
-//            try {
-//                emitter.send(SseEmitter.event()
-//                        .id(String.valueOf(memberId))
-//                        .name("error")
-//                        .data("456"));
-//            } catch (IOException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//            sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
-            emitter.completeWithError(new BusinessLogicException(ExceptionCode.EXPIRED_ACCESS_TOKEN));
+
+            sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
         });
 
 

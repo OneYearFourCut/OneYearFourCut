@@ -18,10 +18,8 @@ public class SseController {
 
     @GetMapping(value = "/members/me/alarms/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId, Response response) {
-//        if (memberId == -1L) {
-//            return ResponseEntity.status(456).build();
-//        }
         SseEmitter sseEmitter = sseService.alarmSubscribe(memberId);
+
         return ResponseEntity.ok(sseEmitter);
     }
 
