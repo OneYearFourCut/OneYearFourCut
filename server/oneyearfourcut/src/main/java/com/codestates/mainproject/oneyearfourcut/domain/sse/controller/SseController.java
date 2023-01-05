@@ -4,8 +4,6 @@ package com.codestates.mainproject.oneyearfourcut.domain.sse.controller;
 import com.amazonaws.Response;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.service.SseService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
-import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
-import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +18,9 @@ public class SseController {
 
     @GetMapping(value = "/members/me/alarms/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId, Response response) {
-        if (memberId == -1L) {
-            return new ResponseEntity<>(null, null, 456);
-        }
+//        if (memberId == -1L) {
+//            return ResponseEntity.status(456).build();
+//        }
         SseEmitter sseEmitter = sseService.alarmSubscribe(memberId);
         return ResponseEntity.ok(sseEmitter);
     }
