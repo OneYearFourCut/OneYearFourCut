@@ -11,8 +11,7 @@ import StompJS from 'stompjs';
 
 const Chatroom = () => {
   const params = useParams();
-  const roomId = parseInt(params.roomId!);
-  // const roomId = deCryption(params.roomId!);
+  const roomId = deCryption(params.roomId!);
   
 
   const { processedData, setProcessedData, dataProcessing, serverData } =
