@@ -2,12 +2,7 @@ import * as S from './style';
 import ChatWrapper from './components/ChatWrapper';
 import React, { useEffect, useState } from 'react';
 import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
-import {
-  NativeEventSource,
-  EventSourcePolyfill,
-  Event,
-} from 'event-source-polyfill';
-import { json } from 'stream/consumers';
+import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import apis from 'shared/components/Header/api';
 
 export default function Index() {
@@ -20,8 +15,7 @@ export default function Index() {
     lastChatMessage?: string;
   }
   const [chatLists, setChatLists] = useState([]);
-  const [reconnecting, setReconnecting] = useState<boolean>(false);
-  const ACCESS_TOKEN = getStoredToken()?.access_token;
+  const [connecting, setConnecting] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
   let eventSource: any = null;
@@ -32,31 +26,21 @@ export default function Index() {
       `${process.env.REACT_APP_SERVER_URL}/chats/rooms/connect`,
       {
         headers: {
-          Authorization: ACCESS_TOKEN!,
+          Authorization: getStoredToken()?.access_token!,
         },
+        heartbeatTimeout: 60 * 60 * 1000,
       },
     );
-    eventSource.onerror = function () {
-      eventSource.close();
-    };
+    setConnecting(true);
   }
 
-  const EventSourceErrorHandler = function (event: any) {
-    switch (event.target.readyState) {
-      case EventSource.CONNECTING:
-        console.log('연결되어있어용!');
-        break;
-      case EventSource.CLOSED:
-        console.log('만약에 닫혀있다면?');
-        eventSource.onerror = EventSourceErrorHandler;
-        Connect();
-        break;
-    }
+  const ErrorHandler = () => {
+    apis.getRefreshedToken().then(() => {
+      Connect();
+    });
   };
 
-  Connect();
-
-  useEffect(() => {
+  const EventHandler = () => {
     // SSE 열려
     eventSource.onopen = async (e: any) => {
       console.log('connection open');
@@ -72,42 +56,39 @@ export default function Index() {
       false,
     );
 
-    eventSource.onmessage = async (e: any) => {
-      let data = await JSON.parse(e.data);
+    eventSource.onmessage = (e: any) => {
+      let data = JSON.parse(e.data);
       let change: any = chatLists.map((el: any) => {
         // 메세지로 들어올 채팅방 번호 같으면
         if (el.chatRoomId === data.chatRoomId) {
           el.chattedAt = data.chattedAt;
           el.lastChatMessage = data.lastChatMessage;
-          return el;
-        } else {
-          return;
         }
+        return el;
       });
 
       setChatLists(change);
     };
 
     eventSource.onerror = (err: any) => {
-      EventSourceErrorHandler(err);
-      // console.log(err.status);
-      // console.log(err.target.readyState);
-      // if (err) {
-      //   if (err.status === 456) {
-      //     apis
-      //       .getRefreshedToken()
-      //       .then(() => {
-      //         Connect();
-      //       })
-      //       .catch((err) => console.log(err));
-      //   }
-      // }
+      console.log('에러 발생: ', err.status);
+      setConnecting(false);
+      if (err.status === 456) {
+        ErrorHandler();
+      }
     };
+  };
+
+  useEffect(() => {
+    // eventSource 연결
+    Connect();
+    EventHandler();
+
     return () => {
       eventSource.close();
       console.log('eventsource closed');
     };
-  }, []);
+  }, [connecting]);
 
   const chatList = chatLists.map(
     (
