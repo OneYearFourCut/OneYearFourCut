@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.sse.controller;
 
 
+import com.amazonaws.Response;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.service.SseService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
@@ -18,7 +19,10 @@ public class SseController {
     private final SseService sseService;
 
     @GetMapping(value = "/members/me/alarms/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId) {
+    public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId, Response response) {
+        if (memberId == -1L) {
+            return new ResponseEntity<>(null, null, 456);
+        }
         SseEmitter sseEmitter = sseService.alarmSubscribe(memberId);
         return ResponseEntity.ok(sseEmitter);
     }
