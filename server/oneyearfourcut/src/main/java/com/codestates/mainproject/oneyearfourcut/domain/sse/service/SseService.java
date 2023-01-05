@@ -25,7 +25,7 @@ public class SseService {
     private final SseEmitterRepository sseEmitterRepository;
     private final AlarmService alarmService;
     private final ChatRoomService chatRoomService;
-    private static final Long DEFAULT_TIMEOUT = 1000L * 60 * 10;
+    private static final Long DEFAULT_TIMEOUT = 1000L * 60;
 
     public SseEmitter alarmSubscribe(Long memberId) {
         String emitterId = memberId + "_" + System.currentTimeMillis();
@@ -45,7 +45,6 @@ public class SseService {
 
             sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
         });
-
 
         Boolean readAlarmExist = alarmService.checkReadAlarm(memberId);
         sendFirstAlarm(emitter, memberId, emitterId, SseType.ALARM, readAlarmExist);
