@@ -29,7 +29,7 @@ export const connect = (
     (frame: Frame) => {
       retryCount = 0;
       read();
-      reSendTrriger(client, roomId);
+      reSendTrigger(client, roomId);
     },
     (err: any) => {
       reConnect(
@@ -176,7 +176,7 @@ const handleQueue = (callback: (client: any, chatroomId: number) => void) => {
   sendDataQueue.push(callback);
 };
 
-const reSendTrriger = (client: any, chatroomId: number) => {
+const reSendTrigger = (client: any, chatroomId: number) => {
   sendDataQueue.forEach((callback) => {
     callback(client, chatroomId);
   });

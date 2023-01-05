@@ -13,7 +13,6 @@ const Chatroom = () => {
   const params = useParams();
   const roomId = deCryption(params.roomId!);
   
-
   const { processedData, setProcessedData, dataProcessing, serverData } =
     useGetChatData(roomId);
 
