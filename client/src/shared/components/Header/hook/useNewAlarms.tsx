@@ -29,14 +29,16 @@ export const useNewAlarms = (isLoggedin: boolean) => {
       setNewAlarms(JSON.parse(e.data));
     });
     eventSource.current.addEventListener('error', (e: any) => {
+      // console.log(e);
       if (e.status === 456) {
         apis
           .getRefreshedToken()
           .then((res) => {
+            eventSourceClose();
             eventSourceConnect();
           })
           .catch((err) => console.log(err));
-      }
+      } 
     });
 
     eventSource.current.addEventListener('close', eventSourceClose);
@@ -48,8 +50,8 @@ export const useNewAlarms = (isLoggedin: boolean) => {
   };
   useEffect(() => {
     if (isLoggedin && alarmIsOpen === false) {
-      eventSourceConnect();
-      return () => eventSourceClose();
+      // eventSourceConnect();
+      // return () => eventSourceClose();
     }
   }, [isLoggedin, alarmIsOpen]);
 

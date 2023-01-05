@@ -6,11 +6,14 @@ import { useGetChatData } from './hooks/useGetChatData';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { bind, connect, disconnect } from './helper/sock';
+import { deCryption } from 'shared/libs/cryption';
 import StompJS from 'stompjs';
 
 const Chatroom = () => {
   const params = useParams();
   const roomId = parseInt(params.roomId!);
+  // const roomId = deCryption(params.roomId!);
+  
 
   const { processedData, setProcessedData, dataProcessing, serverData } =
     useGetChatData(roomId);

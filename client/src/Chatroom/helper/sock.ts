@@ -1,7 +1,12 @@
 import SockJS from 'sockjs-client';
-import StompJS from 'stompjs';
-import { IChatData, IChatServerData } from '../types';
+import StompJS, { Frame } from 'stompjs';
+import { IChatData, IChatServerData, ISendData } from '../types';
 import { getStoredToken } from 'Intro/hooks/tokenStorage';
+import apis from 'shared/components/Header/api';
+
+let retryCount: number = 0;
+let lock: boolean = false;
+let sendDataQueue: ((client: any, chatroomId: number) => void)[] = [];
 
 export const bind = (client: any) => {
   const sockJS = new SockJS(`${process.env.REACT_APP_SERVER_URL}/ws/stomp`);
@@ -19,15 +24,22 @@ export const connect = (
   ) => IChatData[],
   serverData: any,
 ) => {
-
   client.current.connect(
     getHeader(client),
-    (frame: any) => {
+    (frame: Frame) => {
+      retryCount = 0;
       read();
+      reSendTrriger(client, roomId);
     },
     (err: any) => {
-      console.log('소켓연결오류');
-      console.log(err);
+      reConnect(
+        client,
+        roomId,
+        setProcessedData,
+        dataProcessing,
+        serverData,
+        err,
+      );
     },
   );
 
@@ -35,19 +47,22 @@ export const connect = (
     client.current.subscribe(
       `/sub/chats/rooms/${roomId}`,
       (data: any) => {
-        //caching을 위함.
-        serverData.data.chatResponseDtoList.unshift(JSON.parse(data.body));
+        if (data.body) {
+          //caching을 위함.
+          serverData.data.chatResponseDtoList.unshift(JSON.parse(data.body));
 
-        setProcessedData((processedData: IChatData[]) => {
-          return dataProcessing([JSON.parse(data.body)], processedData);
-        });
+          setProcessedData((processedData: IChatData[]) => {
+            return dataProcessing([JSON.parse(data.body)], processedData);
+          });
+        }
       },
       getHeader(client),
     );
   };
 };
 
-export const send = (client: any, chatroomId: number, sendData: any) => {
+export const send = (client: any, chatroomId: number, sendData: ISendData) => {
+  console.log(sendData);
   if (sendData.message !== '')
     client.current.send(
       `/pub/chats/message/${chatroomId}`,
@@ -56,12 +71,29 @@ export const send = (client: any, chatroomId: number, sendData: any) => {
     );
 };
 
+export const handleSend = (
+  client: any,
+  chatroomId: number,
+  sendData: ISendData,
+) => {
+  if (lock) {
+    handleQueue((client: any, chatroomId: number) =>
+      send(client, chatroomId, sendData),
+    );
+  } else {
+    send(client, chatroomId, sendData);
+  }
+};
+
 export const disconnect = (client: any) => {
   for (let subscriptionId in client.current.subscriptions) {
     client.current.unsubscribe(subscriptionId);
   }
 
-  client.current.disconnect(() => console.log('socket disconnect'), getHeader(client));
+  client.current.disconnect(
+    () => console.log('socket disconnect'),
+    getHeader(client),
+  );
 };
 
 const getHeader = (
@@ -75,4 +107,89 @@ const getHeader = (
   };
 
   return simpSessionId ? { ...headers, simpSessionId } : headers;
+};
+
+const reConnect = async (
+  client: any,
+  roomId: number,
+  setProcessedData: any,
+  dataProcessing: (
+    serverData: IChatServerData[],
+    processedData: IChatData[],
+  ) => IChatData[],
+  serverData: any,
+  err: any,
+) => {
+  lock = true;
+
+  console.log('에러발생');
+  console.log(err);
+
+  /*
+  const body = {
+    errorRespnse: {
+      message: '토큰만료',
+      status: 456,
+    },
+    payload: {
+      message: '메세지',
+      senderId: 1,
+    },
+  };
+  */
+
+  let errBody = stringToJSON(err.body);
+  let payload = stringToJSON(errBody.payload);
+
+  handleQueue((client: any, chatroomId: number) =>
+    send(client, chatroomId, payload),
+  );
+
+  console.log(errBody);
+  console.log(payload);
+
+  disconnect(client);
+
+  if (errBody.errorResponse.status === 456) {
+    console.log('토큰재발급');
+    await apis
+      .getRefreshedToken()
+      .then((res) => {
+        console.log(retryCount);
+      })
+      .catch((err) => console.log(err));
+  }
+  console.log('reconnect 시작');
+
+  if (retryCount > 3) {
+    retryCount = 0;
+    //alert와 뒤로가기 또는 새로고침 시도
+    alert('server error');
+    window.location.href = '/';
+  } else {
+    retryCount++;
+    bind(client);
+    connect(client, roomId, setProcessedData, dataProcessing, serverData);
+    console.log('reconnect 종료1');
+  }
+
+  console.log('reconnect 종료2');
+};
+
+const stringToJSON = (target: string | undefined): any => {
+  if (target) {
+    target = JSON.parse(target);
+    return typeof target === 'object' ? target : undefined;
+  } else return undefined;
+};
+
+const handleQueue = (callback: (client: any, chatroomId: number) => void) => {
+  sendDataQueue.push(callback);
+};
+
+const reSendTrriger = (client: any, chatroomId: number) => {
+  console.log(sendDataQueue);
+  sendDataQueue.forEach((callback) => callback(client, chatroomId));
+  lock = false;
+  sendDataQueue = [];
 };

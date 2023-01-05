@@ -39,3 +39,8 @@ export interface IChatData {
   dayDate: string;
   chatList: IChat[];
 }
+
+export interface ISendData {
+  message: string | undefined | null;
+  senderId: number;
+}
