@@ -8,6 +8,8 @@ import com.codestates.mainproject.oneyearfourcut.domain.chatroom.service.ChatRoo
 import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.SseType;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.repository.SseEmitterRepository;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ public class SseService {
             log.info("=============onTimeout Delete=============");
             sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
         });
+        emitter.onError(throwable -> new BusinessLogicException(ExceptionCode.EXPIRED_ACCESS_TOKEN));
 
 
         Boolean readAlarmExist = alarmService.checkReadAlarm(memberId);
