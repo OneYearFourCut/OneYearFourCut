@@ -3,6 +3,8 @@ package com.codestates.mainproject.oneyearfourcut.domain.sse.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.sse.service.SseService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,10 @@ public class SseController {
 
     @GetMapping(value = "/members/me/alarms/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId) {
+        if (memberId == -1L) {
+            throw new BusinessLogicException(ExceptionCode.EXPIRED_ACCESS_TOKEN);
+        }
         SseEmitter sseEmitter = sseService.alarmSubscribe(memberId);
-
         return ResponseEntity.ok(sseEmitter);
     }
 
