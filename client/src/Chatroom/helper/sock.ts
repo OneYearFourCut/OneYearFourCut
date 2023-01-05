@@ -62,7 +62,6 @@ export const connect = (
 };
 
 export const send = (client: any, chatroomId: number, sendData: ISendData) => {
-  console.log(sendData);
   if (sendData.message !== '')
     client.current.send(
       `/pub/chats/message/${chatroomId}`,
@@ -122,9 +121,6 @@ const reConnect = async (
 ) => {
   lock = true;
 
-  console.log('에러발생');
-  console.log(err);
-
   /*
   const body = {
     errorRespnse: {
@@ -141,25 +137,21 @@ const reConnect = async (
   let errBody = stringToJSON(err.body);
   let payload = stringToJSON(errBody.payload);
 
-  handleQueue((client: any, chatroomId: number) =>
-    send(client, chatroomId, payload),
-  );
-
-  console.log(errBody);
-  console.log(payload);
+  payload &&
+    handleQueue((client: any, chatroomId: number) =>
+      send(client, chatroomId, payload),
+    );
 
   disconnect(client);
 
   if (errBody.errorResponse.status === 456) {
-    console.log('토큰재발급');
     await apis
       .getRefreshedToken()
       .then((res) => {
-        console.log(retryCount);
+        console.log('재시도 횟수 : ', retryCount);
       })
       .catch((err) => console.log(err));
   }
-  console.log('reconnect 시작');
 
   if (retryCount > 3) {
     retryCount = 0;
@@ -170,10 +162,7 @@ const reConnect = async (
     retryCount++;
     bind(client);
     connect(client, roomId, setProcessedData, dataProcessing, serverData);
-    console.log('reconnect 종료1');
   }
-
-  console.log('reconnect 종료2');
 };
 
 const stringToJSON = (target: string | undefined): any => {
@@ -188,8 +177,9 @@ const handleQueue = (callback: (client: any, chatroomId: number) => void) => {
 };
 
 const reSendTrriger = (client: any, chatroomId: number) => {
-  console.log(sendDataQueue);
-  sendDataQueue.forEach((callback) => callback(client, chatroomId));
+  sendDataQueue.forEach((callback) => {
+    callback(client, chatroomId);
+  });
   lock = false;
   sendDataQueue = [];
 };

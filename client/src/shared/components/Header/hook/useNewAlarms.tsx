@@ -10,6 +10,7 @@ export const useNewAlarms = (isLoggedin: boolean) => {
   const { alarmIsOpen } = AlarmStore();
   const navigate = useNavigate();
   const eventSource = useRef<any>(null);
+  const reConnectCount = useRef<number>(0);
 
   const eventSourceConnect = () => {
     const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -26,10 +27,12 @@ export const useNewAlarms = (isLoggedin: boolean) => {
 
   const eventSourceAddEvent = () => {
     eventSource.current.addEventListener('newAlarms', (e: any) => {
+      console.log(e);
       setNewAlarms(JSON.parse(e.data));
+      reConnectCount.current = 0;
     });
     eventSource.current.addEventListener('error', (e: any) => {
-      // console.log(e);
+      console.log(e);
       if (e.status === 456) {
         apis
           .getRefreshedToken()
@@ -38,7 +41,19 @@ export const useNewAlarms = (isLoggedin: boolean) => {
             eventSourceConnect();
           })
           .catch((err) => console.log(err));
-      } 
+      } else if (e.status === 457) {
+        alert('로그인이 만료되었습니다.');
+        window.location.replace('/');
+      }
+      if (reConnectCount.current < 3) {
+        console.log('재연결 횟수: ', reConnectCount.current);
+        reConnectCount.current++;
+        eventSourceClose();
+        eventSourceConnect();
+      } else {
+        alert('eventSource server error');
+        window.location.replace('/');
+      }
     });
 
     eventSource.current.addEventListener('close', eventSourceClose);
@@ -50,8 +65,8 @@ export const useNewAlarms = (isLoggedin: boolean) => {
   };
   useEffect(() => {
     if (isLoggedin && alarmIsOpen === false) {
-      // eventSourceConnect();
-      // return () => eventSourceClose();
+      eventSourceConnect();
+      return () => eventSourceClose();
     }
   }, [isLoggedin, alarmIsOpen]);
 
