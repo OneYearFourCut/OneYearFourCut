@@ -1,11 +1,8 @@
 package com.codestates.mainproject.oneyearfourcut.domain.sse.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomResponseDto;
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.repository.ChatRoomRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.service.ChatRoomService;
-import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.SseType;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.repository.SseEmitterRepository;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
@@ -45,15 +42,16 @@ public class SseService {
         });
         emitter.onError(e -> {
             log.info("=============onError Delete=============");
-            try {
-                emitter.send(SseEmitter.event()
-                        .id(String.valueOf(memberId))
-                        .name("error")
-                        .data("456"));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
+//            try {
+//                emitter.send(SseEmitter.event()
+//                        .id(String.valueOf(memberId))
+//                        .name("error")
+//                        .data("456"));
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//            sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
+            emitter.completeWithError(new BusinessLogicException(ExceptionCode.EXPIRED_ACCESS_TOKEN));
         });
 
 
@@ -94,7 +92,7 @@ public class SseService {
                                 .name(sseType.getMessageName())
                                 .data(data));
                         log.info("========{} {} Alarm Success!========", key, sseType);
-                    }catch (IOException e) {
+                    } catch (IOException e) {
                         log.info("========{} {} Alarm Error=========", key, sseType);
                         sseEmitterRepository.deleteById(key, sseType);
                     }
@@ -109,7 +107,7 @@ public class SseService {
                     .name(sseType.getMessageName())
                     .data(data));
             log.info("========{} {} Alarm Success!========", emitterId, sseType);
-        }catch (IOException e) {
+        } catch (IOException e) {
             log.info("========{} {} Alarm Error=========", emitterId, sseType);
             sseEmitterRepository.deleteById(emitterId, sseType);
         }
