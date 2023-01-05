@@ -43,7 +43,18 @@ public class SseService {
             log.info("=============onTimeout Delete=============");
             sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
         });
-        emitter.onError(throwable -> new BusinessLogicException(ExceptionCode.EXPIRED_ACCESS_TOKEN));
+        emitter.onError(e -> {
+            log.info("=============onError Delete=============");
+            try {
+                emitter.send(SseEmitter.event()
+                        .id(String.valueOf(memberId))
+                        .name("error")
+                        .data("456"));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
+        });
 
 
         Boolean readAlarmExist = alarmService.checkReadAlarm(memberId);
