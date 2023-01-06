@@ -10,6 +10,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: false # 쿼리를 가독성있게 바꿔줌
+    show-sql: true
   session:
     store-type: jdbc
   # 이미지 파일 용량 제한 수정
