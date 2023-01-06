@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import apis from 'shared/components/Header/api';
+import moment from 'moment';
 
 export default function Index() {
   interface ChatListProps {
@@ -65,6 +66,7 @@ export default function Index() {
     eventSource.addEventListener('message', (e: any) => {
       let data = JSON.parse(e.data);
       Change(data);
+      ListSort();
     });
 
     eventSource.addEventListener('error', (err: any) => {
@@ -105,6 +107,19 @@ export default function Index() {
       console.log('eventsource closed');
     };
   }, []);
+
+  const ListSort = () => {
+    console.log(chatLists);
+    setChatLists((chatList) =>
+      chatList.sort((a, b): any => {
+        if (moment(a.chattedAt).isBefore(b.chattedAt)) {
+          return 1;
+        } else if (moment(a.chattedAt).isAfter(b.chattedAt)) {
+          return -1;
+        }
+      }),
+    );
+  };
 
   const chatList = chatLists.map(
     (
