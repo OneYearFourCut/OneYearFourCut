@@ -24,6 +24,7 @@ export default function Index() {
   async function Connect() {
     const EventSource = EventSourcePolyfill || NativeEventSource;
     eventSource.current = new EventSource(
+
       `${process.env.REACT_APP_SERVER_URL}/chats/rooms/connect`,
       {
         headers: {
@@ -98,6 +99,7 @@ export default function Index() {
           alert('eventSource server error');
           window.location.replace('/');
         }
+
       }
     });
   };
@@ -121,6 +123,7 @@ export default function Index() {
       }),
     );
   };
+
 
   const chatList = chatLists.map(
     (
@@ -152,4 +155,5 @@ export default function Index() {
   ) : (
     <h3>현재 대화중인 채팅방이 없습니다.</h3>
   );
+
 }

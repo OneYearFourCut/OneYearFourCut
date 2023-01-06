@@ -57,6 +57,7 @@ export const useNewAlarms = (isLoggedin: boolean) => {
           setTimeout(() => {
             eventSourceConnect();
           }, 1000);
+
         } else {
           alert('eventSource server error');
           window.location.replace('/');

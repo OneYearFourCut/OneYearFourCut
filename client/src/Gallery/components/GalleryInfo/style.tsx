@@ -32,7 +32,7 @@ export const InfoBox = styled.div`
 `;
 
 export const Title = styled.h2`
-  text-align: center;
+  text-align: left;
 `;
 
 export const Content = styled.div`
