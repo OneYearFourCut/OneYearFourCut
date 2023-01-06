@@ -4,18 +4,37 @@ import Chat from 'assets/Icon/chat';
 import { SmallBtn, IconBtn } from 'shared/components/Buttons';
 import { useNavigate } from 'react-router-dom';
 import GalleryType from 'GallerySetting/galleryType';
+import apis from 'Gallery/api';
+import { useGalleryData } from 'GallerySetting/hooks/useGalleryData';
+import { enCryption } from 'shared/libs/cryption';
 
 const Index = ({ galleryId }: GalleryType) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/uploadPicture/${galleryId}`);
   };
+  const { data } = useGalleryData(galleryId!);
 
   return (
     <div>
       <S.BtnContainer>
-        <SmallBtn className='round'>팔로우</SmallBtn>
-        <S.smBtn className='ml-8'>
+        <SmallBtn
+          className='round'
+          onClick={() => {
+            navigate(`/chatlist`);
+          }}
+        >
+          채팅방
+        </SmallBtn>
+        {/* <SmallBtn className='round'>팔로우</SmallBtn> */}
+        <S.smBtn
+          className='ml-8'
+          onClick={() => {
+            apis.createChat(data.memberId).then((res) => {
+              navigate(`/chatroom/${enCryption(res.data.chatRoomId)}`);
+            });
+          }}
+        >
           <Chat />
         </S.smBtn>
         <IconBtn
