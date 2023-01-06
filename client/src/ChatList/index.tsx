@@ -31,17 +31,21 @@ export default function Index() {
         heartbeatTimeout: 60 * 60 * 1000,
       },
     );
-    setConnecting(true);
+
+    // SSE 열려
+    eventSource.onopen = async (e: any) => {
+      console.log('connection open');
+    };
   }
 
   const ErrorHandler = () => {
     apis.getRefreshedToken().then(() => {
+      eventSource.close();
       Connect();
     });
   };
 
   const Change = (data: any) => {
-    console.log(data);
     return chatLists.map((el: any) => {
       // 메세지로 들어올 채팅방 번호 같으면
       if (el.chatRoomId === data.chatRoomId) {
@@ -54,17 +58,12 @@ export default function Index() {
   };
 
   const EventHandler = () => {
-    // SSE 열려
-    eventSource.onopen = async (e: any) => {
-      console.log('connection open');
-    };
 
     // 초반에 채팅 리스트 데이터
     eventSource.addEventListener(
       'chatRoom',
       (e: any) => {
         // 채팅방 목록 데이터 저장
-
         setChatLists(JSON.parse(e.data));
       },
       false,
@@ -78,8 +77,14 @@ export default function Index() {
     eventSource.addEventListener('error', (err: any) => {
       console.log('에러 발생: ', err.status);
       if (err.status === 456) {
-        setConnecting(false);
-        ErrorHandler();
+        // ErrorHandler();
+        apis
+          .getRefreshedToken()
+          .then(() => {
+            eventSource.close();
+            Connect();
+          })
+          .catch((err) => console.log(err));
       } else if (err.status === 457) {
         alert('로그인이 만료되었습니다.');
         window.location.replace('/');
@@ -96,7 +101,7 @@ export default function Index() {
       eventSource.close();
       console.log('eventsource closed');
     };
-  }, [connecting]);
+  }, []);
 
   const chatList = chatLists.map(
     (
