@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.sse.controller;
 
 
+import com.amazonaws.Response;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.service.SseService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.LoginMember;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class SseController {
     private final SseService sseService;
 
     @GetMapping(value = "/members/me/alarms/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId) {
+    public ResponseEntity<SseEmitter> alarmSubscribe(@LoginMember Long memberId, Response response) {
         SseEmitter sseEmitter = sseService.alarmSubscribe(memberId);
 
         return ResponseEntity.ok(sseEmitter);
