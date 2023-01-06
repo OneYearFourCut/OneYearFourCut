@@ -1,13 +1,12 @@
 package com.codestates.mainproject.oneyearfourcut.domain.sse.service;
 
-import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.dto.ChatRoomResponseDto;
-import com.codestates.mainproject.oneyearfourcut.domain.chatroom.repository.ChatRoomRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.chatroom.service.ChatRoomService;
-import com.codestates.mainproject.oneyearfourcut.domain.member.dto.MemberResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.SseType;
 import com.codestates.mainproject.oneyearfourcut.domain.sse.repository.SseEmitterRepository;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,11 @@ public class SseService {
             log.info("=============onTimeout Delete=============");
             sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
         });
+        emitter.onError(e -> {
+            log.info("=============onError Delete=============");
 
+            sseEmitterRepository.deleteById(emitterId, SseType.ALARM);
+        });
 
         Boolean readAlarmExist = alarmService.checkReadAlarm(memberId);
         sendFirstAlarm(emitter, memberId, emitterId, SseType.ALARM, readAlarmExist);
@@ -55,11 +58,11 @@ public class SseService {
 
         //만료시 삭제
         emitter.onCompletion(() -> {
-            log.info("=============onCompletion Delete=============");
+            log.info("=================onCompletion Delete=================");
             sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM_LIST);
         });
         emitter.onTimeout(() -> {
-            log.info("=============onTimeout Delete=============");
+            log.info("=================onTimeout Delete=================");
             sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM_LIST);
         });
 
@@ -79,9 +82,9 @@ public class SseService {
                                 .id(String.valueOf(memberId))
                                 .name(sseType.getMessageName())
                                 .data(data));
-                        log.info("========{} Alarm Success!========", key);
-                    }catch (IOException e) {
-                        log.info("========{} Alarm Error=========", key);
+                        log.info("========{} {} Alarm Success!========", key, sseType);
+                    } catch (IOException e) {
+                        log.info("========{} {} Alarm Error=========", key, sseType);
                         sseEmitterRepository.deleteById(key, sseType);
                     }
                 }
@@ -94,9 +97,9 @@ public class SseService {
                     .id(String.valueOf(memberId))
                     .name(sseType.getMessageName())
                     .data(data));
-            log.info("========{} Alarm Success!========", emitterId);
-        }catch (IOException e) {
-            log.info("========{} Alarm Error=========", emitterId);
+            log.info("========{} send Success! {}========", sseType, emitterId);
+        } catch (IOException e) {
+            log.info("========{} send Error! {}=========", sseType, emitterId);
             sseEmitterRepository.deleteById(emitterId, sseType);
         }
     }

@@ -18,6 +18,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -150,4 +151,15 @@ public class ChatRoomRepositoryTest {
 //        chatRoomRepository.findChatRoomMemberInfoByMemberIdAndChatRoomId(1L, 2L);
 
     }
+
+    @Test
+    void findByMemberIdAndChatRoomIdTest() {
+        chatRoomRepository.findByMemberIdAndChatRoomId(1L, 2L);
+    }
+//    @Query("SELECT cr FROM ChatRoom cr "
+//            + "LEFT JOIN FETCH ChatRoomMember crm "
+//            + "ON crm.chatRoom.chatRoomId = cr.chatRoomId"
+//            + "WHERE crm.member.memberId = :memberId "
+//            + "AND cr.chatRoomId = :chatRoomId")
+//    Optional<ChatRoom> findByMemberIdAndChatRoomId(Long memberId, Long chatRoomId);
 }

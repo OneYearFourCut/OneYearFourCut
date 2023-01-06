@@ -1,18 +1,21 @@
 package com.codestates.mainproject.oneyearfourcut.global.websocket.handler;
 
 import com.codestates.mainproject.oneyearfourcut.global.exception.dto.ErrorResponse;
-import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.dto.MessageErrorResponse;
 import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeType;
 import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 @Component
 @Slf4j
@@ -40,12 +43,18 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
         return super.handleClientMessageProcessingError(clientMessage, ex);
 }
     private Message<byte[]> prepareErrorMessage(Message<byte[]> clientMessage, ErrorResponse errorResponse) {
-        String errorCode = String.valueOf(errorResponse.getStatus());
+        Object payloadFromRequest = new String(clientMessage.getPayload(), StandardCharsets.UTF_8);
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
+        MessageErrorResponse<Object> messageErrorResponse = MessageErrorResponse.builder().errorResponse(errorResponse).payload(payloadFromRequest).build();
 
-        accessor.setMessage(String.valueOf(errorResponse.toString())); // 수정된 부분
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String jsonContent = gson.toJson(messageErrorResponse);
+
+        byte[] payload = jsonContent.getBytes(StandardCharsets.UTF_8);
+
+        accessor.setContentType(MimeType.valueOf(ContentType.APPLICATION_JSON.getMimeType()));
         accessor.setLeaveMutable(true);
 
-        return MessageBuilder.createMessage(clientMessage.getPayload(), accessor.getMessageHeaders());
+        return MessageBuilder.createMessage(payload, accessor.getMessageHeaders());
     }
 }

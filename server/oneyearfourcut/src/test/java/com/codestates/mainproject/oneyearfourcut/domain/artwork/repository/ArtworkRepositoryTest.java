@@ -3,12 +3,17 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.repository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
+import com.codestates.mainproject.oneyearfourcut.global.exception.dto.ErrorResponse;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.data.domain.Sort.Order.desc;
@@ -113,4 +118,13 @@ public class ArtworkRepositoryTest {
         }
     }
 
+    @Test
+    void gsonTest() {
+        ErrorResponse response = ErrorResponse.of(ExceptionCode.EXPIRED_ACCESS_TOKEN);
+
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String gsoncontent = gson.toJson(response);
+
+        System.out.println("gsoncontent = " + gsoncontent);
+    }
 }

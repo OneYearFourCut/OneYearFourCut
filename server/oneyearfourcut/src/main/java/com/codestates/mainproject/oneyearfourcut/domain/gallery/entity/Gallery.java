@@ -35,10 +35,10 @@ public class Gallery extends Auditable {
     @Enumerated(EnumType.STRING)
     private GalleryStatus status;
 
-    @Formula("(select count(*) from Follow f where f.member_id = member_id)")
+    @Formula("(select count(*) from follow f where f.member_id = member_id)")
     private Long followingCount;
 
-    @Formula("(select count(*) from Follow f where f.gallery_id = gallery_id) ")
+    @Formula("(select count(*) from follow f where f.gallery_id = gallery_id) ")
     private Long followerCount;
 
     @Builder
@@ -77,6 +77,8 @@ public class Gallery extends Auditable {
                 .galleryId(this.galleryId)
                 .title(this.title)
                 .content(this.content)
+                .memberId(this.member.getMemberId())
+                .profile(this.member.getProfile())
                 .createdAt(this.getCreatedAt())
                 .followingCount(this.getFollowingCount())
                 .followerCount(this.getFollowerCount())

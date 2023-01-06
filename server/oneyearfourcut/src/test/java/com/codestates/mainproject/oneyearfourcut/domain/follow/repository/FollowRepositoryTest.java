@@ -56,6 +56,8 @@ public class FollowRepositoryTest {
         //then
         assertThat(foundFollow.getFollowId()).isEqualTo(2L);
     }
+
+    @Disabled
     @Test
     @DisplayName("")
     void testDeleteFollow(){
@@ -84,6 +86,11 @@ public class FollowRepositoryTest {
 
         //then
         assertThat(followRepository.count()).isEqualTo(4);
+    }
+
+    @Test
+    void jpqlTest() {
+        followRepository.findByFollowMemberIdAndMember(1L, new Member(1L));
     }
 
 

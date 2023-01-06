@@ -29,7 +29,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoomResponseDto> findAllByMemberId(Long memberId);
 
     @Query("SELECT cr FROM ChatRoom cr "
-            + "LEFT JOIN FETCH cr.chatRoomMemberList crm "
+            + "LEFT JOIN FETCH ChatRoomMember crm "
+            + "ON crm.chatRoom.chatRoomId = cr.chatRoomId "
             + "WHERE crm.member.memberId = :memberId "
             + "AND cr.chatRoomId = :chatRoomId")
     Optional<ChatRoom> findByMemberIdAndChatRoomId(Long memberId, Long chatRoomId);
