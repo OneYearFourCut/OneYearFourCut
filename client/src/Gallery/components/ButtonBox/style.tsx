@@ -15,8 +15,8 @@ export const BtnContainer = styled.div`
   .ml-8 {
     margin-left: ${rem(8)};
   }
-  .ml-56 {
-    margin-left: ${rem(56)};
+  .ml-32 {
+    margin-left: ${rem(32)};
   }
 `;
 

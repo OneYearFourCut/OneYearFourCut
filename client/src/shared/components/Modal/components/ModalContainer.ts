@@ -100,10 +100,10 @@ const HambergurBox = styled.div`
     cursor: pointer;
   }
 
-  ulli: hover {
-    font-weight: 1000;
+  ul li:hover {
+    font-weight: 800;
   }
-  ul li:nth-child(n + 4) {
+  ul li:nth-child(n + 5) {
     color: grey;
   }
   .kakaoLoginImg {

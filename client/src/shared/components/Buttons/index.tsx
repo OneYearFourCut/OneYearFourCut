@@ -34,6 +34,13 @@ const Btn = styled.button`
     color: ${({ theme }) => theme.colors.black_003};
     border: 0px;
   }
+
+  &.smallIcon {
+    width: ${rem(80)};
+    height: ${rem(40)};
+    background-color: ${({ theme }) => theme.colors.green_002};
+    border-radius: ${rem(20)};
+  }
 `;
 
 interface IconBtnInterface {
