@@ -97,9 +97,9 @@ public class SseService {
                     .id(String.valueOf(memberId))
                     .name(sseType.getMessageName())
                     .data(data));
-            log.info("========{} {} Alarm Success!========", emitterId, sseType);
+            log.info("========{} send Success! {}========", emitterId, sseType);
         } catch (IOException e) {
-            log.info("========{} {} Alarm Error=========", emitterId, sseType);
+            log.info("========{} send Error! {}=========", emitterId, sseType);
             sseEmitterRepository.deleteById(emitterId, sseType);
         }
     }
