@@ -86,5 +86,10 @@ public class FollowRepositoryTest {
         assertThat(followRepository.count()).isEqualTo(4);
     }
 
+    @Test
+    void jpqlTest() {
+        followRepository.findByFollowMemberIdAndMember(1L, new Member(1L));
+    }
+
 
 }

@@ -45,7 +45,6 @@ public class MessageErrorHandler extends StompSubProtocolErrorHandler {
     private Message<byte[]> prepareErrorMessage(Message<byte[]> clientMessage, ErrorResponse errorResponse) {
         Object payloadFromRequest = new String(clientMessage.getPayload(), StandardCharsets.UTF_8);
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
-
         MessageErrorResponse<Object> messageErrorResponse = MessageErrorResponse.builder().errorResponse(errorResponse).payload(payloadFromRequest).build();
 
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
