@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                                 .antMatchers(HttpMethod.GET, "/galleries/**").permitAll()
-                                .antMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
+                                .antMatchers(HttpMethod.GET, "/auth/refresh/**").permitAll()
                                 .antMatchers(HttpMethod.GET, "/docs/index.html").permitAll()
                                 .antMatchers(HttpMethod.GET, "/").permitAll()
                                 .antMatchers(HttpMethod.GET, "/receive-token").permitAll()
