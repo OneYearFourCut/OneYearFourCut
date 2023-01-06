@@ -14,7 +14,7 @@ export default function Index() {
     chattedAt?: string;
     lastChatMessage?: string;
   }
-  const [chatLists, setChatLists] = useState([]);
+  const [chatLists, setChatLists] = useState<Array<ChatListProps>>([]);
   const [connecting, setConnecting] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -31,20 +31,33 @@ export default function Index() {
         heartbeatTimeout: 60 * 60 * 1000,
       },
     );
-    setConnecting(true);
-  }
 
-  const ErrorHandler = () => {
-    apis.getRefreshedToken().then(() => {
-      Connect();
-    });
-  };
-
-  const EventHandler = () => {
     // SSE 열려
     eventSource.onopen = async (e: any) => {
       console.log('connection open');
     };
+  }
+
+  const ErrorHandler = () => {
+    apis.getRefreshedToken().then(() => {
+      eventSource.close();
+      Connect();
+    });
+  };
+
+  const Change = (data: any) => {
+    return chatLists.map((el: any) => {
+      // 메세지로 들어올 채팅방 번호 같으면
+      if (el.chatRoomId === data.chatRoomId) {
+        el.chattedAt = data.chattedAt;
+        el.lastChatMessage = data.lastChatMessage;
+        return el;
+      }
+      return el;
+    });
+  };
+
+  const EventHandler = () => {
 
     // 초반에 채팅 리스트 데이터
     eventSource.addEventListener(
@@ -56,27 +69,27 @@ export default function Index() {
       false,
     );
 
-    eventSource.onmessage = (e: any) => {
+    eventSource.addEventListener('message', (e: any) => {
       let data = JSON.parse(e.data);
-      let change: any = chatLists.map((el: any) => {
-        // 메세지로 들어올 채팅방 번호 같으면
-        if (el.chatRoomId === data.chatRoomId) {
-          el.chattedAt = data.chattedAt;
-          el.lastChatMessage = data.lastChatMessage;
-        }
-        return el;
-      });
+      setChatLists(Change(data));
+    });
 
-      setChatLists(change);
-    };
-
-    eventSource.onerror = (err: any) => {
+    eventSource.addEventListener('error', (err: any) => {
       console.log('에러 발생: ', err.status);
-      setConnecting(false);
       if (err.status === 456) {
-        ErrorHandler();
+        // ErrorHandler();
+        apis
+          .getRefreshedToken()
+          .then(() => {
+            eventSource.close();
+            Connect();
+          })
+          .catch((err) => console.log(err));
+      } else if (err.status === 457) {
+        alert('로그인이 만료되었습니다.');
+        window.location.replace('/');
       }
-    };
+    });
   };
 
   useEffect(() => {
@@ -88,7 +101,7 @@ export default function Index() {
       eventSource.close();
       console.log('eventsource closed');
     };
-  }, [connecting]);
+  }, []);
 
   const chatList = chatLists.map(
     (

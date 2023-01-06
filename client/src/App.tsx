@@ -38,13 +38,13 @@ const router = createBrowserRouter([
         element: <Intro />,
       },
       {
-        path: '/chatroom/:roomId',
+        path: '/chatroom/*',
         element: (
-          <Suspense fallback={<TriggerBox />}>
-            <AuthCheck>
+          <AuthCheck>
+            <Suspense fallback={<TriggerBox />}>
               <ChatRoom />
-            </AuthCheck>
-          </Suspense>
+            </Suspense>
+          </AuthCheck>
         ),
       },
       {

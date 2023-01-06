@@ -11,8 +11,8 @@ import StompJS from 'stompjs';
 
 const Chatroom = () => {
   const params = useParams();
-  const roomId = deCryption(params.roomId!);
-  
+  const roomId = deCryption(params['*']!);
+
   const { processedData, setProcessedData, dataProcessing, serverData } =
     useGetChatData(roomId);
 
@@ -25,8 +25,6 @@ const Chatroom = () => {
       disconnect(client);
     };
   }, []);
-
-
 
   return (
     <DefualtContainer>
