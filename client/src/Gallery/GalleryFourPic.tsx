@@ -36,9 +36,11 @@ const Gallery = () => {
       <ButtonBox galleryId={galleryId} />
       <FourCut galleryId={galleryId} />
       <BottomButton galleryId={galleryId} />
-      <button onClick={() => {
-            navigate(`/chatroom/4`);
-        }}></button>
+      <button
+        onClick={() => {
+          navigate(`/chatlist`);
+        }}
+      ></button>
     </Container>
   );
 };
