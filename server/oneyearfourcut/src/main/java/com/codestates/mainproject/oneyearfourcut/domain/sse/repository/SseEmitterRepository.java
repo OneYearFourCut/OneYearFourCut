@@ -29,10 +29,10 @@ public class SseEmitterRepository {
 //        }
 
         emitters.put(emitterId, sseEmitter);
-        log.info("=========================================");
+        log.info("=================================================");
         log.info("============={} created : {}=============", sseType, emitterId);
-        log.info("============={} size: {}============", sseType, emitters.size());
-        log.info("=========================================");
+        log.info("==================={} size: {}===================", sseType, emitters.size());
+        log.info("=================================================");
         return sseEmitter;
     }
 
@@ -45,8 +45,8 @@ public class SseEmitterRepository {
         }
         emitters.remove(emitterId);
         log.info("============{} deleted: {}============", sseType, emitterId);
-        log.info("==========={} size: {}============", sseType, emitters.size());
-        log.info("=========================================");
+        log.info("==================={} size: {}====================", sseType, emitters.size());
+        log.info("=================================================");
     }
 
     public SseEmitter findById(String emitterId, SseType sseType) {

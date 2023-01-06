@@ -58,11 +58,11 @@ public class SseService {
 
         //만료시 삭제
         emitter.onCompletion(() -> {
-            log.info("=============onCompletion Delete=============");
+            log.info("=================onCompletion Delete=================");
             sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM_LIST);
         });
         emitter.onTimeout(() -> {
-            log.info("=============onTimeout Delete=============");
+            log.info("=================onTimeout Delete=================");
             sseEmitterRepository.deleteById(emitterId, SseType.CHATROOM_LIST);
         });
 
@@ -97,9 +97,9 @@ public class SseService {
                     .id(String.valueOf(memberId))
                     .name(sseType.getMessageName())
                     .data(data));
-            log.info("========{} send Success! {}========", emitterId, sseType);
+            log.info("========{} send Success! {}========", sseType, emitterId);
         } catch (IOException e) {
-            log.info("========{} send Error! {}=========", emitterId, sseType);
+            log.info("========{} send Error! {}=========", sseType, emitterId);
             sseEmitterRepository.deleteById(emitterId, sseType);
         }
     }

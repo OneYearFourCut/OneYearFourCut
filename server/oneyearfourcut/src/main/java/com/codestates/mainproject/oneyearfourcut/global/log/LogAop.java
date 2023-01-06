@@ -17,9 +17,9 @@ public class LogAop {
 
     @Around("allController()")
     public Object galleryLogging(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("#################################################");
+        log.info("###########################################################");
         log.info("#########{} -> {}##########", joinPoint.getSignature().getDeclaringType().getSimpleName(), joinPoint.getSignature().getName());
-        log.info("#################################################");
+        log.info("###########################################################");
 
         return joinPoint.proceed();
     }

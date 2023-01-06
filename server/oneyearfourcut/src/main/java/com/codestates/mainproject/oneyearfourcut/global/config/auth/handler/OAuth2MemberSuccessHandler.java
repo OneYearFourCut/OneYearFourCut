@@ -43,7 +43,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         // kakao_account안에 또 profile이라는 JSON객체가 있다. (nickname, profile_image)
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
-        log.info("##############################로그인 시도!##################################");
+        log.info("##############################LOGIN##################################");
 
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) kakaoProfile.get("nickname");
