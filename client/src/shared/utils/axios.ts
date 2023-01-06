@@ -164,7 +164,6 @@ refreshInstance.interceptors.response.use(
   async (err) => {
     if (err.response.status === 457) return ErrorHandler457(err);
     else return err;
-
   },
 );
 
