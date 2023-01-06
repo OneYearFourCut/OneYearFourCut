@@ -1,6 +1,7 @@
 import * as S from './style';
 import Camera from 'assets/Icon/camera';
-import { IconBtn } from 'shared/components/Buttons';
+import Chat from 'assets/Icon/chat';
+import { SmallBtn, IconBtn } from 'shared/components/Buttons';
 import { useNavigate } from 'react-router-dom';
 import GalleryType from 'GallerySetting/galleryType';
 
@@ -13,7 +14,15 @@ const Index = ({ galleryId }: GalleryType) => {
   return (
     <div>
       <S.BtnContainer>
-        <IconBtn onClick={handleClick} className='white' icon={<Camera />}>
+        <SmallBtn className='round'>팔로우</SmallBtn>
+        <S.smBtn className='ml-8'>
+          <Chat />
+        </S.smBtn>
+        <IconBtn
+          onClick={handleClick}
+          className='white ml-56'
+          icon={<Camera />}
+        >
           <p>사진 올려주기</p>
         </IconBtn>
       </S.BtnContainer>

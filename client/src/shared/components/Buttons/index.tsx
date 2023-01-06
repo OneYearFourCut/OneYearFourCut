@@ -14,8 +14,8 @@ const Btn = styled.button`
   padding: ${rem(5)};
   line-height: 120%;
 
-  &.square {
-    border-radius: ${rem(5)};
+  &.round {
+    border-radius: ${rem(20)};
   }
 
   &.white {
@@ -37,7 +37,7 @@ const Btn = styled.button`
 `;
 
 interface IconBtnInterface {
-  className: string;
+  className?: string;
   icon?: JSX.Element;
   children?: React.ReactNode;
   onClick?: () => void;
@@ -53,8 +53,9 @@ const SmallBtn = styled.button`
   font-size: ${rem(16)};
   margin-left: ${rem(294)};
 
-  &.square {
-    border-radius: ${rem(5)};
+  &.round {
+    border-radius: ${rem(20)};
+    margin-left: ${rem(0)};
   }
 
   &.white {

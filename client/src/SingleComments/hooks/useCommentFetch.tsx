@@ -23,7 +23,7 @@ const useCommentFetch = () => {
           refetch().then((res) => {
             setTimeout(() => {
               if (res.data) {
-                if (res.data?.data.commentList.length >= 10) {
+                if (res.data?.data.commentList.length > 10) {
                   setIsData(true);
                   setPage(page + 1);
                   observer.observe(entry.target);
@@ -39,12 +39,12 @@ const useCommentFetch = () => {
         }
       });
     },
-    [comment],
+    [comment, page],
   );
 
   const target = useIntersection(callbackCmt, { threshold: 0.3 });
 
-  return { isData, comment, target, data, setIsData };
+  return { isData, comment, target, data, setIsData, setPage };
 };
 
 export default useCommentFetch;

@@ -4,20 +4,27 @@ import XIcon from 'shared/components/Icons/XIcon';
 
 import { useParams, useNavigate } from 'react-router-dom';
 import useCommentFetch from './hooks/useCommentFetch';
-
+import styled from 'styled-components';
 import { TriggerBox } from 'AlarmList/components/AlarmContainer';
+import CommentStore from 'store/store';
+
+const TrBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+`;
 
 const CommentsList = () => {
   const navigate = useNavigate();
 
   const { isData, comment, target, data } = useCommentFetch();
+  const { commentCount } = CommentStore();
 
   return (
     <S.CommentBody>
       <S.PicTitle>
-        <S.CommentCount>
-          댓글 {comment?.length === 0 ? 0 : comment?.length}
-        </S.CommentCount>
+        <S.CommentCount>댓글 {commentCount}</S.CommentCount>
         <div onClick={() => navigate(-1)}>
           <XIcon />
         </div>
@@ -40,11 +47,13 @@ const CommentsList = () => {
           );
         })
       )}
-      {isData && (
-        <TriggerBox ref={target} className='test'>
-          <div></div>
-        </TriggerBox>
-      )}
+      <TrBox>
+        {isData && (
+          <TriggerBox ref={target} className='test'>
+            <div></div>
+          </TriggerBox>
+        )}
+      </TrBox>
     </S.CommentBody>
   );
 };

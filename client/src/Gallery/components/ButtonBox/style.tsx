@@ -3,11 +3,6 @@ import { rem } from 'polished';
 
 export const BtnContainer = styled.div`
   ${({ theme }) => theme.mixins.flexBox('row', 'center', 'center')}
-
-  & .mr {
-    margin-right: ${rem(10)};
-  }
-
   p {
     margin-right: ${rem(10)};
   }
@@ -15,7 +10,13 @@ export const BtnContainer = styled.div`
   div {
     color: ${({ theme }) => theme.colors.black_004};
     font-size: ${rem(15)};
-    text-align: end;
+  }
+
+  .ml-8 {
+    margin-left: ${rem(8)};
+  }
+  .ml-56 {
+    margin-left: ${rem(56)};
   }
 `;
 
@@ -24,4 +25,14 @@ export const Time = styled.div`
   font-size: ${rem(15)};
   text-align: end;
   margin-top: ${rem(10)};
+`;
+
+export const smBtn = styled.button`
+  width: ${rem(55)};
+  height: ${rem(40)};
+  background-color: ${({ theme }) => theme.colors.green_002};
+  border-radius: ${rem(20)};
+  border: none;
+  color: white;
+  font-size: ${rem(16)};
 `;

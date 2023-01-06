@@ -8,13 +8,14 @@ import Snowfall from 'react-snowfall';
 import { setinitUrl } from 'shared/libs/saveSessionStorage';
 import { useEffect } from 'react';
 import { deCryption } from 'shared/libs/cryption';
-
+import { useNavigate } from 'react-router-dom';
 const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
 const Gallery = () => {
   const params = useParams();
   const galleryId = deCryption(params['*']!);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setinitUrl(window.location.pathname);
@@ -35,6 +36,11 @@ const Gallery = () => {
       <ButtonBox galleryId={galleryId} />
       <FourCut galleryId={galleryId} />
       <BottomButton galleryId={galleryId} />
+      <button
+        onClick={() => {
+          navigate(`/chatlist`);
+        }}
+      ></button>
     </Container>
   );
 };
