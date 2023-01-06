@@ -3,6 +3,7 @@ import ChatWrapper from './components/ChatWrapper';
 import React, { useEffect, useState } from 'react';
 import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
+import apis from 'shared/components/Header/api';
 
 export default function Index() {
   interface ChatListProps {
@@ -14,24 +15,34 @@ export default function Index() {
     lastChatMessage?: string;
   }
   const [chatLists, setChatLists] = useState([]);
-  const ACCESS_TOKEN = getStoredToken()?.access_token;
+  const [connecting, setConnecting] = useState<boolean>(false);
 
-  // API 주소 주시면 연결
-  // 너와 나의 연결 고리 우리 안의 소리
-  useEffect(() => {
-    const EventSource = EventSourcePolyfill || NativeEventSource;
+  const EventSource = EventSourcePolyfill || NativeEventSource;
+  let eventSource: any = null;
 
-    const eventSource = new EventSource(
+  // SSE 연결 함수
+  function Connect() {
+    eventSource = new EventSource(
       `${process.env.REACT_APP_SERVER_URL}/chats/rooms/connect`,
       {
         headers: {
-          Authorization: ACCESS_TOKEN!,
+          Authorization: getStoredToken()?.access_token!,
         },
+        heartbeatTimeout: 60 * 60 * 1000,
       },
     );
+    setConnecting(true);
+  }
 
+  const ErrorHandler = () => {
+    apis.getRefreshedToken().then(() => {
+      Connect();
+    });
+  };
+
+  const EventHandler = () => {
     // SSE 열려
-    eventSource.onopen = async (event) => {
+    eventSource.onopen = async (e: any) => {
       console.log('connection open');
     };
 
@@ -39,33 +50,45 @@ export default function Index() {
     eventSource.addEventListener(
       'chatRoom',
       (e: any) => {
+        // 채팅방 목록 데이터 저장
         setChatLists(JSON.parse(e.data));
       },
       false,
     );
 
-    // 서버로부터 데이터가 오면
-    eventSource.onmessage = async (e: any) => {
-      const res = await e.data;
-      console.log('메세지 올 때', res);
-
-      setChatLists((prevState) => {
-        return { ...prevState };
+    eventSource.onmessage = (e: any) => {
+      let data = JSON.parse(e.data);
+      let change: any = chatLists.map((el: any) => {
+        // 메세지로 들어올 채팅방 번호 같으면
+        if (el.chatRoomId === data.chatRoomId) {
+          el.chattedAt = data.chattedAt;
+          el.lastChatMessage = data.lastChatMessage;
+        }
+        return el;
       });
-      // 메세지 오면 chatRoomId가 같으면 바꿔치기
+
+      setChatLists(change);
     };
 
-    eventSource.onerror = (event) => {
-      console.log(event);
-      if (event.target.readyState === EventSource.CLOSED) {
-        console.log('eventsource closed (' + event.target.readyState + ')');
+    eventSource.onerror = (err: any) => {
+      console.log('에러 발생: ', err.status);
+      setConnecting(false);
+      if (err.status === 456) {
+        ErrorHandler();
       }
     };
+  };
+
+  useEffect(() => {
+    // eventSource 연결
+    Connect();
+    EventHandler();
+
     return () => {
       eventSource.close();
       console.log('eventsource closed');
     };
-  }, []);
+  }, [connecting]);
 
   const chatList = chatLists.map(
     (
