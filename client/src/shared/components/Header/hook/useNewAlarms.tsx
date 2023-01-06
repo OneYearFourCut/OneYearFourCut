@@ -36,7 +36,6 @@ export const useNewAlarms = (isLoggedin: boolean) => {
       reConnectCount.current = 0;
     });
     eventSource.current.addEventListener('error', async (e: any) => {
-
       eventSourceClose();
       if (e.status === 456) {
         await apis
@@ -57,7 +56,6 @@ export const useNewAlarms = (isLoggedin: boolean) => {
           setTimeout(() => {
             eventSourceConnect();
           }, 1000);
-
         } else {
           alert('eventSource server error');
           window.location.replace('/');
