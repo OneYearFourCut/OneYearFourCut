@@ -14,7 +14,7 @@ export default function Index() {
     chattedAt?: string;
     lastChatMessage?: string;
   }
-  const [chatLists, setChatLists] = useState([]);
+  const [chatLists, setChatLists] = useState<Array<ChatListProps>>([]);
   const [connecting, setConnecting] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -40,6 +40,19 @@ export default function Index() {
     });
   };
 
+  const Change = (data: any) => {
+    console.log(data);
+    return chatLists.map((el: any) => {
+      // 메세지로 들어올 채팅방 번호 같으면
+      if (el.chatRoomId === data.chatRoomId) {
+        el.chattedAt = data.chattedAt;
+        el.lastChatMessage = data.lastChatMessage;
+        return el;
+      }
+      return el;
+    });
+  };
+
   const EventHandler = () => {
     // SSE 열려
     eventSource.onopen = async (e: any) => {
@@ -51,32 +64,27 @@ export default function Index() {
       'chatRoom',
       (e: any) => {
         // 채팅방 목록 데이터 저장
+
         setChatLists(JSON.parse(e.data));
       },
       false,
     );
 
-    eventSource.onmessage = (e: any) => {
+    eventSource.addEventListener('message', (e: any) => {
       let data = JSON.parse(e.data);
-      let change: any = chatLists.map((el: any) => {
-        // 메세지로 들어올 채팅방 번호 같으면
-        if (el.chatRoomId === data.chatRoomId) {
-          el.chattedAt = data.chattedAt;
-          el.lastChatMessage = data.lastChatMessage;
-        }
-        return el;
-      });
+      setChatLists(Change(data));
+    });
 
-      setChatLists(change);
-    };
-
-    eventSource.onerror = (err: any) => {
+    eventSource.addEventListener('error', (err: any) => {
       console.log('에러 발생: ', err.status);
-      setConnecting(false);
       if (err.status === 456) {
+        setConnecting(false);
         ErrorHandler();
+      } else if (err.status === 457) {
+        alert('로그인이 만료되었습니다.');
+        window.location.replace('/');
       }
-    };
+    });
   };
 
   useEffect(() => {
