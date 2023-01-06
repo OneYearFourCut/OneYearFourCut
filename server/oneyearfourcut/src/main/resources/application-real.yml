@@ -21,8 +21,8 @@ spring:
 logging:
   level:
     com.zaxxer.hikari.pool.HikariPool: debug
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql: trace
