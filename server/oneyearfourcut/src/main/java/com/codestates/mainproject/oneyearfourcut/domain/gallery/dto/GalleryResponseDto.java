@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class GalleryResponseDto {
     private Long galleryId;
     private Long memberId;
+    private String profile;
     private String title;
     private String content;
     private LocalDateTime createdAt;

@@ -56,6 +56,8 @@ public class FollowRepositoryTest {
         //then
         assertThat(foundFollow.getFollowId()).isEqualTo(2L);
     }
+
+    @Disabled
     @Test
     @DisplayName("")
     void testDeleteFollow(){

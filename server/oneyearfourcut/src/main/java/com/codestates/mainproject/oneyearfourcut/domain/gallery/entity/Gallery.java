@@ -78,6 +78,7 @@ public class Gallery extends Auditable {
                 .title(this.title)
                 .content(this.content)
                 .memberId(this.member.getMemberId())
+                .profile(this.member.getProfile())
                 .createdAt(this.getCreatedAt())
                 .followingCount(this.getFollowingCount())
                 .followerCount(this.getFollowerCount())
