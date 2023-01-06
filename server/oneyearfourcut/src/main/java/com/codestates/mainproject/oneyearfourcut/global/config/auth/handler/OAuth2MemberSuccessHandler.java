@@ -7,6 +7,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberSer
 import com.codestates.mainproject.oneyearfourcut.domain.refreshToken.service.RefreshTokenService;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
@@ -40,6 +42,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         // kakao_account안에 또 profile이라는 JSON객체가 있다. (nickname, profile_image)
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+
+        log.info("##############################로그인 시도!##################################");
 
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) kakaoProfile.get("nickname");
