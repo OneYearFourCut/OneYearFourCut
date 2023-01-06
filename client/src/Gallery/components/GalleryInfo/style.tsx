@@ -4,7 +4,7 @@ import { rem } from 'polished';
 export const Info = styled.div`
   ${({ theme }) => theme.mixins.flexBox('row', 'center', 'flex-start')}
   width: ${rem(428)};
-  padding: ${rem(20)};
+  padding: ${rem(15)} ${rem(30)};
 `;
 
 export const ProfileBox = styled.div`
@@ -27,7 +27,8 @@ export const Profile = styled.img`
 
 export const InfoBox = styled.div`
   min-width: ${rem(280)};
-  ${({ theme }) => theme.mixins.flexBox('column', 'flex-start', 'center')}
+  ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
+  padding: ${rem(5)}
 `;
 
 export const Title = styled.h2`
@@ -35,5 +36,5 @@ export const Title = styled.h2`
 `;
 
 export const Content = styled.div`
-  text-align: left;
+  text-align: center;
 `;

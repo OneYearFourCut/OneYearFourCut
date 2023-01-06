@@ -20,10 +20,14 @@ export const useNewAlarms = (isLoggedin: boolean) => {
         headers: {
           Authorization: getStoredToken()?.access_token!,
         },
-        heartbeatTimeout: 60*60*1000,
+        heartbeatTimeout: 60 * 60 * 1000,
       },
     );
     eventSourceAddEvent();
+
+    eventSource.current.onopen = async (e: any) => {
+      reConnectCount.current = 0;
+    };
   };
 
   const eventSourceAddEvent = () => {
@@ -31,23 +35,29 @@ export const useNewAlarms = (isLoggedin: boolean) => {
       setNewAlarms(JSON.parse(e.data));
       reConnectCount.current = 0;
     });
-    eventSource.current.addEventListener('error', (e: any) => {
+    eventSource.current.addEventListener('error', async (e: any) => {
+
+      eventSourceClose();
       if (e.status === 456) {
-        apis
+        await apis
           .getRefreshedToken()
           .then((res) => {
-            eventSourceClose();
             eventSourceConnect();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            reConnectCount.current++;
+          });
       } else if (e.status === 457) {
         alert('로그인이 만료되었습니다.');
         window.location.replace('/');
       } else {
         if (reConnectCount.current < 3) {
           reConnectCount.current++;
-          eventSourceClose();
-          eventSourceConnect();
+
+          setTimeout(() => {
+            eventSourceConnect();
+          }, 1000);
+
         } else {
           alert('eventSource server error');
           window.location.replace('/');
@@ -59,7 +69,6 @@ export const useNewAlarms = (isLoggedin: boolean) => {
   };
 
   const eventSourceClose = () => {
-    console.log('eventSource Close');
     eventSource.current.close();
   };
   useEffect(() => {

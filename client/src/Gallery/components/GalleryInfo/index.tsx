@@ -14,9 +14,9 @@ const Index = ({ galleryId }: GalleryType) => {
         </S.InfoBox>
         <S.ProfileBox>
           <S.ProfileCircle>
-            <S.Profile src='/images/1.jpg' />
+            <S.Profile src={data.profile} />
           </S.ProfileCircle>
-          <div>프로필 보기</div>
+          {/* <div>팔로우 보기</div> */}
         </S.ProfileBox>
       </S.Info>
     </div>

@@ -1,9 +1,10 @@
 import * as S from './style';
 import ChatWrapper from './components/ChatWrapper';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import apis from 'shared/components/Header/api';
+import moment from 'moment';
 
 export default function Index() {
   interface ChatListProps {
@@ -15,14 +16,15 @@ export default function Index() {
     lastChatMessage?: string;
   }
   const [chatLists, setChatLists] = useState<Array<ChatListProps>>([]);
-  const [connecting, setConnecting] = useState<boolean>(false);
+  const eventSource = useRef<any>(null);
+  const reConnectCount = useRef<number>(0);
 
-  const EventSource = EventSourcePolyfill || NativeEventSource;
-  let eventSource: any = null;
 
   // SSE 연결 함수
-  function Connect() {
-    eventSource = new EventSource(
+  async function Connect() {
+    const EventSource = EventSourcePolyfill || NativeEventSource;
+    eventSource.current = new EventSource(
+
       `${process.env.REACT_APP_SERVER_URL}/chats/rooms/connect`,
       {
         headers: {
@@ -32,76 +34,96 @@ export default function Index() {
       },
     );
 
+    EventHandler();
     // SSE 열려
-    eventSource.onopen = async (e: any) => {
-      console.log('connection open');
+    eventSource.current.onopen = async (e: any) => {
+      reConnectCount.current = 0;
+
     };
   }
 
-  const ErrorHandler = () => {
-    apis.getRefreshedToken().then(() => {
-      eventSource.close();
-      Connect();
-    });
-  };
-
   const Change = (data: any) => {
-    return chatLists.map((el: any) => {
-      // 메세지로 들어올 채팅방 번호 같으면
-      if (el.chatRoomId === data.chatRoomId) {
-        el.chattedAt = data.chattedAt;
-        el.lastChatMessage = data.lastChatMessage;
+    setChatLists((chatList) =>
+      chatList.map((el: any) => {
+        // 메세지로 들어올 채팅방 번호 같으면
+        if (el.chatRoomId === data.chatRoomId) {
+          el.chattedAt = data.chattedAt;
+          el.lastChatMessage = data.lastChatMessage;
+          return el;
+        }
         return el;
-      }
-      return el;
-    });
+      }),
+    );
   };
 
   const EventHandler = () => {
-
     // 초반에 채팅 리스트 데이터
-    eventSource.addEventListener(
+    eventSource.current.addEventListener(
       'chatRoom',
       (e: any) => {
         // 채팅방 목록 데이터 저장
-        setChatLists(JSON.parse(e.data));
+        let data = JSON.parse(e.data);
+        setChatLists(data);
       },
       false,
     );
-
-    eventSource.addEventListener('message', (e: any) => {
+    
+    eventSource.current.addEventListener('message', (e: any) => {
       let data = JSON.parse(e.data);
-      setChatLists(Change(data));
+      Change(data);
+      ListSort();
     });
 
-    eventSource.addEventListener('error', (err: any) => {
-      console.log('에러 발생: ', err.status);
+    eventSource.current.addEventListener('error', async (err: any) => {
+      eventSource.current.close();
+
       if (err.status === 456) {
-        // ErrorHandler();
-        apis
+        await apis
           .getRefreshedToken()
-          .then(() => {
-            eventSource.close();
+          .then((res) => {
             Connect();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            reConnectCount.current++;
+          });
       } else if (err.status === 457) {
         alert('로그인이 만료되었습니다.');
         window.location.replace('/');
+      } else {
+        if (reConnectCount.current < 3) {
+          reConnectCount.current++;
+          setTimeout(() => {
+            Connect();
+          }, 1000);
+        } else {
+          alert('eventSource server error');
+          window.location.replace('/');
+        }
+
       }
     });
   };
 
   useEffect(() => {
-    // eventSource 연결
     Connect();
-    EventHandler();
-
     return () => {
-      eventSource.close();
-      console.log('eventsource closed');
+      eventSource.current.close();
     };
   }, []);
+
+  const ListSort = () => {
+    console.log(chatLists);
+    setChatLists((chatList) =>
+      chatList.sort((a, b): any => {
+        if (moment(a.chattedAt).isBefore(b.chattedAt)) {
+          return 1;
+        } else if (moment(a.chattedAt).isAfter(b.chattedAt)) {
+          return -1;
+        }
+      }),
+    );
+  };
+
 
   const chatList = chatLists.map(
     (
@@ -128,5 +150,10 @@ export default function Index() {
       );
     },
   );
-  return <S.Container>{chatList}</S.Container>;
+  return chatList.length !== 0 ? (
+    <S.Container>{chatList}</S.Container>
+  ) : (
+    <h3>현재 대화중인 채팅방이 없습니다.</h3>
+  );
+
 }
