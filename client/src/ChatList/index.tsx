@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { setStoredToken, getStoredToken } from 'Intro/hooks/tokenStorage';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import apis from 'shared/components/Header/api';
+import moment from 'moment';
 
 export default function Index() {
   interface ChatListProps {
@@ -17,6 +18,7 @@ export default function Index() {
   const [chatLists, setChatLists] = useState<Array<ChatListProps>>([]);
   const eventSource = useRef<any>(null);
   const reConnectCount = useRef<number>(0);
+
 
   // SSE 연결 함수
   async function Connect() {
@@ -35,6 +37,7 @@ export default function Index() {
     // SSE 열려
     eventSource.current.onopen = async (e: any) => {
       reConnectCount.current = 0;
+
     };
   }
 
@@ -58,14 +61,16 @@ export default function Index() {
       'chatRoom',
       (e: any) => {
         // 채팅방 목록 데이터 저장
-        setChatLists(JSON.parse(e.data));
+        let data = JSON.parse(e.data);
+        setChatLists(data);
       },
       false,
     );
-
+    
     eventSource.current.addEventListener('message', (e: any) => {
       let data = JSON.parse(e.data);
       Change(data);
+      ListSort();
     });
 
     eventSource.current.addEventListener('error', async (err: any) => {
@@ -103,6 +108,19 @@ export default function Index() {
       eventSource.current.close();
     };
   }, []);
+
+  const ListSort = () => {
+    console.log(chatLists);
+    setChatLists((chatList) =>
+      chatList.sort((a, b): any => {
+        if (moment(a.chattedAt).isBefore(b.chattedAt)) {
+          return 1;
+        } else if (moment(a.chattedAt).isAfter(b.chattedAt)) {
+          return -1;
+        }
+      }),
+    );
+  };
 
   const chatList = chatLists.map(
     (
