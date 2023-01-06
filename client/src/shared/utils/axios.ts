@@ -54,20 +54,17 @@ formdataInstance.interceptors.request.use((config: any) => {
 });
 
 refreshInstance.interceptors.request.use((config: any) => {
-  config.headers.Authorization = getStoredToken()?.access_token;
-  config.headers.refresh = getStoredToken()?.refresh_token;
   if (lock) {
-    return new Promise(() =>
-      handleQueue((token: string) =>
-        Promise.resolve({
-          message: '토큰 재발급 완료',
-          code: 200,
-          token: token,
-        }),
-      ),
-    );
+    return new Promise((resolve) => {
+      handleQueue((token: string) => {
+        config.url = '/auth/refresh/check';
+        resolve(config);
+      });
+    });
   } else {
     lock = true;
+    config.headers.Authorization = getStoredToken()?.access_token;
+    config.headers.refresh = getStoredToken()?.refresh_token;
     return config;
   }
 });
@@ -157,14 +154,16 @@ formdataInstance.interceptors.response.use(
 
 refreshInstance.interceptors.response.use(
   async (res) => {
-    await storeToken(res.headers.authorization, res.headers.refresh);
-    refreshTrigger(getStoredToken()?.access_token!);
+    if (res.headers.authorization && res.headers.refresh)
+      await storeToken(res.headers.authorization, res.headers.refresh);
+    refreshTrigger(res.headers.authorization!);
     lock = false;
+    requestQueue = [];
     return res;
   },
   async (err) => {
-    console.log(err);
     if (err.response.status === 457) return ErrorHandler457(err);
+    else return err;
   },
 );
 
