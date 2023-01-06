@@ -70,7 +70,6 @@ export default function Index() {
     });
 
     eventSource.addEventListener('error', (err: any) => {
-      console.log('에러 발생: ', err.status);
       if (err.status === 456) {
         apis
           .getRefreshedToken()
