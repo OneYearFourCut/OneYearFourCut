@@ -9,6 +9,8 @@ import { setinitUrl } from 'shared/libs/saveSessionStorage';
 import { useEffect } from 'react';
 import { deCryption } from 'shared/libs/cryption';
 import { useNavigate } from 'react-router-dom';
+
+
 const Container = styled.div`
   ${({ theme }) => theme.mixins.flexBox('column', 'center', 'center')}
 `;
@@ -36,11 +38,6 @@ const Gallery = () => {
       <ButtonBox galleryId={galleryId} />
       <FourCut galleryId={galleryId} />
       <BottomButton galleryId={galleryId} />
-      <button
-        onClick={() => {
-          navigate(`/chatlist`);
-        }}
-      ></button>
     </Container>
   );
 };
