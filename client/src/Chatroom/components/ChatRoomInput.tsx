@@ -1,8 +1,8 @@
 import * as S from './style';
-import { send } from '../helper/sock';
+import { handleSend } from '../helper/sock';
 import React, { useRef } from 'react';
 import { loginStore } from 'store/store';
-
+import type { ISendData } from '../types';
 export const ChatRoomInput = ({
   client,
   roomId,
@@ -14,13 +14,12 @@ export const ChatRoomInput = ({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSendMsg = () => {
+    const sendData : ISendData= {
+      message: textAreaRef.current?.value,
+      senderId: memberId,
+    };
 
-    const sendData = {
-      message : textAreaRef.current?.value,
-      senderId : memberId
-    }
-
-    send(client, roomId, sendData);
+    handleSend(client, roomId, sendData);
     textAreaRef.current!.value = '';
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
