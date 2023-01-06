@@ -32,43 +32,39 @@ export default function Index() {
       },
     );
 
-    // SSE 열려
     eventSource.onopen = async (e: any) => {
       console.log('connection open');
     };
+  }
 
+  const Change = (data: any) => {
+    setChatLists((chatList) =>
+      chatList.map((el: any) => {
+        // 메세지로 들어올 채팅방 번호 같으면
+        if (el.chatRoomId === data.chatRoomId) {
+          el.chattedAt = data.chattedAt;
+          el.lastChatMessage = data.lastChatMessage;
+          return el;
+        }
+        return el;
+      }),
+    );
+  };
+
+  const EventHandler = () => {
     // 초반에 채팅 리스트 데이터
     eventSource.addEventListener(
       'chatRoom',
       (e: any) => {
         // 채팅방 목록 데이터 저장
-        console.log(JSON.parse(e.data));
-        setChatLists(JSON.parse(e.data));
+        let data = JSON.parse(e.data);
+        setChatLists(data);
       },
       false,
     );
-  }
-
-  const Change = (data: any) => {
-    console.log('얘는 새로 온 데이터 : ', data);
-    console.log('얘는 기존 리스트 :', chatLists);
-    return chatLists.map((el: any) => {
-      // 메세지로 들어올 채팅방 번호 같으면
-      console.log(el);
-      if (el.chatRoomId === data.chatRoomId) {
-        el.chattedAt = data.chattedAt;
-        el.lastChatMessage = data.lastChatMessage;
-        return el;
-      }
-      return el;
-    });
-  };
-
-  const EventHandler = () => {
     eventSource.addEventListener('message', (e: any) => {
       let data = JSON.parse(e.data);
-      console.log(Change(data));
-      setChatLists(Change(data));
+      Change(data);
     });
 
     eventSource.addEventListener('error', (err: any) => {
@@ -78,6 +74,7 @@ export default function Index() {
           .getRefreshedToken()
           .then(() => {
             eventSource.close();
+            console.log('eventsource closed');
             Connect();
           })
           .catch((err) => console.log(err));
@@ -88,6 +85,7 @@ export default function Index() {
         if (reConnectCount < 3) {
           setReConnectCount(reConnectCount + 1);
           eventSource.close();
+          console.log('eventsource closed');
           Connect();
         } else {
           alert('eventSource server error');
@@ -107,8 +105,6 @@ export default function Index() {
       console.log('eventsource closed');
     };
   }, []);
-
-  console.log(chatLists);
 
   const chatList = chatLists.map(
     (
