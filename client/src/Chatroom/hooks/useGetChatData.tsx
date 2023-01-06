@@ -18,7 +18,7 @@ export const useGetChatData = (roomId: number) => {
   );
 
   const { data: serverData, status } = useQuery(
-    ['useGetChatData'],
+    ['useGetChatData',roomId],
     () => apis.getChatData(roomId),
     {
       staleTime: Infinity,
