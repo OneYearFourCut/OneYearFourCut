@@ -33,10 +33,10 @@
 </table>
 
 ## 🛠 Tech Stacks
-![image](https://user-images.githubusercontent.com/86215246/208829845-b56ea20a-d9c9-42d2-bb8e-95b9ede3075a.png)
+![image](![기술스택](https://user-images.githubusercontent.com/84262646/211267634-f41d5545-cbd4-4bf4-911a-05c9943aa3c2.jpg))
 
 ## 🛠 Project Architecture
-![image](https://user-images.githubusercontent.com/86215246/208829860-198cfeca-bcb3-4b73-b11a-1403efbd6148.png)
+![image](![아키텍쳐](https://user-images.githubusercontent.com/84262646/211267710-ea70ebb1-d563-428e-8b08-c2b307a4fa97.jpg))
 
 ### 기능 시연
 
