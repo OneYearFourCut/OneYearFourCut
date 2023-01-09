@@ -33,9 +33,11 @@
 </table>
 
 ## 🛠 Tech Stacks
+![기술스택](https://user-images.githubusercontent.com/84262646/211268253-9b2c8d59-d9fe-4b3c-a9f7-a20851c6029d.jpg)
 
 
 ## 🛠 Project Architecture
+![아키텍쳐](https://user-images.githubusercontent.com/84262646/211268264-973eb864-b509-4d97-80ce-10fc2541702f.jpg)
 
 
 ### 기능 시연
