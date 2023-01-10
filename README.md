@@ -38,15 +38,3 @@
 
 ## 🛠 Project Architecture
 ![아키텍쳐](https://user-images.githubusercontent.com/84262646/211268264-973eb864-b509-4d97-80ce-10fc2541702f.jpg)
-
-
-### 기능 시연
-
-채팅
-
-알림
-
-무한스크롤
-
-OAuth2 로그인
-
