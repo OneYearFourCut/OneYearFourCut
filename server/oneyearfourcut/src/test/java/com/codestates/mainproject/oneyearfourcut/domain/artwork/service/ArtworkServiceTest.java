@@ -3,13 +3,15 @@ package com.codestates.mainproject.oneyearfourcut.domain.artwork.service;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPatchDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
@@ -33,8 +35,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
@@ -59,7 +61,7 @@ public class ArtworkServiceTest {
     private ArtworkLikeRepository artworkLikeRepository;
 
     @Mock
-    private AlarmService alarmService;
+    private AlarmEventPublisher alarmEventPublisher;
 
     @Nested
     @DisplayName("파일 업로드 관련 - 작품 등록 및 수정")
@@ -107,8 +109,10 @@ public class ArtworkServiceTest {
                 artwork.setGallery(gallery);
                 artwork.setImagePath(imagePath);
 
-                willDoNothing().given(alarmService).createAlarmBasedOnArtwork(any(), any(), any(), any());
-                willDoNothing().given(galleryService).verifiedGalleryExist(any(Long.class));
+                gallery.setMember(loginMember);
+
+                given(galleryService.findGallery(anyLong())).willReturn(gallery);
+                willDoNothing().given(alarmEventPublisher).publishAlarmEvent(any(AlarmEvent.class));
                 given(awsS3Service.uploadFile(any())).willReturn(imagePath);
                 given(artworkRepository.save(any(Artwork.class))).willReturn(artwork);
 
@@ -250,7 +254,7 @@ public class ArtworkServiceTest {
                 like.setArtwork(artwork1);
 
                 willDoNothing().given(galleryService).verifiedGalleryExist(any(Long.class));
-                given(artworkRepository.findAllByGallery_GalleryIdAndStatus(any(Long.class), any(ArtworkStatus.class), any(Sort.class)))
+                given(artworkRepository.findAllByGallery_GalleryId(any(Long.class), any(Sort.class)))
                         .willReturn(artworkList);
                 given(memberService.findMember(any())).willReturn(loginMember);
 
@@ -267,7 +271,7 @@ public class ArtworkServiceTest {
                 like.setArtwork(artwork1);
 
                 willDoNothing().given(galleryService).verifiedGalleryExist(any(Long.class));
-                given(artworkRepository.findAllByGallery_GalleryIdAndStatus(any(Long.class), any(ArtworkStatus.class), any(Sort.class)))
+                given(artworkRepository.findAllByGallery_GalleryId(any(Long.class), any(Sort.class)))
                         .willReturn(artworkList);
                 given(memberService.findMember(any())).willReturn(nonLoginMember);
 
@@ -286,7 +290,7 @@ public class ArtworkServiceTest {
             public void findOneYearFourCutTest() {
 
                 willDoNothing().given(galleryService).verifiedGalleryExist(any());
-                given(artworkRepository.findTop4ByGallery_GalleryIdAndStatus(any(), any(), any()))
+                given(artworkRepository.findTop4ByGallery_GalleryId(any(), any()))
                         .willReturn(oneYearFourCut);
 
                 List<OneYearFourCutResponseDto> result = artworkService.findOneYearFourCut(gallery.getGalleryId());
@@ -324,36 +328,35 @@ public class ArtworkServiceTest {
             artwork.setMember(loginMember);
         }
 
-//        @Test
-//        @DisplayName("작성자가 작품 삭제")
-//        public void DeleteArtworkByWriterTest() {
-//            artwork.setMember(loginMember);
-//
-//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-//
-//            artworkService.deleteArtwork(
-//                    loginMember.getMemberId(),
-//                    gallery.getGalleryId(),
-//                    artwork.getArtworkId());
-//
-//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-//        }
+        @Test
+        @DisplayName("작성자가 작품 삭제")
+        public void DeleteArtworkByWriterTest() {
+            artwork.setMember(loginMember);
 
-//        @Test
-//        @DisplayName("갤러리 주인이 작품 삭제")
-//        public void DeleteArtworkByAdminTest() {
-//
-//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-//
-//            artworkService.deleteArtwork(
-//                    adminMember.getMemberId(),
-//                    gallery.getGalleryId(),
-//                    artwork.getArtworkId());
-//
-//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-//        }
+            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+            willDoNothing().given(awsS3Service).deleteImage(any(String.class));
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+            artworkService.deleteArtwork(
+                    loginMember.getMemberId(),
+                    gallery.getGalleryId(),
+                    artwork.getArtworkId());
+
+        }
+
+        @Test
+        @DisplayName("갤러리 주인이 작품 삭제")
+        public void DeleteArtworkByAdminTest() {
+
+            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+
+            artworkService.deleteArtwork(
+                    adminMember.getMemberId(),
+                    gallery.getGalleryId(),
+                    artwork.getArtworkId());
+
+        }
 
         @Test
         @DisplayName("관계 없는 유저가 작품 삭제")

@@ -1,6 +1,7 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.controller;
 
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPostResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -25,9 +26,9 @@ public class GalleryController {
     @PostMapping
     public ResponseEntity postGallery(@Valid @RequestBody GalleryRequestDto galleryRequestDto,
                                       @LoginMember Long memberId) {
-        GalleryResponseDto galleryResponseDto = galleryService.createGallery(galleryRequestDto, memberId);
+        GalleryPostResponseDto galleryPostResponseDto = galleryService.createGallery(galleryRequestDto, memberId);
 
-        return new ResponseEntity<>(galleryResponseDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(galleryPostResponseDto, HttpStatus.CREATED);
     }
 
     //전시관 조회

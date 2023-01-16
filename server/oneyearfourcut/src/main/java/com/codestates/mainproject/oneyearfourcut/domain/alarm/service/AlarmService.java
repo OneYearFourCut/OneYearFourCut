@@ -7,36 +7,30 @@ import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.repository.AlarmRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.entity.Comment;
-import com.codestates.mainproject.oneyearfourcut.domain.comment.repository.CommentRepository;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
-import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.BusinessLogicException;
+import com.codestates.mainproject.oneyearfourcut.global.exception.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType.COMMENT_GALLERY;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@org.springframework.transaction.annotation.Transactional
+@Transactional
 public class AlarmService {
     private final MemberService memberService;
-    private final GalleryService galleryService;
-    private final CommentRepository commentRepository;
     private final ArtworkRepository artworkRepository;
     private final AlarmRepository alarmRepository;
 
-    @Transactional
     public List<AlarmResponseDto> getAlarmPagesByFilter(String filter, int page, Long memberId) {
         Member member = memberService.findMember(memberId);
 
@@ -46,7 +40,16 @@ public class AlarmService {
             alarmPage = findAlarmPagesByFilter(filter, memberId, page);
             List<Alarm> alarmList = alarmPage.getContent();
             List<AlarmResponseDto> alarmListToResDTO = alarmList.stream()
-                    .map(Alarm::toAlarmResponseDto)
+                    .map(alarm -> {
+                        Member sender = memberService.findMember(alarm.getSenderId());
+                        String artworkTitle = null;
+                        if (alarm.getArtworkId() != null) {
+                            Artwork artwork = artworkRepository.findById(alarm.getArtworkId())
+                                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTWORK_NOT_FOUND));
+                            artworkTitle = artwork.getTitle();
+                        }
+                        return alarm.toAlarmResponseDto(sender.getNickname(), artworkTitle);
+                    })
                     .collect(Collectors.toList());
             return alarmListToResDTO;
         } finally {
@@ -55,160 +58,34 @@ public class AlarmService {
     }
 
 
-
-
-    @Transactional
-    public AlarmReadCheckResponseDto checkReadAlarm(Long memberId) {
-        Boolean alarmExist = alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
-        if(alarmExist) {
-            return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.TRUE).message("읽지않은 알림이 존재합니다.").build();
-        }
-        else return AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build();
+    @Transactional(readOnly = true)
+    public Boolean checkReadAlarm(Long memberId) {
+        return alarmRepository.existsByMember_MemberIdAndReadCheck(memberId, Boolean.FALSE);
     }
 
-    @Transactional
     private Page<Alarm> findAlarmPagesByFilter(String filter, Long memberId, int page) {
         PageRequest pr = PageRequest.of(page - 1, 7);
         Page<Alarm> alarmPage;
-        if(Objects.equals(filter, "ALL")){
-            alarmPage = alarmRepository.findAllByMember_MemberIdOrderByAlarmIdDesc(memberId,pr);
-        }
-        else{
+        if (Objects.equals(filter, "ALL")) {
+            alarmPage = alarmRepository.findAllByMember_MemberIdOrderByAlarmIdDesc(memberId, pr);
+        } else {
             alarmPage = alarmRepository.findAllByAlarmTypeAndMember_MemberIdOrderByAlarmIdDesc(
                     AlarmType.valueOf(filter), memberId, pr);
         }
-        if(alarmPage.isEmpty()){
-            Page.empty();
-        }
+
         return alarmPage;
     }
 
-    @Transactional
-    public void createAlarmBasedOnArtwork(Long artworkId, Long galleryId, Long memberIdProducer, AlarmType ALARMTYPE) { //type  --> PostArtwork
-        Member memberGalleryReceiver = new Member();
-        Artwork artwork = new Artwork();
+    public void createAlarm(Long receiverId, Long senderId, AlarmType alarmType, Long galleryId, Long artworkId) {
+        Alarm alarm = Alarm.builder()
+                .member(new Member(receiverId))
+                .senderId(senderId)
+                .alarmType(alarmType)
+                .artworkId(artworkId)
+                .galleryId(galleryId)
+                .readCheck(false)
+                .build();
 
-        memberGalleryReceiver = galleryService.findGallery(galleryId).getMember();
-        if (!Objects.equals(memberGalleryReceiver.getMemberId(), memberIdProducer))
-        {
-            artwork = artworkRepository.findById(artworkId).orElseThrow();
-
-            Alarm alarmOnGalleryOwner = Alarm.builder()
-                    .member(memberGalleryReceiver)
-                    .memberIdProducer(memberIdProducer)
-                    .alarmType(ALARMTYPE)
-                    .artworkId(artwork.getArtworkId())
-                    .artworkTitle(artwork.getTitle())
-                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
-                    .readCheck(false)
-                    .galleryId(galleryId)
-                    .build();
-
-            alarmRepository.save(alarmOnGalleryOwner);
-        }
+        alarmRepository.save(alarm);
     }
-
-    @Transactional
-    public void createAlarmBasedOnGallery(Long galleryId, Long memberIdProducer, AlarmType ALARMTYPE) { //type -> CommentGallery
-        Member memberGalleryReceiver = new Member();
-
-        memberGalleryReceiver = galleryService.findGallery(galleryId).getMember();
-        if (!Objects.equals(memberGalleryReceiver.getMemberId(), memberIdProducer))
-        {
-            Alarm alarmOnGalleryOwner = Alarm.builder()
-                    .member(memberGalleryReceiver)
-                    .memberIdProducer(memberIdProducer)
-                    .alarmType(ALARMTYPE)
-                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
-                    .readCheck(false)
-                    .galleryId(galleryId)
-                    .build();
-
-            alarmRepository.save(alarmOnGalleryOwner);
-        }
-    }
-
-    @Transactional
-    public void createAlarmBasedOnArtworkAndGallery(Long artworkId, Long galleryId, Long memberIdProducer, AlarmType ALARMTYPE) { //type -> LikeArtwork, CommentArtwork
-        Member memberArtworkReceiver, memberGalleryReceiver = new Member();
-        Artwork artwork = new Artwork();
-
-        memberArtworkReceiver = artworkRepository.findById(artworkId).orElseThrow().getMember();
-        memberGalleryReceiver = galleryService.findGallery(galleryId).getMember();
-        if (!Objects.equals(memberArtworkReceiver.getMemberId(), memberIdProducer) )
-        {
-            artwork = artworkRepository.findById(artworkId).orElseThrow();
-
-            Alarm alarmOnArtworkOwner = Alarm.builder()
-                    .member(memberArtworkReceiver)
-                    .memberIdProducer(memberIdProducer)
-                    .alarmType(ALARMTYPE)
-                    .artworkId(artwork.getArtworkId())
-                    .artworkTitle(artwork.getTitle())
-                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
-                    .readCheck(false)
-                    .galleryId(galleryId)
-                    .build();
-
-            alarmRepository.save(alarmOnArtworkOwner);
-
-            Alarm alarmOnGalleryOwner = Alarm.builder()
-                    .member(memberGalleryReceiver)
-                    .memberIdProducer(memberIdProducer)
-                    .alarmType(ALARMTYPE)
-                    .artworkId(artwork.getArtworkId())
-                    .artworkTitle(artwork.getTitle())
-                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
-                    .readCheck(false)
-                    .galleryId(galleryId)
-                    .build();
-
-            alarmRepository.save(alarmOnGalleryOwner);
-        }
-    }
-    @Transactional
-    public void createAlarmBasedOnCommentGallery(Long commentId, Long memberIdProducer, AlarmType REPLY) { //type -> Reply
-        Member memberCommentReceiver = new Member();
-        Artwork artwork = new Artwork();
-        Comment comment = commentRepository.findById(commentId).orElseThrow();
-        memberCommentReceiver = comment.getMember();
-        if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer))
-        {
-            Alarm alarmOnCommentOwner = Alarm.builder()
-                    .member(memberCommentReceiver)
-                    .memberIdProducer(memberIdProducer)
-                    .alarmType(REPLY)
-                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
-                    .readCheck(false)
-                    .galleryId(comment.getGallery().getGalleryId())
-                    .build();
-
-            alarmRepository.save(alarmOnCommentOwner);
-        }
-    }
-
-    @Transactional
-    public void createAlarmBasedOnCommentArtwork(Long commentId, Long memberIdProducer, AlarmType REPLY) { //type -> Reply
-        Member memberCommentReceiver = new Member();
-        Long artworkId = commentRepository.findById(commentId).orElseThrow().getArtworkId();
-
-        Comment comment = commentRepository.findById(commentId).orElseThrow();
-        memberCommentReceiver = comment.getMember();
-        if (!Objects.equals(memberCommentReceiver.getMemberId(), memberIdProducer))
-        {
-            Alarm alarmOnCommentOwner = Alarm.builder()
-                    .member(memberCommentReceiver)
-                    .memberIdProducer(memberIdProducer)
-                    .alarmType(REPLY)
-                    .artworkId(artworkId)
-                    .artworkTitle(artworkRepository.findById(artworkId).orElseThrow().getTitle())
-                    .userNickname(memberService.findMember(memberIdProducer).getNickname())
-                    .readCheck(false)
-                    .galleryId(comment.getGallery().getGalleryId())
-                    .build();
-
-            alarmRepository.save(alarmOnCommentOwner);
-        }
-    }
-
 }

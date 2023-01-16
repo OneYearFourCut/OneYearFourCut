@@ -55,6 +55,12 @@ public class RefreshTokenController {
         return new ResponseEntity("새로 토큰이 발급되었습니다.", HttpStatus.CREATED);
     }
 
+    @GetMapping("/auth/refresh/check")
+    public ResponseEntity refreshCheck() {
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/auth/logout")
     public ResponseEntity logout(@LoginMember Long memberId) {
         refreshTokenService.deleteRefreshToken(memberId);

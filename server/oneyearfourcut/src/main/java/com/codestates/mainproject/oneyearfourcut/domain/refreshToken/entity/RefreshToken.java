@@ -5,6 +5,7 @@ import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 
@@ -18,7 +19,7 @@ public class RefreshToken extends Auditable {
 
     private String token;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

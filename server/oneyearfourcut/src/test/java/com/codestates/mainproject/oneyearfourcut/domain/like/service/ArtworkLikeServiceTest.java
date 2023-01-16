@@ -5,12 +5,16 @@ import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.ArtworkLike;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.entity.LikeStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.repository.ArtworkLikeRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.Like.service.ArtworkLikeService;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.entity.AlarmType;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEvent;
+import com.codestates.mainproject.oneyearfourcut.domain.alarm.event.AlarmEventPublisher;
 import com.codestates.mainproject.oneyearfourcut.domain.alarm.service.AlarmService;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.service.ArtworkService;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,8 +46,6 @@ public class ArtworkLikeServiceTest {
     @Mock
     private MemberService memberService;
 
-    @Mock
-    private AlarmService alarmService;
 
     @Test
     @DisplayName("like가 존재하지만 cancel상태였을 때")
@@ -58,7 +61,7 @@ public class ArtworkLikeServiceTest {
         given(memberService.findMember(any())).willReturn(loginMember);
         given(artworkService.findVerifiedArtwork(any(Long.class), any(Long.class))).willReturn(artwork);
         given(artworkLikeRepository.findByMemberAndArtwork(any(), any())).willReturn(Optional.of(like));
-        willDoNothing().given(alarmService).createAlarmBasedOnArtworkAndGallery(anyLong(),anyLong(), anyLong(), any());
+
         artworkLikeService.updateArtworkLike(1L, 1L, 1L);
 
         assertThat(like.getStatus()).isEqualTo(LikeStatus.LIKE);
@@ -79,7 +82,6 @@ public class ArtworkLikeServiceTest {
         given(memberService.findMember(any())).willReturn(loginMember);
         given(artworkService.findVerifiedArtwork(any(Long.class), any(Long.class))).willReturn(artwork);
         given(artworkLikeRepository.findByMemberAndArtwork(any(), any())).willReturn(Optional.of(like));
-        willDoNothing().given(alarmService).createAlarmBasedOnArtworkAndGallery(anyLong(), anyLong(), anyLong(), any());
         artworkLikeService.updateArtworkLike(1L, 1L, 1L);
 
         assertThat(like.getStatus()).isEqualTo(LikeStatus.CANCEL);

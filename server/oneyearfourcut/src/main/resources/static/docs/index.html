@@ -564,12 +564,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 88
+Content-Length: 106
 
 {
   "nickname" : "홍길동",
   "profile" : "http://testprofile",
-  "galleryId" : null
+  "galleryId" : null,
+  "memberId" : 1
 }</code></pre>
 </div>
 </div>
@@ -592,6 +593,11 @@ Content-Length: 88
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 식별자</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile</code></p></td>
@@ -995,13 +1001,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 138
+Content-Length: 131
 
 {
   "galleryId" : 1,
   "title" : "홍길동의 전시회",
   "content" : "안녕하세요",
-  "createdAt" : "2022-12-06T20:51:25.391096"
+  "createdAt" : "2022-12-25T12:25:25"
 }</code></pre>
 </div>
 </div>
@@ -1092,13 +1098,17 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 138
+Content-Length: 224
 
 {
   "galleryId" : 1,
+  "memberId" : 1,
+  "profile" : "/profile",
   "title" : "홍길동의 전시회",
   "content" : "안녕하세요",
-  "createdAt" : "2022-12-06T20:51:25.415662"
+  "createdAt" : "2022-12-25T12:25:25",
+  "followingCount" : 31,
+  "followerCount" : 23
 }</code></pre>
 </div>
 </div>
@@ -1123,6 +1133,16 @@ Content-Length: 138
 <td class="tableblock halign-left valign-top"><p class="tableblock">전시관 식별자</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전시관 주인 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전시관 주인 프로필</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">전시관 제목</p></td>
@@ -1136,6 +1156,16 @@ Content-Length: 138
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>createdAt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">생성일자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>followingCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팔로잉 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>followerCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팔로워 수</p></td>
 </tr>
 </tbody>
 </table>
@@ -2224,10 +2254,10 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/comments' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxNCwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgzLCJleHAiOjE2NzAzMjgwODN9.eNdz4456sdd_SrC6ySuEyR2g0232N2TCNDvO4pnxmNHFZvp3AP8wborIuk4thCxw' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json' \
     -d '{
-  "content" : "댓글입니다"
+  "content" : "텍스트"
 }'</code></pre>
 </div>
 </div>
@@ -2236,13 +2266,13 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxNCwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgzLCJleHAiOjE2NzAzMjgwODN9.eNdz4456sdd_SrC6ySuEyR2g0232N2TCNDvO4pnxmNHFZvp3AP8wborIuk4thCxw
+Authorization: Bearer (AccessToken)
 Accept: application/json
-Content-Length: 35
+Content-Length: 29
 Host: localhost:8080
 
 {
-  "content" : "댓글입니다"
+  "content" : "텍스트"
 }</code></pre>
 </div>
 </div>
@@ -2288,27 +2318,24 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 285
+X-Frame-Options: DENY
+Content-Length: 276
 
 {
   "galleryId" : 1,
   "commentList" : {
     "commentId" : 1,
-    "createdAt" : "2022-11-25T11:09:24.94",
-    "modifiedAt" : "2022-11-25T11:09:24.94",
-    "memberId" : 14,
-    "nickname" : "test1",
-    "content" : "댓글입니다",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 1,
+    "nickname" : "사용자",
+    "content" : "텍스트",
     "artworkId" : null,
     "imagePath" : null
   }
@@ -2323,10 +2350,10 @@ Content-Length: 285
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/1/comments' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMywidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgzLCJleHAiOjE2NzAzMjgwODN9.BGxRjlGl7cLFNaKchMB73c2SbLZODGa34HSqdJCDZYxritQ1Wv3-QgdoNnNGnM-F' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json' \
     -d '{
-  "content" : "댓글입니다"
+  "content" : "텍스트"
 }'</code></pre>
 </div>
 </div>
@@ -2335,13 +2362,13 @@ Content-Length: 285
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/1/artworks/1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMywidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgzLCJleHAiOjE2NzAzMjgwODN9.BGxRjlGl7cLFNaKchMB73c2SbLZODGa34HSqdJCDZYxritQ1Wv3-QgdoNnNGnM-F
+Authorization: Bearer (AccessToken)
 Accept: application/json
-Content-Length: 35
+Content-Length: 29
 Host: localhost:8080
 
 {
-  "content" : "댓글입니다"
+  "content" : "텍스트"
 }</code></pre>
 </div>
 </div>
@@ -2391,28 +2418,25 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 256
+X-Frame-Options: DENY
+Content-Length: 247
 
 {
   "galleryId" : 1,
   "artworkId" : 1,
   "commentList" : {
     "commentId" : 1,
-    "createdAt" : "2022-11-25T11:09:24.94",
-    "modifiedAt" : "2022-11-25T11:09:24.94",
-    "memberId" : 13,
-    "nickname" : "test1",
-    "content" : "댓글입니다"
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 1,
+    "nickname" : "사용자",
+    "content" : "텍스트"
   }
 }</code></pre>
 </div>
@@ -2423,7 +2447,7 @@ Content-Length: 256
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/4/comments?page=1' -i -X GET \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/comments?page=1' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json'</code></pre>
 </div>
@@ -2431,7 +2455,7 @@ Content-Length: 256
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /galleries/4/comments?page=1 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /galleries/1/comments?page=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Host: localhost:8080</code></pre>
@@ -2479,52 +2503,58 @@ Host: localhost:8080</code></pre>
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 915
+X-Frame-Options: DENY
+Content-Length: 1095
 
 {
-  "galleryId" : 4,
+  "galleryId" : 1,
   "commentList" : [ {
-    "commentId" : 4,
-    "createdAt" : "2022-11-14T23:41:52.764644",
-    "modifiedAt" : "2022-11-16T23:41:57.764644",
-    "memberId" : 4,
-    "nickname" : "reply",
-    "content" : "comment444",
+    "commentId" : 1,
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 1,
+    "nickname" : "사용자1",
+    "content" : "댓글1",
     "artworkId" : null,
-    "imagePath" : "/test.jpg"
+    "imagePath" : null
   }, {
     "commentId" : 2,
-    "createdAt" : "2022-11-12T23:41:58.764644",
-    "modifiedAt" : "2022-11-16T23:41:57.764644",
-    "memberId" : 1,
-    "nickname" : "gallery",
-    "content" : "comment2",
-    "artworkId" : 2,
-    "imagePath" : "/test.jpg"
-  }, {
-    "commentId" : 1,
-    "createdAt" : "2022-11-11T23:41:57.764644",
-    "modifiedAt" : "2022-11-16T23:41:57.764644",
-    "memberId" : 1,
-    "nickname" : "gallery",
-    "content" : "comment1댓글대스",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 2,
+    "nickname" : "사용자2",
+    "content" : "댓글2",
     "artworkId" : 1,
-    "imagePath" : "/test.jpg"
+    "imagePath" : "artwork1.jpg"
+  }, {
+    "commentId" : 3,
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 3,
+    "nickname" : "사용자3",
+    "content" : "댓글3",
+    "artworkId" : null,
+    "imagePath" : null
+  }, {
+    "commentId" : 4,
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 4,
+    "nickname" : "사용자4",
+    "content" : "댓글4",
+    "artworkId" : null,
+    "imagePath" : null
   } ],
   "pageInfo" : {
     "page" : 1,
     "size" : 10,
-    "totalElements" : 3,
+    "totalElements" : 4,
     "totalPages" : 1
   }
 }</code></pre>
@@ -2536,7 +2566,7 @@ Content-Length: 915
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/6/artworks/1/comments?page=1' -i -X GET \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/artworks/1/comments?page=1' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json'</code></pre>
 </div>
@@ -2544,7 +2574,7 @@ Content-Length: 915
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /galleries/6/artworks/1/comments?page=1 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /galleries/1/artworks/1/comments?page=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Host: localhost:8080</code></pre>
@@ -2596,33 +2626,51 @@ Host: localhost:8080</code></pre>
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 375
+X-Frame-Options: DENY
+Content-Length: 929
 
 {
-  "galleryId" : 6,
+  "galleryId" : 1,
   "artworkId" : 1,
   "commentList" : [ {
     "commentId" : 1,
-    "createdAt" : "2022-11-11T23:41:57.764644",
-    "modifiedAt" : "2022-11-16T23:41:57.764644",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
     "memberId" : 1,
-    "nickname" : "gallery",
-    "content" : "comment1댓글대스"
+    "nickname" : "사용자1",
+    "content" : "댓글1"
+  }, {
+    "commentId" : 2,
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 2,
+    "nickname" : "사용자2",
+    "content" : "댓글2"
+  }, {
+    "commentId" : 3,
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 3,
+    "nickname" : "사용자3",
+    "content" : "댓글3"
+  }, {
+    "commentId" : 4,
+    "createdAt" : "2023-01-06T17:58:08.995662",
+    "modifiedAt" : "2023-01-06T17:58:08.995666",
+    "memberId" : 4,
+    "nickname" : "사용자4",
+    "content" : "댓글4"
   } ],
   "pageInfo" : {
     "page" : 1,
     "size" : 10,
-    "totalElements" : 1,
+    "totalElements" : 4,
     "totalPages" : 1
   }
 }</code></pre>
@@ -2634,27 +2682,27 @@ Content-Length: 375
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/5/comments/6' -i -X PATCH \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/comments/1' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgzLCJleHAiOjE2NzAzMjgwODN9.WXoIUQVbsn8FY-ypTKcu6CTJ6bVTW0x4v_B25Dxh4ytsdcwjdxB4ZbJ4hH438Yud' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json' \
     -d '{
-  "content" : "수정댓글입니다."
+  "content" : "수정된 댓글"
 }'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/5/comments/6 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/1/comments/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMSwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgzLCJleHAiOjE2NzAzMjgwODN9.WXoIUQVbsn8FY-ypTKcu6CTJ6bVTW0x4v_B25Dxh4ytsdcwjdxB4ZbJ4hH438Yud
+Authorization: Bearer (AccessToken)
 Accept: application/json
-Content-Length: 42
+Content-Length: 36
 Host: localhost:8080
 
 {
-  "content" : "수정댓글입니다."
+  "content" : "수정된 댓글"
 }</code></pre>
 </div>
 </div>
@@ -2704,27 +2752,24 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 292
+X-Frame-Options: DENY
+Content-Length: 283
 
 {
-  "galleryId" : 5,
+  "galleryId" : 1,
   "commentList" : {
-    "commentId" : 6,
-    "createdAt" : "2022-11-25T11:09:24.94",
-    "modifiedAt" : "2022-11-25T11:09:24.94",
-    "memberId" : 11,
-    "nickname" : "test1",
-    "content" : "수정댓글입니다.",
+    "commentId" : 1,
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25",
+    "memberId" : 1,
+    "nickname" : "사용자",
+    "content" : "수정된 댓글",
     "artworkId" : null,
     "imagePath" : null
   }
@@ -2737,18 +2782,18 @@ Content-Length: 292
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/3/comments/5' -i -X DELETE \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/1/comments/1' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzAzMjc0ODMsImV4cCI6MTY3MDMyODA4M30.Y7eq2wf6SbbOU59D0AhLdzzAFQsHh0GSom6Q5KmnGF5ebxvShVOG9X6MR8b0Qa_I' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/3/comments/5 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/1/comments/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzAzMjc0ODMsImV4cCI6MTY3MDMyODA4M30.Y7eq2wf6SbbOU59D0AhLdzzAFQsHh0GSom6Q5KmnGF5ebxvShVOG9X6MR8b0Qa_I
+Authorization: Bearer (AccessToken)
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -2799,15 +2844,12 @@ Host: localhost:8080</code></pre>
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN</code></pre>
+X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 <hr>
@@ -2824,10 +2866,10 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/1/replies' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDg0LCJleHAiOjE2NzAzMjgwODR9.E9AQbB8UkF-dpA5cNrtVBEBvOYNvp9ZnqbFiIKXqOfs3ogPFkYIksHVYBRHHvuhW' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json' \
     -d '{
-  "content" : "답글입니다"
+  "content" : "대댓글"
 }'</code></pre>
 </div>
 </div>
@@ -2836,13 +2878,13 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">POST /galleries/comments/1/replies HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDg0LCJleHAiOjE2NzAzMjgwODR9.E9AQbB8UkF-dpA5cNrtVBEBvOYNvp9ZnqbFiIKXqOfs3ogPFkYIksHVYBRHHvuhW
+Authorization: Bearer (AccessToken)
 Accept: application/json
-Content-Length: 35
+Content-Length: 29
 Host: localhost:8080
 
 {
-  "content" : "답글입니다"
+  "content" : "대댓글"
 }</code></pre>
 </div>
 </div>
@@ -2888,27 +2930,24 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 233
+X-Frame-Options: DENY
+Content-Length: 224
 
 {
   "commentId" : 1,
   "replyList" : {
     "replyId" : 1,
-    "memberId" : 10,
-    "nickname" : "test1",
-    "content" : "답글입니다",
-    "createdAt" : "2022-11-25T11:09:24.94",
-    "modifiedAt" : "2022-11-25T11:09:24.94"
+    "memberId" : 1,
+    "nickname" : "작성자",
+    "content" : "대댓글",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25"
   }
 }</code></pre>
 </div>
@@ -2956,27 +2995,38 @@ Host: localhost:8080</code></pre>
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 187
+X-Frame-Options: DENY
+Content-Length: 608
 
 {
   "commentId" : 1,
   "replyList" : [ {
-    "replyId" : 4,
-    "memberId" : 11,
-    "nickname" : "kang",
-    "content" : "답글",
-    "createdAt" : null,
-    "modifiedAt" : null
+    "replyId" : 1,
+    "memberId" : 1,
+    "nickname" : "작성자1",
+    "content" : "대댓글1",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25"
+  }, {
+    "replyId" : 2,
+    "memberId" : 2,
+    "nickname" : "작성자2",
+    "content" : "대댓글2",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25"
+  }, {
+    "replyId" : 3,
+    "memberId" : 3,
+    "nickname" : "작성자3",
+    "content" : "대댓글3",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25"
   } ]
 }</code></pre>
 </div>
@@ -2987,27 +3037,27 @@ Content-Length: 187
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/4/replies/1' -i -X PATCH \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/1/replies/1' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMiwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDg0LCJleHAiOjE2NzAzMjgwODR9.Dq3FeKRJp2HzO1he9U5hVroHx8mFS2xY0EHyObZmUeUnzs91ro_wd2jaxg9cnDTW' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json' \
     -d '{
-  "content" : "수정대댓글입니다."
+  "content" : "수정대댓글"
 }'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/comments/4/replies/1 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /galleries/comments/1/replies/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMiwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDg0LCJleHAiOjE2NzAzMjgwODR9.Dq3FeKRJp2HzO1he9U5hVroHx8mFS2xY0EHyObZmUeUnzs91ro_wd2jaxg9cnDTW
+Authorization: Bearer (AccessToken)
 Accept: application/json
-Content-Length: 45
+Content-Length: 35
 Host: localhost:8080
 
 {
-  "content" : "수정대댓글입니다."
+  "content" : "수정대댓글"
 }</code></pre>
 </div>
 </div>
@@ -3057,27 +3107,24 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 243
+X-Frame-Options: DENY
+Content-Length: 230
 
 {
-  "commentId" : 4,
+  "commentId" : 1,
   "replyList" : {
     "replyId" : 1,
-    "memberId" : 12,
-    "nickname" : "test1",
-    "content" : "수정대댓글입니다.",
-    "createdAt" : "2022-11-25T11:09:24.94",
-    "modifiedAt" : "2022-11-25T11:09:24.94"
+    "memberId" : 1,
+    "nickname" : "작성자",
+    "content" : "수정대댓글",
+    "createdAt" : "2022-12-25T12:25:25",
+    "modifiedAt" : "2022-12-25T12:25:25"
   }
 }</code></pre>
 </div>
@@ -3088,18 +3135,18 @@ Content-Length: 243
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/3/replies/3' -i -X DELETE \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/galleries/comments/1/replies/1' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzAzMjc0ODQsImV4cCI6MTY3MDMyODA4NH0.xsKkOouoVNoVDPGk3XIppuDtHt27Zj3VcWSG4QvXKsvHJvAvmMijy1Ly2tDVi_f7' \
+    -H 'Authorization: Bearer (AccessToken)' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/comments/3/replies/3 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /galleries/comments/1/replies/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzAzMjc0ODQsImV4cCI6MTY3MDMyODA4NH0.xsKkOouoVNoVDPGk3XIppuDtHt27Zj3VcWSG4QvXKsvHJvAvmMijy1Ly2tDVi_f7
+Authorization: Bearer (AccessToken)
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -3150,15 +3197,12 @@ Host: localhost:8080</code></pre>
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: SAMEORIGIN</code></pre>
+X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 <hr>
@@ -3170,109 +3214,25 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_현재_알림_페이지_조회">7.1. 현재 알림 페이지 조회</h3>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">curl-request</div>
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/me/alarms?page=1&amp;filter=ALL' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgxLCJleHAiOjE2NzAzMjgwODF9.Girv5RxygTIenBMQIYeh5BaXgs9Z-d_BPo6OZlj1IxA8WzcojB43tDcsBtb8gMyp' \
-    -H 'Accept: application/json'</code></pre>
+<p>Unresolved directive in index.adoc - include::/Users/phile/GitHub/OneYearFourCut/server/oneyearfourcut/build/generated-snippets/getAlarmListFiltered/curl-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">http-request</div>
-<div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /members/me/alarms?page=1&amp;filter=ALL HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoxMCwidXNlcm5hbWUiOiJrYW5nQGdtYWlsLmNvbSIsInN1YiI6ImthbmdAZ21haWwuY29tIiwiaWF0IjoxNjcwMzI3NDgxLCJleHAiOjE2NzAzMjgwODF9.Girv5RxygTIenBMQIYeh5BaXgs9Z-d_BPo6OZlj1IxA8WzcojB43tDcsBtb8gMyp
-Accept: application/json
-Host: localhost:8080</code></pre>
+<p>Unresolved directive in index.adoc - include::/Users/phile/GitHub/OneYearFourCut/server/oneyearfourcut/build/generated-snippets/getAlarmListFiltered/http-request.adoc[]</p>
 </div>
+<div class="paragraph">
+<div class="title">request-headers</div>
+<p>Unresolved directive in index.adoc - include::/Users/phile/GitHub/OneYearFourCut/server/oneyearfourcut/build/generated-snippets/getAlarmListFiltered/request-headers.adoc[]</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 58. request-headers</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JWT - Access Token</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 59. request-parameters</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>filter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 기준</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 수</p></td>
-</tr>
-</tbody>
-</table>
-<div class="listingblock">
+<div class="paragraph">
+<div class="title">request-parameters</div>
+<p>Unresolved directive in index.adoc - include::/Users/phile/GitHub/OneYearFourCut/server/oneyearfourcut/build/generated-snippets/getAlarmListFiltered/request-parameters.adoc[]</p>
+</div>
+<div class="paragraph">
 <div class="title">http-response</div>
-<div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: SAMEORIGIN
-Content-Length: 641
-
-[ {
-  "alarmId" : 2,
-  "alarmType" : "POST_ARTWORK",
-  "userNickname" : "행위유저 1",
-  "createdAt" : "2022-12-06T20:51:21.549896",
-  "read" : false,
-  "artworkId" : 1,
-  "artworkTitle" : "Test 작품 입니다."
-}, {
-  "alarmId" : 3,
-  "alarmType" : "LIKE_ARTWORK",
-  "userNickname" : "행위유저 2",
-  "createdAt" : "2022-12-06T20:51:21.550616",
-  "read" : false,
-  "artworkId" : 1,
-  "artworkTitle" : "Test 작품 입니다."
-}, {
-  "alarmId" : 4,
-  "alarmType" : "COMMENT_GALLERY",
-  "userNickname" : "행위유저 3",
-  "createdAt" : "2022-12-06T20:51:21.551081",
-  "read" : true,
-  "artworkId" : null,
-  "artworkTitle" : null
-} ]</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::/Users/phile/GitHub/OneYearFourCut/server/oneyearfourcut/build/generated-snippets/getAlarmListFiltered/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -3282,7 +3242,7 @@ Content-Length: 641
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/me/alarms/read' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzAzMjc0ODEsImV4cCI6MTY3MDMyODA4MX0.f-B_j0u6YJ2785cORI1kbYYtZEbvPry0fSecrwBn9JhsH_S4roGYFTVla426WTbD' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzI5OTU0ODYsImV4cCI6MTY3Mjk5ODM2Nn0.xN5lXfEShb6AU1ysHCt_CXAeF7e5hH6sZ_zNg3LOKEj0P2ar-F_DAvzfgnWcO8jr' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -3291,13 +3251,13 @@ Content-Length: 641
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">GET /members/me/alarms/read HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzAzMjc0ODEsImV4cCI6MTY3MDMyODA4MX0.f-B_j0u6YJ2785cORI1kbYYtZEbvPry0fSecrwBn9JhsH_S4roGYFTVla426WTbD
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiVVNFUiIsImlkIjo5LCJ1c2VybmFtZSI6ImthbmdAZ21haWwuY29tIiwic3ViIjoia2FuZ0BnbWFpbC5jb20iLCJpYXQiOjE2NzI5OTU0ODYsImV4cCI6MTY3Mjk5ODM2Nn0.xN5lXfEShb6AU1ysHCt_CXAeF7e5hH6sZ_zNg3LOKEj0P2ar-F_DAvzfgnWcO8jr
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 60. request-headers</caption>
+<caption class="title">Table 58. request-headers</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -3344,7 +3304,7 @@ Content-Length: 78
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-12-05 15:12:41 +0900
+Last updated 2022-12-11 14:32:39 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

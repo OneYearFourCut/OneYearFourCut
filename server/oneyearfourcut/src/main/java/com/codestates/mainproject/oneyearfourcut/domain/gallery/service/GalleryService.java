@@ -1,6 +1,8 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.follow.repository.FollowRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPatchDto;
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPostResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -26,8 +28,9 @@ import static com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Ga
 public class GalleryService {
     private final GalleryRepository galleryRepository;
     private final MemberService memberService;
+    private final FollowRepository followRepository;
 
-    public GalleryResponseDto createGallery(GalleryRequestDto galleryRequestDto, Long memberId) {
+    public GalleryPostResponseDto createGallery(GalleryRequestDto galleryRequestDto, Long memberId) {
         // 오픈된 전시관이 이미 존재하는지 확인하고 있으면 에러
         verifiedMemberCanOpenGallery(memberId);
 
@@ -35,7 +38,7 @@ public class GalleryService {
 
         Gallery savedGallery = galleryRepository.save(gallery);
 
-        return savedGallery.toGalleryResponseDto();
+        return savedGallery.toGalleryPostResponseDto();
     }
 
     public GalleryResponseDto modifyGallery(GalleryPatchDto galleryPatchDto, Long loginId) {

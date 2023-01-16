@@ -9,4 +9,5 @@ public class MemberResponseDto {
     private String nickname;
     private String profile;
     private Long galleryId;
+    private Long memberId;
 }
