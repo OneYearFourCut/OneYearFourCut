@@ -12,7 +12,6 @@ import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkPostD
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.ArtworkResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.dto.OneYearFourCutResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.repository.ArtworkRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
@@ -250,13 +249,12 @@ public class ArtworkServiceTest {
             @Test
             @DisplayName("특정 작품에 좋아요를 누른 유저 일괄 조회 테스트")
             public void findArtworkListByLoginUser() {
-                ArtworkLike like = new
-                        ArtworkLike(1L);
+                ArtworkLike like = new ArtworkLike(1L);
                 like.setMember(loginMember);
                 like.setArtwork(artwork1);
 
                 willDoNothing().given(galleryService).verifiedGalleryExist(any(Long.class));
-                given(artworkRepository.findAllByGallery_GalleryIdAndStatus(any(Long.class), any(ArtworkStatus.class), any(Sort.class)))
+                given(artworkRepository.findAllByGallery_GalleryId(any(Long.class), any(Sort.class)))
                         .willReturn(artworkList);
                 given(memberService.findMember(any())).willReturn(loginMember);
 
@@ -273,7 +271,7 @@ public class ArtworkServiceTest {
                 like.setArtwork(artwork1);
 
                 willDoNothing().given(galleryService).verifiedGalleryExist(any(Long.class));
-                given(artworkRepository.findAllByGallery_GalleryIdAndStatus(any(Long.class), any(ArtworkStatus.class), any(Sort.class)))
+                given(artworkRepository.findAllByGallery_GalleryId(any(Long.class), any(Sort.class)))
                         .willReturn(artworkList);
                 given(memberService.findMember(any())).willReturn(nonLoginMember);
 
@@ -292,7 +290,7 @@ public class ArtworkServiceTest {
             public void findOneYearFourCutTest() {
 
                 willDoNothing().given(galleryService).verifiedGalleryExist(any());
-                given(artworkRepository.findTop4ByGallery_GalleryIdAndStatus(any(), any(), any()))
+                given(artworkRepository.findTop4ByGallery_GalleryId(any(), any()))
                         .willReturn(oneYearFourCut);
 
                 List<OneYearFourCutResponseDto> result = artworkService.findOneYearFourCut(gallery.getGalleryId());
@@ -330,36 +328,35 @@ public class ArtworkServiceTest {
             artwork.setMember(loginMember);
         }
 
-//        @Test
-//        @DisplayName("작성자가 작품 삭제")
-//        public void DeleteArtworkByWriterTest() {
-//            artwork.setMember(loginMember);
-//
-//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-//
-//            artworkService.deleteArtwork(
-//                    loginMember.getMemberId(),
-//                    gallery.getGalleryId(),
-//                    artwork.getArtworkId());
-//
-//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-//        }
+        @Test
+        @DisplayName("작성자가 작품 삭제")
+        public void DeleteArtworkByWriterTest() {
+            artwork.setMember(loginMember);
 
-//        @Test
-//        @DisplayName("갤러리 주인이 작품 삭제")
-//        public void DeleteArtworkByAdminTest() {
-//
-//            willDoNothing().given(galleryService).verifiedGalleryExist(any());
-//            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
-//
-//            artworkService.deleteArtwork(
-//                    adminMember.getMemberId(),
-//                    gallery.getGalleryId(),
-//                    artwork.getArtworkId());
-//
-//            assertThat(artwork.getStatus()).isEqualTo(ArtworkStatus.DELETED);
-//        }
+            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+            willDoNothing().given(awsS3Service).deleteImage(any(String.class));
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+            artworkService.deleteArtwork(
+                    loginMember.getMemberId(),
+                    gallery.getGalleryId(),
+                    artwork.getArtworkId());
+
+        }
+
+        @Test
+        @DisplayName("갤러리 주인이 작품 삭제")
+        public void DeleteArtworkByAdminTest() {
+
+            willDoNothing().given(galleryService).verifiedGalleryExist(any());
+            given(artworkRepository.findById(any())).willReturn(Optional.of(artwork));
+
+            artworkService.deleteArtwork(
+                    adminMember.getMemberId(),
+                    gallery.getGalleryId(),
+                    artwork.getArtworkId());
+
+        }
 
         @Test
         @DisplayName("관계 없는 유저가 작품 삭제")

@@ -15,7 +15,6 @@ import org.hibernate.annotations.Formula;
 import javax.persistence.*;
 
 @Getter
-@Table(name = "follow")
 @NoArgsConstructor
 @Entity
 public class Follow extends Auditable {

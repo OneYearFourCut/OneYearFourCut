@@ -6,6 +6,7 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryReque
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
+import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.config.auth.jwt.PrincipalDto;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeAll;
@@ -145,11 +146,14 @@ class GalleryControllerRestDocsTest {
     void getGallery() throws Exception {
         //given
         LocalDateTime time = LocalDateTime.of(2022, 12, 25, 12, 25, 25);
+        Member member = new Member(1L);
+        member.updateProfile("/profile");
         Gallery gallery = Gallery.builder()
                 .title("홍길동의 전시회")
                 .content("안녕하세요")
                 .followerCount(23L)
                 .followingCount(31L)
+                .member(member)
                 .build();
         gallery.generateTestGallery(1L, time);
 
@@ -179,6 +183,8 @@ class GalleryControllerRestDocsTest {
                         responseFields(
                                 List.of(
                                         fieldWithPath("galleryId").type(JsonFieldType.NUMBER).description("전시관 식별자"),
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("전시관 주인 식별자"),
+                                        fieldWithPath("profile").type(JsonFieldType.STRING).description("전시관 주인 프로필"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("전시관 제목"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("전시관 내용"),
                                         fieldWithPath("createdAt").type(JsonFieldType.STRING).description("생성일자"),
@@ -200,6 +206,7 @@ class GalleryControllerRestDocsTest {
         GalleryResponseDto galleryResponseDto = Gallery.builder()
                 .title("수정된 제목")
                 .content("수정된 내용")
+                .member(new Member(1L))
                 .build()
                 .toGalleryResponseDto();
 

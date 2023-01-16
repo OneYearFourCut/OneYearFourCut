@@ -11,9 +11,13 @@ public class JWTController {    //jwt test를 위한 임시 controller
         return "receive-token";
     }
 
-    @RequestMapping("/sse")
-    public String sse() {
-        return "sse";
+    @RequestMapping("/sse/1")
+    public String sse1() {
+        return "sse1";
+    }
+    @RequestMapping("/sse/2")
+    public String sse2() {
+        return "sse2";
     }
 
 }

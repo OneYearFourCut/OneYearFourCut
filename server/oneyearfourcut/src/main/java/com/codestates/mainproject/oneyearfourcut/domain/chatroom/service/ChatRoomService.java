@@ -32,25 +32,27 @@ public class ChatRoomService {
     /* 채팅방 생성 (1:1) */
     public ChatRoomResponseDto createChatRoom(long memberId, ChatRoomPostDto chatRoomPostDto) { // meberId = token
         Long receiverId = chatRoomPostDto.getReceiverId();
+        Member receiver = memberService.findMember(receiverId);
 
         Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByMemberId(memberId, receiverId);
-        ChatRoom chatRoom = optionalChatRoom.orElse(new ChatRoom());
+        ChatRoom responseChatRoom = null;
+        
+        if (optionalChatRoom.isPresent()) {
+            responseChatRoom = optionalChatRoom.get();
+        } else {
+            ChatRoom chatRoom = new ChatRoom();
+            ChatRoomMember chatRoomMember1 = new ChatRoomMember();
+            chatRoomMember1.setMember(new Member(memberId));
+            chatRoom.addChatRoomMember(chatRoomMember1);
 
-        System.out.println("############### receiverId = " + receiverId);
+            // 이런 방식으로 단체 채팅방도 구현할 수 있을듯...
+            ChatRoomMember chatRoomMember2 = new ChatRoomMember();
+            chatRoomMember2.setMember(new Member(receiverId));
+            chatRoom.addChatRoomMember(chatRoomMember2);
 
-        ChatRoomMember chatRoomMember1 = new ChatRoomMember();
-        chatRoomMember1.setMember(new Member(memberId));
-        chatRoom.addChatRoomMember(chatRoomMember1);
-
-        // 이런 방식으로 단체 채팅방도 구현할 수 있을듯...
-        ChatRoomMember chatRoomMember2 = new ChatRoomMember();
-        chatRoomMember2.setMember(new Member(receiverId));
-        chatRoom.addChatRoomMember(chatRoomMember2);
-
-        Member receiver = memberService.findMember(receiverId);
-        ChatRoom createdChatRoom = chatRoomRepository.save(chatRoom);
-
-        return new ChatRoomResponseDto().of(receiver, createdChatRoom);
+            responseChatRoom = chatRoomRepository.save(chatRoom);
+        }
+        return new ChatRoomResponseDto().of(receiver, responseChatRoom);
     }
 
     public List<ChatRoomResponseDto> findChatRoomList(long memberId) {

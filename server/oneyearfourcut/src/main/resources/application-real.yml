@@ -1,7 +1,7 @@
 spring:
   datasource:
     hikari:
-      maximum-pool-size: 50 #커넥션 풀 갯수 설정
+      maximum-pool-size: 100 #커넥션 풀 갯수 설정
   profiles:
     include: oauth
   jpa:
@@ -9,7 +9,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-        format_sql: true # 쿼리를 가독성있게 바꿔줌
+        format_sql: false # 쿼리를 가독성있게 바꿔줌
+    show-sql: true
   session:
     store-type: jdbc
   # 이미지 파일 용량 제한 수정
@@ -21,8 +22,8 @@ spring:
 logging:
   level:
     com.zaxxer.hikari.pool.HikariPool: debug
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql: trace
