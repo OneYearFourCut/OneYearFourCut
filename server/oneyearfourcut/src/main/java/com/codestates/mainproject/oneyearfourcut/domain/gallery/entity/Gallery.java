@@ -8,9 +8,9 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRespo
 import com.codestates.mainproject.oneyearfourcut.domain.member.entity.Member;
 import com.codestates.mainproject.oneyearfourcut.global.auditable.Auditable;
 import org.hibernate.annotations.Formula;
+import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
