@@ -1,5 +1,6 @@
 package com.codestates.mainproject.oneyearfourcut.domain.gallery.service;
 
+import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryPostResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryRequestDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.dto.GalleryResponseDto;
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.entity.Gallery;
@@ -55,13 +56,13 @@ public class CreateGalleryTest {
                 .willReturn(gallery);
 
         // when
-        GalleryResponseDto galleryResponseDto = galleryService.createGallery(galleryRequestDto, emptyMemberId);
+        GalleryPostResponseDto galleryPostResponseDto = galleryService.createGallery(galleryRequestDto, emptyMemberId);
 
         // then
         assertThat(gallery.getMember().getMemberId()).isEqualTo(emptyMemberId);
         assertThat(gallery.getStatus()).isEqualTo(GalleryStatus.OPEN);
-        assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
-        assertThat(galleryResponseDto.getContent()).isEqualTo(content);
+        assertThat(galleryPostResponseDto.getTitle()).isEqualTo(title);
+        assertThat(galleryPostResponseDto.getContent()).isEqualTo(content);
     }
 
     @Test
@@ -79,13 +80,13 @@ public class CreateGalleryTest {
                 .willReturn(gallery);
 
         // when
-        GalleryResponseDto galleryResponseDto = galleryService.createGallery(galleryRequestDto, closedGalleryMemberId);
+        GalleryPostResponseDto galleryPostResponseDto = galleryService.createGallery(galleryRequestDto, closedGalleryMemberId);
 
         // then
         assertThat(gallery.getMember().getMemberId()).isEqualTo(closedGalleryMemberId);
         assertThat(gallery.getStatus()).isEqualTo(GalleryStatus.OPEN);
-        assertThat(galleryResponseDto.getTitle()).isEqualTo(title);
-        assertThat(galleryResponseDto.getContent()).isEqualTo(content);
+        assertThat(galleryPostResponseDto.getTitle()).isEqualTo(title);
+        assertThat(galleryPostResponseDto.getContent()).isEqualTo(content);
     }
 
     @Test

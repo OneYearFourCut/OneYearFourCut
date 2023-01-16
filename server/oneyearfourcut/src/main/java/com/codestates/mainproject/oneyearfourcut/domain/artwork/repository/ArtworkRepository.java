@@ -1,21 +1,19 @@
 package com.codestates.mainproject.oneyearfourcut.domain.artwork.repository;
 
 import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.Artwork;
-import com.codestates.mainproject.oneyearfourcut.domain.artwork.entity.ArtworkStatus;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ArtworkRepository extends JpaRepository<Artwork, Long> {
 
 
-    List<Artwork> findAllByGallery_GalleryIdAndStatus(Long galleryId, ArtworkStatus status, Sort sort);
+    List<Artwork> findAllByGallery_GalleryId(Long galleryId, Sort sort);
 
-    List<Artwork> findTop4ByGallery_GalleryIdAndStatus(Long galleryId, ArtworkStatus status, Sort sort);
+    List<Artwork> findTop4ByGallery_GalleryId(Long galleryId, Sort sort);
 
 
 }

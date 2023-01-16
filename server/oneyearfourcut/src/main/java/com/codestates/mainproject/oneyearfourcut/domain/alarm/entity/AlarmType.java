@@ -9,6 +9,7 @@ public enum AlarmType {
     REPLY_GALLERY,
 
     REPLY_ARTWORK,
+    FOLLOW,
 
 
 
