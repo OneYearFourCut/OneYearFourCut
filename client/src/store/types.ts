@@ -1,3 +1,5 @@
+import { LargeNumberLike } from 'crypto';
+
 export interface ModalState {
   AlertModal: boolean;
   ProfileModal: boolean;
@@ -53,6 +55,7 @@ export interface UserType {
   nickname?: string;
   profile?: string;
   galleryId?: number;
+  memberId?: number;
 }
 
 export interface Login {
@@ -77,4 +80,15 @@ export interface Comment {
   setCloseModal: () => void;
   setChangeComment: (input: number) => void;
   setLastOpen: (input: number) => void;
+}
+
+export interface Reply {
+  nickName: string;
+  date: number;
+  comment: string;
+}
+
+export interface ReplySet {
+  replyData: Reply;
+  setData: (key: string, data: File | string | number) => void;
 }

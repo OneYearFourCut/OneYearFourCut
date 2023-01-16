@@ -26,7 +26,7 @@ const Profile = () => {
   const { pathname } = useLocation(); // 지금 위치 기억
 
   const login_url = process.env.REACT_APP_KAKAO_AUTH_URL;
-  
+
   return (
     <>
       <B.HambergurBox>
@@ -42,6 +42,13 @@ const Profile = () => {
                 전시관 편집하기
               </li>
               <li onClick={handleCopy}>전시회 공유하기</li>
+              <li
+                onClick={() => {
+                  navigateSearch(`/chatlist`, {});
+                }}
+              >
+                채팅목록 보러가기
+              </li>
               <li onClick={handleLogout}>로그아웃</li>
               <li onClick={() => openModal('DeleteGalleryModal')}>
                 전시회 삭제
@@ -55,12 +62,10 @@ const Profile = () => {
             className='kakaoLoginImg'
             src={'/images/kakao_login_medium_narrow.png'}
             alt=''
-            onClick={
-              () => {
-                setHistory(pathname); // 가야 할 경로
-                window.location.replace(login_url!);
-              }
-            }
+            onClick={() => {
+              setHistory(pathname); // 가야 할 경로
+              window.location.replace(login_url!);
+            }}
           ></img>
         )}
       </B.HambergurBox>

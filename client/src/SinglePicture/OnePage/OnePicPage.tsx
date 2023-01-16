@@ -31,7 +31,7 @@ const OnePicPage = () => {
     <Body>
       {open ? (
         <ModalBackdrop>
-          <SingleComment />
+          <SingleComment single={true} />
         </ModalBackdrop>
       ) : (
         <div className='single'>

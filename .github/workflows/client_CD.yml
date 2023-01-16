@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches:
-      - dev-fe
+      - dev
     types:
       - closed
 jobs:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
-          ref: 'dev-fe'
+          ref: 'dev'
           
       - name: pwd && ls -al
         run: ls -al

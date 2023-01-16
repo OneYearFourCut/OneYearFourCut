@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import UploadPicture from 'UploadPicture';
 import AlarmList from 'AlarmList';
+import ChatList from 'ChatList';
 import ToastRender from 'shared/components/Toast';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import ForBidden from 'ForBidden';
@@ -11,11 +12,14 @@ import SinglePicPage from './SinglePicture/index';
 import OnePicPage from 'SinglePicture/OnePage/OnePicPage';
 import AuthCheck from 'shared/hooks/useAuth';
 import { TriggerBox } from 'AlarmList/components/AlarmContainer';
+import SingleComment from './SingleComments/index';
+
 const Header = React.lazy(() => import('shared/components/Header'));
 const GalleryFourPic = React.lazy(() => import('Gallery/GalleryFourPic'));
 const GalleryAllPic = React.lazy(() => import('Gallery/GalleryAllPic'));
-const SingleComment = React.lazy(() => import('./SingleComments/index'));
 const AllComment = React.lazy(() => import('./AllComments/AllComments'));
+
+const ChatRoom = React.lazy(() => import('./Chatroom'));
 
 const router = createBrowserRouter([
   {
@@ -32,6 +36,16 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Intro />,
+      },
+      {
+        path: '/chatroom/*',
+        element: (
+          <AuthCheck>
+            <Suspense fallback={<TriggerBox />}>
+              <ChatRoom />
+            </Suspense>
+          </AuthCheck>
+        ),
       },
       {
         path: '/gallerySetting',
@@ -68,7 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: `/fourPic/:galleryId`,
+        path: `/fourPic/*`,
         element: (
           <Suspense fallback={<TriggerBox />}>
             <GalleryFourPic />
@@ -96,8 +110,24 @@ const router = createBrowserRouter([
         path: '/allPic/:galleryId/:artworkId/comments',
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <SingleComment />
+            <SingleComment single={true} />
           </Suspense>
+        ),
+      },
+      {
+        path: '/allPic/:galleryId/:artworkId/comments/:commentId',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SingleComment single={false} />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/chatList',
+        element: (
+          <AuthCheck>
+            <ChatList />
+          </AuthCheck>
         ),
       },
     ],

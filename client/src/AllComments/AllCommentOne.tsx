@@ -45,7 +45,7 @@ const AllSingleComment = ({
 }) => {
   const params = useParams();
   const galleryId = parseInt(params.galleryId!);
-  const { mutate } = useDeleteComment(galleryId, commentId);
+  const { mutate } = useDeleteComment(galleryId);
 
   const { target, openModal, closeModal } = ModalStore();
   const { resetData } = UploadStore();
@@ -56,8 +56,9 @@ const AllSingleComment = ({
   const OpenModal = () => {
     openModal('AlertModal');
   };
-  const handleProgressBtn = () => {
-    mutate();
+  const handleProgressBtn = (el: any) => {
+    console.log(el);
+    mutate(el);
     resetData();
     closeModal('AlertModal');
   };
@@ -105,7 +106,7 @@ const AllSingleComment = ({
       {target.AlertModal ? (
         <Back>
           <ModalBackdrop>
-            <Alert data={DeleteComment(handleProgressBtn)} />
+            <Alert data={DeleteComment(() => handleProgressBtn(commentId))} />
           </ModalBackdrop>
         </Back>
       ) : null}
