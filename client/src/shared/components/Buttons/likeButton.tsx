@@ -56,10 +56,7 @@ const LikeButton = ({
       <Box>
         {idx !== undefined && data?.data[idx].liked === false ? (
           <div className='heart'></div>
-        ) : (
-          <div className='heart check'></div>
-        )}
-        {idx === undefined && state === false ? (
+        ) : idx === undefined && state === false ? (
           <div className='heart'></div>
         ) : (
           <div className='heart check'></div>

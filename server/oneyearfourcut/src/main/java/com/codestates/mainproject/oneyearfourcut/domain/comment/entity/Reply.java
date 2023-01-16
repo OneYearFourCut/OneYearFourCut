@@ -21,11 +21,11 @@ public class Reply extends Auditable {
     @Column(length = 30, nullable = false) // nullable = false 추가해도 될까요?
     private String content; // 댓글 내용
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment; // 댓글 id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 작성자 회원 id
 

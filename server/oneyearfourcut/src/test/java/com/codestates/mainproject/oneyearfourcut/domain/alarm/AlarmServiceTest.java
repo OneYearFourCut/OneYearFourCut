@@ -9,75 +9,15 @@ import com.codestates.mainproject.oneyearfourcut.domain.gallery.repository.Galle
 import com.codestates.mainproject.oneyearfourcut.domain.gallery.service.GalleryService;
 import com.codestates.mainproject.oneyearfourcut.domain.member.repository.MemberRepository;
 import com.codestates.mainproject.oneyearfourcut.domain.member.service.MemberService;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+@ExtendWith(MockitoExtension.class)
 class AlarmServiceTest {
-
-    @Mock
-    private MemberService memberService;
-    @Mock
-    private ArtworkService artworkService;
-    @Mock
-    private GalleryService galleryService;
-    @Mock
-    private CommentService commentService;
-
-    @Mock
-    private GalleryRepository galleryRepository;
-
-    @Autowired
-    private AlarmRepository alarmRepository;
-    @Autowired
-    private ArtworkRepository artworkRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @InjectMocks
-    private AlarmService alarmService;
-
-
-    /*@Test
-    @DisplayName("create  alarm ")
-    void testCreateAlarm(Long locationId, Long memberId, AlarmType type) {
-        //given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .nickname("홍길동")
-                        .build());
-
-        System.out.println(member.getMemberId());
-        assertThat
-
-        *//*Artwork artwork = new Artwork(locationId);
-
-            given
-
-            if(type != COMMENT_GALLERY) {
-                member = artworkRepository.findById(locationId).orElseThrow().getMember();
-                artwork = artworkRepository.findById(locationId).orElseThrow(); }
-            else { member = galleryService.findGallery(locationId).getMember();
-                artwork = null;}
-
-            assert artwork != null;
-
-            Alarm alarm = Alarm.builder()
-                    .member(member)
-                    .memberIdProducer(memberId)
-                    .alarmType(type)
-                    .artworkId(artwork.getArtworkId())
-                    .artworkTitle(artwork.getTitle())
-                    .userNickname(memberService.findMember(memberId).getNickname())
-                    .readCheck(false)
-                    .build();
-
-            alarmRepository.save(alarm);*//*
-    }
-*/
-
-
-
 
 
 }

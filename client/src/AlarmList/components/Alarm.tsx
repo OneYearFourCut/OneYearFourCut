@@ -18,7 +18,7 @@ const Alarm = ({ data }: { data: ALData }) => {
         break;
       case ALDataType.COMMENT_GALLERY:
         content += `전시관에 댓글을 남겼습니다.`;
-        url += `/${data.galleryId}/comments`;
+        url += `/${data.galleryId}/artworks/comments`;
         break;
       case ALDataType.REPLY_ARTWORK:
         content += `작품 < ${data.artworkTitle} >에 남긴 댓글에 댓글이 등록되었습니다.`;
@@ -26,7 +26,7 @@ const Alarm = ({ data }: { data: ALData }) => {
         break;
       case ALDataType.REPLY_GALLERY:
         content += `전시관 에 남긴 댓글에 댓글이 등록되었습니다.`;
-        url += `/${data.galleryId}/comments`;
+        url += `/${data.galleryId}/artworks/comments`;
         break;
       case ALDataType.POST_ARTWORK:
         content += `작품 < ${data.artworkTitle} >을 등록하셨습니다.`;

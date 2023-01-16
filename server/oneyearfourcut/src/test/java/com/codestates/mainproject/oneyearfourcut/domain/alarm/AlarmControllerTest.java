@@ -202,7 +202,7 @@ class AlarmControllerTest {
                 .build());
 
         given(this.alarmService.checkReadAlarm(Mockito.any(member2.getMemberId().getClass())))
-                .willReturn(AlarmReadCheckResponseDto.builder().readAlarmExist(Boolean.FALSE).message("현재 알림이 없습니다.").build());
+                .willReturn(Boolean.FALSE);
 
         //when
         ResultActions actions = mockMvc.perform(

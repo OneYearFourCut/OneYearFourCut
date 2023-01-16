@@ -5,7 +5,7 @@ import { rem } from 'polished';
 const ModalBackdropBox = styled.div`
   width: ${rem(428)};
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   z-index: 51;

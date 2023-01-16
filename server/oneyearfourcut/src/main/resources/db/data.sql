@@ -40,4 +40,9 @@ INSERT INTO ARTWORK_LIKE (member_id, artwork_id, status, created_at, last_modifi
 (1, 3, 'LIKE', '2022-11-11T23:44:57.764644', '2022-11-16T23:44:57.764644'),
 (2, 3, 'LIKE', '2022-11-11T23:45:57.764644', '2022-11-16T23:45:57.764644');
 
+INSERT INTO CHAT_ROOM (chatted_at, last_chat_message) VALUES
+('2022-11-11T23:45:57.764644', '안녕하세요');
 
+INSERT INTO CHAT_ROOM_MEMBER (member_id, chat_room_id) VALUES
+(1, 1),
+(3, 1);
